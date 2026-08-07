@@ -9,7 +9,7 @@ import KnowledgeGraphViewer from './components/KnowledgeGraphViewer';
 import AnomalyFlagsPanel from './components/AnomalyFlagsPanel';
 import { Product, CatalogMetrics } from './types/product';
 import { api } from './services/api';
-import { Menu, Search, Bell, Terminal, CheckCircle2, PanelLeftOpen, Sun, Moon } from 'lucide-react';
+import { Menu, Search, Bell, Terminal, CheckCircle2, PanelLeftOpen } from 'lucide-react';
 
 type View = 'dashboard' | 'catalog' | 'ingest' | 'validate' | 'export' | 'knowledge';
 
@@ -25,20 +25,6 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [metrics, setMetrics] = useState<CatalogMetrics | null>(null);
   const [loading, setLoading] = useState(true);
-  
-  // Theme state: defaults to false (Crisp Light Mode - easy on eyes!)
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    // Apply body theme class
-    if (isDark) {
-      document.body.classList.add('theme-dark');
-      document.body.classList.remove('theme-light');
-    } else {
-      document.body.classList.add('theme-light');
-      document.body.classList.remove('theme-dark');
-    }
-  }, [isDark]);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -105,22 +91,6 @@ function App() {
 
   const sidebarLeft = sidebarCollapsed ? 0 : SIDEBAR_WIDTH;
 
-  // Theme-aware styles for App layout
-  const headerBg = isDark ? 'rgba(8,13,26,0.92)' : 'rgba(255,255,255,0.92)';
-  const headerBorder = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
-  const iconBtnBg = isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc';
-  const iconBtnBorder = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
-  const iconBtnColor = isDark ? '#94a3b8' : '#64748b';
-  const searchBg = isDark ? 'rgba(15,23,42,0.8)' : '#f8fafc';
-  const searchBorder = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
-  const searchTextColor = isDark ? '#e2e8f0' : '#0f172a';
-  const headingColor = isDark ? '#ffffff' : '#0f172a';
-  const subtextColor = isDark ? '#64748b' : '#64748b';
-  const liveCardBg = isDark ? 'linear-gradient(145deg, rgba(30,41,59,0.65) 0%, rgba(15,23,42,0.85) 100%)' : '#ffffff';
-  const logBoxBg = isDark ? 'rgba(15,23,42,0.6)' : '#f8fafc';
-  const logBoxBorder = isDark ? 'rgba(255,255,255,0.06)' : '#e2e8f0';
-  const logTextColor = isDark ? '#cbd5e1' : '#334155';
-
   const renderContent = () => {
     if (selectedProduct) {
       return <ProductDetailView product={selectedProduct} onBack={handleBackToCatalog} />;
@@ -131,30 +101,29 @@ function App() {
           <div className="animate-fade-in-up">
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
               <div>
-                <h1 style={{ fontSize: 26, fontWeight: 800, color: headingColor, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: 12 }}>
                   Product Intelligence Platform
                   <span className="badge badge-commerce_ready">
                     <CheckCircle2 size={11} /> Active
                   </span>
                 </h1>
-                <p style={{ fontSize: 14, fontWeight: 500, color: subtextColor, marginTop: 4 }}>AI-powered catalog enrichment and validation pipeline</p>
+                <p style={{ fontSize: 14, color: '#64748b', marginTop: 4 }}>AI-powered catalog enrichment and validation pipeline</p>
               </div>
             </div>
 
-            <MetricsOverview metrics={metrics} loading={loading} isDark={isDark} />
+            <MetricsOverview metrics={metrics} loading={loading} />
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 24, marginTop: 32 }}>
               <AnomalyFlagsPanel onSelectProduct={(id) => {
                 const p = products.find(prod => prod.id === id);
                 if (p) handleSelectProduct(p);
-              }} isDark={isDark} />
-              
-              <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', background: liveCardBg, border: `1px solid ${headerBorder}` }}>
+              }} />
+              <div className="glass-card" style={{ display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 8, background: isDark ? 'rgba(6,182,212,0.15)' : '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Terminal size={16} color={isDark ? "#22d3ee" : "#0284c7"} />
+                  <div style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(6,182,212,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Terminal size={16} color="#22d3ee" />
                   </div>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, color: headingColor }}>Live AI Extraction Stream</h3>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>Live AI Extraction Stream</h3>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {[
@@ -167,15 +136,16 @@ function App() {
                       display: 'flex', alignItems: 'center', gap: 12,
                       padding: '10px 14px',
                       borderRadius: 10,
-                      background: logBoxBg,
-                      border: `1px solid ${logBoxBorder}`,
+                      background: 'rgba(15,23,42,0.6)',
+                      border: '1px solid rgba(255,255,255,0.06)',
                     }}>
-                      <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace', flexShrink: 0, fontWeight: 600 }}>{log.time}</span>
+                      <span style={{ fontSize: 11, color: '#475569', fontFamily: 'JetBrains Mono, monospace', flexShrink: 0 }}>{log.time}</span>
                       <span style={{
                         width: 7, height: 7, borderRadius: '50%', flexShrink: 0,
-                        background: log.type === 'success' ? '#059669' : log.type === 'warning' ? '#d97706' : '#0284c7',
+                        background: log.type === 'success' ? '#10b981' : log.type === 'warning' ? '#f59e0b' : '#06b6d4',
+                        boxShadow: `0 0 6px ${log.type === 'success' ? '#10b981' : log.type === 'warning' ? '#f59e0b' : '#06b6d4'}`,
                       }} />
-                      <p style={{ fontSize: 12, fontWeight: 600, color: logTextColor, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{log.msg}</p>
+                      <p style={{ fontSize: 12, color: '#cbd5e1', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{log.msg}</p>
                     </div>
                   ))}
                 </div>
@@ -187,14 +157,13 @@ function App() {
       case 'validate':
         return (
           <div className="animate-fade-in-up">
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: headingColor, marginBottom: 24, letterSpacing: '-0.5px' }}>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 24, letterSpacing: '-0.5px' }}>
               {currentView === 'validate' ? 'Human-in-the-Loop Validation Studio' : 'Product Intelligence Catalog'}
             </h1>
             <CatalogGrid
               products={currentView === 'validate' ? products.filter(p => p.status === 'flagged' || p.completeness < 80) : products}
               loading={loading}
               onSelectProduct={handleSelectProduct}
-              isDark={isDark}
             />
           </div>
         );
@@ -218,18 +187,17 @@ function App() {
         top: 0,
         left: sidebarLeft,
         right: 0,
-        background: headerBg,
+        background: 'rgba(8,13,26,0.92)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: `1px solid ${headerBorder}`,
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
         zIndex: 30,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 24px',
         gap: 16,
-        transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, border-color 0.3s',
-        boxShadow: isDark ? 'none' : '0 1px 3px rgba(15,23,42,0.04)',
+        transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}>
         {/* Left: Toggle + Search */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
@@ -246,20 +214,20 @@ function App() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               width: 38, height: 38,
               borderRadius: 10,
-              background: iconBtnBg,
-              border: `1px solid ${iconBtnBorder}`,
-              color: iconBtnColor,
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: '#94a3b8',
               cursor: 'pointer',
               flexShrink: 0,
               transition: 'all 0.2s',
             }}
           >
-            {sidebarCollapsed ? <PanelLeftOpen size={19} color={iconBtnColor} /> : <Menu size={19} color={iconBtnColor} />}
+            {sidebarCollapsed ? <PanelLeftOpen size={19} color="#94a3b8" /> : <Menu size={19} color="#94a3b8" />}
           </button>
 
           {/* Search */}
           <div style={{ position: 'relative', flex: 1, maxWidth: 420 }}>
-            <Search size={15} color={isDark ? "#475569" : "#94a3b8"} style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+            <Search size={15} color="#475569" style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
             <input
               type="text"
               placeholder="Search SKUs, products, attributes..."
@@ -268,72 +236,51 @@ function App() {
               style={{
                 width: '100%',
                 height: 38,
-                background: searchBg,
-                border: `1px solid ${searchBorder}`,
+                background: 'rgba(15,23,42,0.8)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: 10,
                 paddingLeft: 38,
                 paddingRight: 14,
                 fontSize: 13,
-                color: searchTextColor,
+                color: '#e2e8f0',
                 fontFamily: 'inherit',
                 outline: 'none',
                 transition: 'border-color 0.2s',
               }}
-              onFocus={e => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={e => (e.target.style.borderColor = searchBorder)}
+              onFocus={e => (e.target.style.borderColor = '#06b6d4')}
+              onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
             />
           </div>
         </div>
 
-        {/* Right: Theme Toggle + Bell + Avatar */}
+        {/* Right: Bell + Avatar */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-          {/* Light / Dark Mode Toggle Button */}
-          <button
-            onClick={() => setIsDark(!isDark)}
-            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              height: 38, padding: '0 12px',
-              borderRadius: 10,
-              background: isDark ? 'rgba(255,255,255,0.06)' : '#f1f5f9',
-              border: `1px solid ${iconBtnBorder}`,
-              color: isDark ? '#fbbf24' : '#4f46e5',
-              cursor: 'pointer',
-              fontSize: 12, fontWeight: 700,
-              transition: 'all 0.2s',
-            }}
-          >
-            {isDark ? <Sun size={17} color="#fbbf24" /> : <Moon size={17} color="#4f46e5" />}
-            <span style={{ fontSize: 12, fontWeight: 700, color: isDark ? '#f8fafc' : '#0f172a' }}>
-              {isDark ? 'Dark' : 'Light'}
-            </span>
-          </button>
-
           <button style={{
             position: 'relative',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             width: 38, height: 38,
             borderRadius: 10,
-            background: iconBtnBg,
-            border: `1px solid ${iconBtnBorder}`,
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.1)',
             cursor: 'pointer',
           }}>
-            <Bell size={18} color={iconBtnColor} />
+            <Bell size={18} color="#94a3b8" />
             <span style={{
               position: 'absolute', top: 8, right: 8,
               width: 7, height: 7,
               borderRadius: '50%',
-              background: '#0284c7',
+              background: '#22d3ee',
+              boxShadow: '0 0 6px #22d3ee',
             }} />
           </button>
 
           <div style={{
             width: 38, height: 38,
             borderRadius: 10,
-            background: 'linear-gradient(135deg, #4f46e5, #0284c7)',
+            background: 'linear-gradient(135deg, #6366f1, #06b6d4)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 13, fontWeight: 800, color: '#fff',
-            boxShadow: '0 4px 12px rgba(79,70,229,0.3)',
+            boxShadow: '0 4px 12px rgba(99,102,241,0.4)',
             cursor: 'pointer',
           }}>JS</div>
         </div>
@@ -350,7 +297,6 @@ function App() {
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         isOpenMobile={sidebarOpenMobile}
         onCloseMobile={() => setSidebarOpenMobile(false)}
-        isDark={isDark}
       />
 
       {/* Main Content */}
