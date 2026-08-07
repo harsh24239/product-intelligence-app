@@ -17,6 +17,7 @@ interface NavbarProps {
   onToggleCollapse?: () => void;
   isOpenMobile?: boolean;
   onCloseMobile?: () => void;
+  isDark?: boolean;
 }
 
 const navItems = [
@@ -34,9 +35,23 @@ const Navbar: React.FC<NavbarProps> = ({
   collapsed = false, 
   onToggleCollapse, 
   isOpenMobile, 
-  onCloseMobile 
+  onCloseMobile,
+  isDark = false
 }) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  // Theme-aware color parameters
+  const bg = isDark ? '#090e1c' : '#ffffff';
+  const borderRight = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
+  const headerBorder = isDark ? 'rgba(255,255,255,0.08)' : '#f1f5f9';
+  const titleColor = isDark ? '#ffffff' : '#0f172a';
+  const sectionLabel = isDark ? '#475569' : '#94a3b8';
+  const btnBg = isDark ? 'rgba(255,255,255,0.05)' : '#f8fafc';
+  const btnBorder = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
+  const btnColor = isDark ? '#94a3b8' : '#64748b';
+  const userBoxBg = isDark ? 'rgba(99,102,241,0.08)' : '#f8fafc';
+  const userBoxBorder = isDark ? 'rgba(99,102,241,0.2)' : '#e2e8f0';
+  const userNameColor = isDark ? '#e2e8f0' : '#0f172a';
 
   return (
     <>
@@ -46,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({
           onClick={onCloseMobile}
           style={{
             position: 'fixed', inset: 0,
-            background: 'rgba(0,0,0,0.7)',
+            background: 'rgba(0,0,0,0.5)',
             backdropFilter: 'blur(6px)',
             zIndex: 35,
           }}
@@ -59,19 +74,20 @@ const Navbar: React.FC<NavbarProps> = ({
         position: 'fixed',
         left: 0,
         top: 0,
-        background: 'linear-gradient(180deg, #090e1c 0%, #0a1020 100%)',
-        borderRight: '1px solid rgba(255,255,255,0.08)',
+        background: bg,
+        borderRight: `1px solid ${borderRight}`,
         display: 'flex',
         flexDirection: 'column',
         zIndex: 40,
-        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, border-color 0.3s',
         transform: collapsed ? 'translateX(-100%)' : (isOpenMobile ? 'translateX(0)' : undefined),
+        boxShadow: isDark ? 'none' : '2px 0 12px rgba(15,23,42,0.03)',
       }}>
         
         {/* Brand */}
         <div style={{
-          padding: '20px 20px',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          padding: '18px 20px',
+          borderBottom: `1px solid ${headerBorder}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -79,19 +95,19 @@ const Navbar: React.FC<NavbarProps> = ({
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
-              width: 40, height: 40,
+              width: 38, height: 38,
               borderRadius: 12,
-              background: 'linear-gradient(135deg, #6366f1 0%, #06b6d4 100%)',
+              background: 'linear-gradient(135deg, #4f46e5 0%, #0284c7 100%)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexShrink: 0,
-              boxShadow: '0 0 22px rgba(99,102,241,0.5)',
+              boxShadow: '0 4px 14px rgba(79,70,229,0.3)',
             }}>
               <Zap size={20} color="white" />
             </div>
             <span style={{
               fontWeight: 800,
               fontSize: 18,
-              color: '#fff',
+              color: titleColor,
               whiteSpace: 'nowrap',
               letterSpacing: '-0.5px',
             }}>IntelliProduct</span>
@@ -104,20 +120,12 @@ const Navbar: React.FC<NavbarProps> = ({
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               width: 34, height: 34,
               borderRadius: 8,
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: '#94a3b8',
+              background: btnBg,
+              border: `1px solid ${btnBorder}`,
+              color: btnColor,
               cursor: 'pointer',
               transition: 'all 0.2s',
               flexShrink: 0,
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.12)';
-              (e.currentTarget as HTMLButtonElement).style.color = '#fff';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)';
-              (e.currentTarget as HTMLButtonElement).style.color = '#94a3b8';
             }}
           >
             <PanelLeftClose size={18} />
@@ -128,10 +136,10 @@ const Navbar: React.FC<NavbarProps> = ({
         <div style={{ padding: '20px 20px 8px', flexShrink: 0 }}>
           <span style={{
             fontSize: 10,
-            fontWeight: 700,
+            fontWeight: 800,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
-            color: '#475569',
+            color: sectionLabel,
           }}>Navigation</span>
         </div>
 
@@ -148,6 +156,30 @@ const Navbar: React.FC<NavbarProps> = ({
             const Icon = item.icon;
             const isActive = currentView === item.id;
             const isHovered = hoveredId === item.id;
+
+            let itemBg = 'transparent';
+            let itemBorder = '1px solid transparent';
+            let itemLeftBorder = '3px solid transparent';
+            let textColor = isDark ? '#94a3b8' : '#475569';
+            let iconBoxBg = isDark ? 'rgba(255,255,255,0.04)' : '#f1f5f9';
+            let iconColor = isDark ? '#64748b' : '#64748b';
+
+            if (isActive) {
+              itemBg = isDark 
+                ? 'linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(6,182,212,0.15) 100%)' 
+                : 'linear-gradient(135deg, #e0e7ff 0%, #e0f2fe 100%)';
+              itemBorder = isDark ? '1px solid rgba(6,182,212,0.4)' : '1px solid #c7d2fe';
+              itemLeftBorder = '3px solid #4f46e5';
+              textColor = isDark ? '#ffffff' : '#4f46e5';
+              iconBoxBg = isDark ? 'rgba(6,182,212,0.15)' : '#ffffff';
+              iconColor = '#4f46e5';
+            } else if (isHovered) {
+              itemBg = isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc';
+              itemBorder = isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0';
+              itemLeftBorder = isDark ? '3px solid rgba(6,182,212,0.3)' : '3px solid #cbd5e1';
+              textColor = isDark ? '#e2e8f0' : '#0f172a';
+              iconColor = isDark ? '#67e8f9' : '#0284c7';
+            }
 
             return (
               <button
@@ -167,18 +199,10 @@ const Navbar: React.FC<NavbarProps> = ({
                   width: '100%',
                   cursor: 'pointer',
                   transition: 'all 0.18s cubic-bezier(0.4, 0, 0.2, 1)',
-                  background: isActive
-                    ? 'linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(6,182,212,0.15) 100%)'
-                    : isHovered
-                    ? 'rgba(255,255,255,0.06)'
-                    : 'transparent',
-                  border: isActive
-                    ? '1px solid rgba(6,182,212,0.4)'
-                    : isHovered
-                    ? '1px solid rgba(255,255,255,0.1)'
-                    : '1px solid transparent',
-                  borderLeft: isActive ? '3px solid #22d3ee' : isHovered ? '3px solid rgba(6,182,212,0.3)' : '3px solid transparent',
-                  boxShadow: isActive ? '0 4px 20px rgba(6,182,212,0.12)' : 'none',
+                  background: itemBg,
+                  border: itemBorder,
+                  borderLeft: itemLeftBorder,
+                  boxShadow: isActive && !isDark ? '0 2px 8px rgba(79,70,229,0.12)' : 'none',
                   transform: isHovered && !isActive ? 'translateX(3px)' : 'translateX(0)',
                   textAlign: 'left',
                 }}
@@ -191,23 +215,16 @@ const Navbar: React.FC<NavbarProps> = ({
                   height: 34,
                   borderRadius: 8,
                   flexShrink: 0,
-                  background: isActive
-                    ? 'rgba(6,182,212,0.15)'
-                    : isHovered
-                    ? 'rgba(6,182,212,0.1)'
-                    : 'rgba(255,255,255,0.04)',
+                  background: iconBoxBg,
                   transition: 'all 0.18s',
                 }}>
-                  <Icon
-                    size={17}
-                    color={isActive ? '#22d3ee' : isHovered ? '#67e8f9' : '#64748b'}
-                  />
+                  <Icon size={17} color={iconColor} />
                 </div>
 
                 <span style={{
                   fontSize: 14,
-                  fontWeight: isActive ? 700 : 500,
-                  color: isActive ? '#fff' : isHovered ? '#e2e8f0' : '#94a3b8',
+                  fontWeight: isActive ? 700 : 600,
+                  color: textColor,
                   whiteSpace: 'nowrap',
                   flex: 1,
                   letterSpacing: '-0.1px',
@@ -221,9 +238,9 @@ const Navbar: React.FC<NavbarProps> = ({
                     width: 6,
                     height: 6,
                     borderRadius: '50%',
-                    background: '#22d3ee',
+                    background: '#4f46e5',
                     flexShrink: 0,
-                    boxShadow: '0 0 8px #22d3ee',
+                    boxShadow: '0 0 8px rgba(79,70,229,0.5)',
                   }} />
                 )}
               </button>
@@ -234,7 +251,7 @@ const Navbar: React.FC<NavbarProps> = ({
         {/* Footer */}
         <div style={{
           padding: '16px 20px',
-          borderTop: '1px solid rgba(255,255,255,0.06)',
+          borderTop: `1px solid ${headerBorder}`,
           flexShrink: 0,
         }}>
           <div style={{
@@ -243,20 +260,20 @@ const Navbar: React.FC<NavbarProps> = ({
             gap: 10,
             padding: '10px 12px',
             borderRadius: 10,
-            background: 'rgba(99,102,241,0.08)',
-            border: '1px solid rgba(99,102,241,0.2)',
+            background: userBoxBg,
+            border: `1px solid ${userBoxBorder}`,
           }}>
             <div style={{
               width: 32, height: 32,
               borderRadius: 8,
-              background: 'linear-gradient(135deg, #6366f1, #06b6d4)',
+              background: 'linear-gradient(135deg, #4f46e5, #0284c7)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 12, fontWeight: 800, color: '#fff',
               flexShrink: 0,
             }}>JS</div>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', whiteSpace: 'nowrap' }}>John Smith</div>
-              <div style={{ fontSize: 11, color: '#64748b', whiteSpace: 'nowrap' }}>Admin</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: userNameColor, whiteSpace: 'nowrap' }}>John Smith</div>
+              <div style={{ fontSize: 11, color: sectionLabel, whiteSpace: 'nowrap' }}>Admin</div>
             </div>
           </div>
         </div>
