@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { getCatalogMetrics } from '../services/anomalyService.js';
+import { findInterchangeableSubstitutes } from '../services/vectorSearchService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,6 +57,19 @@ router.get('/:id', (req, res) => {
   } else {
     res.status(404).json({ error: 'Product not found' });
   }
+});
+
+// Vector Similarity Search for Drop-in Replacement Substitutes
+router.get('/:id/substitutes', (req, res) => {
+  const product = catalog.find(p => p.id === req.params.id);
+  if (!product) return res.status(404).json({ error: 'Product not found' });
+
+  const substitutes = findInterchangeableSubstitutes(product, catalog);
+  res.json({
+    productId: product.id,
+    sku: product.sku,
+    substitutes
+  });
 });
 
 router.put('/:id', (req, res) => {

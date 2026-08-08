@@ -1,0 +1,158 @@
+import { jsPDF } from 'jspdf';
+import QRCode from 'qrcode';
+import { Product } from '../types/product';
+
+/**
+ * Generates a high-res 1-page PDF Technical Specification Datasheet with dynamic QR code.
+ */
+export async function generateProductDatasheet(product: Product): Promise<void> {
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  // Header Background Banner
+  doc.setFillColor(15, 23, 42); // #0f172a
+  doc.rect(0, 0, pageWidth, 32, 'F');
+
+  // Header Title
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.text('INTELLIPRODUCT OFFICIAL DATASHEET', 14, 15);
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(148, 163, 184);
+  doc.text(`Industrial Specification Sheet • Verified Catalog ID: ${product.id}`, 14, 23);
+
+  // Status Badge on Header
+  doc.setFillColor(16, 185, 129); // emerald green
+  doc.rect(pageWidth - 45, 10, 32, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text(product.status.toUpperCase(), pageWidth - 42, 15.5);
+
+  // Section 1: Product Overview Card
+  doc.setDrawColor(226, 232, 240);
+  doc.setFillColor(248, 250, 252);
+  doc.roundedRect(14, 38, pageWidth - 28, 30, 3, 3, 'FD');
+
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text(product.name, 18, 48);
+
+  doc.setTextColor(79, 70, 229);
+  doc.setFontSize(11);
+  doc.text(`SKU: ${product.sku}`, 18, 55);
+
+  doc.setTextColor(100, 116, 139);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Manufacturer: ${product.manufacturer}   |   Category: ${product.category}`, 18, 62);
+
+  // Section 2: Technical Specifications Table
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('TECHNICAL SPECIFICATIONS PROFILE', 14, 76);
+
+  doc.setLineWidth(0.4);
+  doc.setDrawColor(79, 70, 229);
+  doc.line(14, 78, pageWidth - 14, 78);
+
+  let startY = 86;
+  const col1 = 18;
+  const col2 = 90;
+  const col3 = 110;
+  const col4 = 175;
+
+  const specEntries = Object.entries(product.specs).filter(([_, val]) => val !== null && val !== '');
+
+  doc.setFontSize(10);
+  for (let i = 0; i < specEntries.length; i += 2) {
+    const [key1, val1] = specEntries[i];
+    const [key2, val2] = specEntries[i + 1] || [];
+
+    if ((i / 2) % 2 === 0) {
+      doc.setFillColor(241, 245, 249);
+      doc.rect(14, startY - 4, pageWidth - 28, 8, 'F');
+    }
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(71, 85, 105);
+    doc.text(key1.toUpperCase(), col1, startY);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(15, 23, 42);
+    doc.text(String(val1), col2, startY);
+
+    if (key2) {
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(71, 85, 105);
+      doc.text(key2.toUpperCase(), col3, startY);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(15, 23, 42);
+      doc.text(String(val2), col4, startY);
+    }
+
+    startY += 9;
+  }
+
+  // Section 3: Certifications & Compliance
+  startY += 6;
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(15, 23, 42);
+  doc.text('COMPLIANCE & INDUSTRIAL CERTIFICATIONS', 14, startY);
+
+  doc.setDrawColor(2, 132, 199);
+  doc.line(14, startY + 2, pageWidth - 14, startY + 2);
+  startY += 10;
+
+  const certs: string[] = product.certifications && product.certifications.length > 0 ? product.certifications : ['CE', 'UL', 'ISO 9001', 'IEC 60034'];
+  let certX = 14;
+  certs.forEach((cert: string) => {
+    doc.setFillColor(224, 242, 254);
+    doc.setDrawColor(186, 230, 253);
+    doc.roundedRect(certX, startY, 28, 7, 2, 2, 'FD');
+    doc.setTextColor(3, 105, 161);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text(cert, certX + 5, startY + 4.8);
+    certX += 34;
+  });
+
+  // Section 4: Dynamic QR Code Verification
+  startY += 18;
+  const qrDataUrl = await QRCode.toDataURL(`https://api.intelliproduct.io/v1/products/${product.id}`);
+
+  doc.setDrawColor(226, 232, 240);
+  doc.setFillColor(248, 250, 252);
+  doc.roundedRect(14, startY, pageWidth - 28, 38, 3, 3, 'FD');
+
+  doc.addImage(qrDataUrl, 'PNG', 18, startY + 4, 30, 30);
+
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text('DYNAMIC QR CODE AUTHENTICATION', 54, startY + 12);
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(100, 116, 139);
+  doc.text('Scan with a mobile phone or scanner to verify the authenticity, live API data,', 54, startY + 18);
+  doc.text(`and real-time schema specification of SKU ${product.sku}.`, 54, startY + 24);
+
+  // Footer
+  doc.setFontSize(8);
+  doc.setTextColor(148, 163, 184);
+  doc.text(`Generated by IntelliProduct AI Engine • ${new Date().toLocaleDateString()} • Page 1 of 1`, 14, doc.internal.pageSize.getHeight() - 10);
+
+  // Download PDF
+  doc.save(`${product.sku}_Official_Datasheet.pdf`);
+}

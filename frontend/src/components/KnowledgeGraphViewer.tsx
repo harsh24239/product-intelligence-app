@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Network, Database, ChevronDown, Sparkles, X } from 'lucide-react';
+import { Network, Database, ChevronDown, Sparkles, X, Filter } from 'lucide-react';
 
 interface NodeDetail {
   id: string;
@@ -13,10 +13,11 @@ interface NodeDetail {
 
 const KnowledgeGraphViewer: React.FC = () => {
   const [expandedBase, setExpandedBase] = useState(true);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'atex' | 'motors' | 'certs'>('all');
   const [selectedNode, setSelectedNode] = useState<NodeDetail | null>({
     id: 'motor-root',
     name: 'Industrial Motors & Drives',
-    category: 'Root Ontology Domain',
+    category: 'Root Taxonomy Domain',
     type: 'Core Domain',
     connectedNodes: 4500,
     standards: ['IEC 60034-30-1', 'NEMA MG1', 'ISO 13849-1'],
@@ -35,25 +36,25 @@ const KnowledgeGraphViewer: React.FC = () => {
     },
     'ip-rating': {
       id: 'ip-rating',
-      name: 'Ingress Protection (IP)',
+      name: 'Ingress Protection (IP65/IP67)',
       category: 'Enclosure Standard',
       type: 'Safety Spec',
       connectedNodes: 3200,
       standards: ['IEC 60529', 'DIN 40050-9'],
-      description: 'Standardized seal protection ratings defining dust tightness and water jet resistance capabilities (e.g. IP65, IP67, IP69K).'
+      description: 'Standardized seal protection ratings defining dust tightness and water jet resistance capabilities.'
     },
-    'servo-drive': {
-      id: 'servo-drive',
-      name: 'Servo Drive Assembly',
-      category: 'Actuator Class',
-      type: 'Mechanical Subsystem',
-      connectedNodes: 1850,
-      standards: ['ISO 13849-1', 'CE Directive'],
-      description: 'Precision motion controller units with integrated feedback resolvers and encoder interfaces for dynamic torque automation.'
+    'atex': {
+      id: 'atex',
+      name: 'ATEX Explosion Proof (Zone 1/21)',
+      category: 'Hazardous Compliance',
+      type: 'Safety Directive',
+      connectedNodes: 1240,
+      standards: ['EN 60079-0', 'Directive 2014/34/EU'],
+      description: 'Mandatory European safety standard for equipment operating in potentially explosive atmospheres.'
     },
     'voltage': {
       id: 'voltage',
-      name: 'Operating Voltage & Power',
+      name: 'Operating Voltage (400V AC)',
       category: 'Electrical Spec',
       type: 'Primary Attribute',
       connectedNodes: 4100,
@@ -62,11 +63,11 @@ const KnowledgeGraphViewer: React.FC = () => {
     },
     'efficiency': {
       id: 'efficiency',
-      name: 'Energy Efficiency Rating',
+      name: 'Energy Efficiency (IE3/IE4)',
       category: 'Eco Standard',
       type: 'Classification',
       connectedNodes: 2900,
-      standards: ['IE1 - IE5 Premium'],
+      standards: ['IEC 60034-30-1'],
       description: 'International energy efficiency class benchmarks for industrial motor operating power losses.'
     }
   };
@@ -76,15 +77,34 @@ const KnowledgeGraphViewer: React.FC = () => {
       <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-white mb-1 tracking-tight flex items-center gap-3">
-            Knowledge Graph & Ontologies
-            <span className="badge badge-ai_enriched"><Sparkles size={11} /> Realtime Graph V2</span>
+            Dynamic Force-Directed Knowledge Graph
+            <span className="badge badge-ai_enriched"><Sparkles size={11} /> Physics Engine V2</span>
           </h1>
           <p className="text-gray text-sm">Visualizing multi-relational product ontologies, ISO/IEC industrial standards, and semantic attribute links.</p>
         </div>
+        
+        {/* Node Filters */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-cyan-300 bg-[rgba(6,182,212,0.1)] px-3 py-1.5 rounded-xl border border-[rgba(6,182,212,0.2)]">
-            84,200 Connected Edges
-          </span>
+          <Filter size={14} color="#0284c7" />
+          <div style={{ display: 'flex', gap: 4, background: 'rgba(15,23,42,0.6)', padding: 3, borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }}>
+            {[
+              { id: 'all', label: 'All Nodes' },
+              { id: 'atex', label: 'ATEX Cluster' },
+              { id: 'motors', label: 'Motor Specs' },
+              { id: 'certs', label: 'ISO Certs' },
+            ].map(f => (
+              <button
+                key={f.id}
+                onClick={() => setActiveFilter(f.id as any)}
+                style={{
+                  padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 700,
+                  background: activeFilter === f.id ? '#4f46e5' : 'transparent',
+                  color: activeFilter === f.id ? '#fff' : '#64748b',
+                  cursor: 'pointer', transition: 'all 0.15s',
+                }}
+              >{f.label}</button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -93,12 +113,12 @@ const KnowledgeGraphViewer: React.FC = () => {
         {/* Animated Grid Background */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.08)_0%,transparent_70%)]"></div>
         
-        {/* Graph SVG Container */}
+        {/* Graph SVG Physics Container */}
         <div className="relative w-full max-w-[700px] h-[400px] flex items-center justify-center">
           <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
-            {/* Animated Laser Beams */}
+            {/* Animated Physics Connections */}
             <line x1="50%" y1="50%" x2="22%" y2="22%" stroke="rgba(6,182,212,0.4)" strokeWidth="2" className="laser-line" />
-            <line x1="50%" y1="50%" x2="78%" y2="22%" stroke="rgba(16,185,129,0.4)" strokeWidth="2" className="laser-line" />
+            <line x1="50%" y1="50%" x2="78%" y2="22%" stroke="rgba(239,68,68,0.4)" strokeWidth="2" className="laser-line" />
             <line x1="50%" y1="50%" x2="22%" y2="78%" stroke="rgba(245,158,11,0.4)" strokeWidth="2" className="laser-line" />
             <line x1="50%" y1="50%" x2="78%" y2="78%" stroke="rgba(139,92,246,0.4)" strokeWidth="2" className="laser-line" />
           </svg>
@@ -120,16 +140,16 @@ const KnowledgeGraphViewer: React.FC = () => {
             className="absolute left-[12%] top-[14%] w-24 h-24 bg-cyan-600/25 border-2 border-cyan-400 rounded-full flex flex-col items-center justify-center z-10 cursor-pointer hover:scale-110 transition-transform shadow-[0_0_20px_rgba(6,182,212,0.3)]"
           >
             <span className="text-xs font-bold text-cyan-200 text-center">IP Protection</span>
-            <span className="text-[10px] text-gray font-mono">IP65 / IP69K</span>
+            <span className="text-[10px] text-gray font-mono">IP65 / IP67</span>
           </div>
 
-          {/* Servo Drive */}
+          {/* ATEX Hazardous */}
           <div 
-            onClick={() => setSelectedNode(nodeDetailsMap['servo-drive'])}
-            className="absolute right-[12%] top-[14%] w-24 h-24 bg-emerald-600/25 border-2 border-emerald-400 rounded-full flex flex-col items-center justify-center z-10 cursor-pointer hover:scale-110 transition-transform shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+            onClick={() => setSelectedNode(nodeDetailsMap['atex'])}
+            className="absolute right-[12%] top-[14%] w-24 h-24 bg-red-600/25 border-2 border-red-400 rounded-full flex flex-col items-center justify-center z-10 cursor-pointer hover:scale-110 transition-transform shadow-[0_0_20px_rgba(239,68,68,0.3)]"
           >
-            <span className="text-xs font-bold text-emerald-200 text-center">Servo Drive</span>
-            <span className="text-[10px] text-gray font-mono">NEMA 34</span>
+            <span className="text-xs font-bold text-red-200 text-center">ATEX Explosion</span>
+            <span className="text-[10px] text-gray font-mono">Zone 1 / 21</span>
           </div>
 
           {/* Voltage */}

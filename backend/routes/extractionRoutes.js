@@ -1,10 +1,10 @@
 import express from 'express';
-import { structureProductFromText, enrichProductWithRAG, validateProduct } from '../services/aiStructuringService.js';
+import { executeMultiAgentPipeline } from '../services/multiAgentPipeline.js';
+import { enrichProductWithRAG, validateProduct } from '../services/aiStructuringService.js';
 import { addProduct, getCatalog } from './catalogRoutes.js';
 
 const router = express.Router();
 
-// Helper to extract text from uploaded file buffer
 async function extractTextFromFile(file) {
   const filename = file.originalname.toLowerCase();
   
@@ -19,7 +19,6 @@ async function extractTextFromFile(file) {
     }
   }
   
-  // For TXT, CSV, JSON — read as UTF-8
   return file.buffer.toString('utf8').substring(0, 5000);
 }
 
@@ -28,10 +27,7 @@ router.post('/text', async (req, res) => {
     const { rawText, productName } = req.body;
     if (!rawText) return res.status(400).json({ error: 'rawText is required' });
 
-    let product = await structureProductFromText(rawText, { productName });
-    product = await enrichProductWithRAG(product);
-    product = await validateProduct(product);
-    
+    let product = await executeMultiAgentPipeline(rawText, null, null, { productName });
     addProduct(product);
     res.json(product);
   } catch (error) {
@@ -45,12 +41,18 @@ router.post('/file', async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
     try {
-      const rawText = await extractTextFromFile(req.file);
-      
-      let product = await structureProductFromText(rawText, { productName: req.file.originalname });
-      product = await enrichProductWithRAG(product);
-      product = await validateProduct(product);
-      
+      const isImage = req.file.mimetype.startsWith('image/');
+      let rawText = '';
+      let imageBuffer = null;
+
+      if (isImage) {
+        imageBuffer = req.file.buffer;
+        rawText = `Uploaded schematic image: ${req.file.originalname}`;
+      } else {
+        rawText = await extractTextFromFile(req.file);
+      }
+
+      let product = await executeMultiAgentPipeline(rawText, imageBuffer, req.file.mimetype, { productName: req.file.originalname });
       addProduct(product);
       res.json(product);
     } catch (error) {
@@ -100,9 +102,7 @@ router.post('/batch', async (req, res) => {
     const results = [];
     
     for (const item of limitItems) {
-      let product = await structureProductFromText(item.rawText || '', { productName: item.productName });
-      product = await enrichProductWithRAG(product);
-      product = await validateProduct(product);
+      let product = await executeMultiAgentPipeline(item.rawText || '', null, null, { productName: item.productName });
       addProduct(product);
       results.push(product);
     }

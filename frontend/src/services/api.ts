@@ -18,6 +18,11 @@ export const api = {
     if (!res.ok) throw new Error('Failed to fetch product');
     return res.json();
   },
+  getSubstitutes: async (id: string): Promise<{ productId: string; sku: string; substitutes: any[] }> => {
+    const res = await fetch(`/api/catalog/${id}/substitutes`);
+    if (!res.ok) throw new Error('Failed to fetch vector substitutes');
+    return res.json();
+  },
   updateProduct: async (id: string, updates: Partial<Product>): Promise<Product> => {
     const res = await fetch(`/api/catalog/${id}`, {
       method: 'PATCH',

@@ -1,5 +1,5 @@
 export type ProductStatus = 'raw' | 'ai_enriched' | 'validated' | 'commerce_ready' | 'flagged';
-export type EnrichmentSource = 'llm_extraction' | 'rag_enrichment' | 'human_validated' | 'rule_engine';
+export type EnrichmentSource = 'llm_extraction' | 'rag_enrichment' | 'human_validated' | 'rule_engine' | 'gemini_extraction';
 export type AnomalySeverity = 'low' | 'medium' | 'high';
 
 export interface ProductAttribute {
@@ -51,6 +51,9 @@ export interface Product {
   attributes: ProductAttribute[];
   anomalies: ProductAnomaly[];
   auditLog: AuditLogEntry[];
+  certifications?: string[];
+  price?: string | number;
+  extractionMethod?: string;
 }
 
 export interface CatalogMetrics {
