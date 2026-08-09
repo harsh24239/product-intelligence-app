@@ -98,19 +98,19 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
           display: 'inline-flex',
           alignItems: 'center',
           gap: 6,
-          padding: '4px 10px',
-          borderRadius: 6,
-          fontSize: 12,
-          fontWeight: 700,
+          padding: '6px 12px',
+          borderRadius: 8,
+          fontSize: 13,
+          fontWeight: 800,
           color: cfg.color,
           background: cfg.bg,
           border: `1px solid ${cfg.border}`,
           whiteSpace: 'nowrap',
         }}
       >
-        {status === 'ai_enriched' && <Sparkles size={12} />}
-        {status === 'flagged' && <AlertCircle size={12} />}
-        {status === 'commerce_ready' && <span style={{ fontSize: 11 }}>✓</span>}
+        {status === 'ai_enriched' && <Sparkles size={14} />}
+        {status === 'flagged' && <AlertCircle size={14} />}
+        {status === 'commerce_ready' && <span style={{ fontSize: 13 }}>✓</span>}
         {cfg.label}
       </span>
     );
@@ -281,7 +281,7 @@ function ProductCard({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <StatusBadge status={product.status} />
         {product.anomalies.length > 0 && (
-          <span style={{ fontSize: 12, fontWeight: 800, color: '#FBBF24', background: 'rgba(245, 158, 11, 0.18)', border: '1px solid rgba(245, 158, 11, 0.45)', padding: '3px 9px', borderRadius: 6 }}>
+          <span style={{ fontSize: 13, fontWeight: 800, color: '#FBBF24', background: 'rgba(245, 158, 11, 0.18)', border: '1px solid rgba(245, 158, 11, 0.45)', padding: '5px 12px', borderRadius: 8 }}>
             {product.anomalies.length} Flag{product.anomalies.length > 1 ? 's' : ''}
           </span>
         )}
@@ -289,21 +289,21 @@ function ProductCard({
 
       {/* Product Name & Icon */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(59, 130, 246, 0.18)', border: '1px solid rgba(59, 130, 246, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Package size={22} color="#60A5FA" />
+        <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(56, 189, 248, 0.18)', border: '1px solid rgba(56, 189, 248, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Package size={24} color="#60A5FA" />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <h3 style={{ fontSize: 17, fontWeight: 800, color: hovered ? '#60A5FA' : '#FFFFFF', lineHeight: 1.35, transition: 'color 0.15s' }}>
+          <h3 style={{ fontSize: 20, fontWeight: 800, color: hovered ? '#60A5FA' : '#FFFFFF', lineHeight: 1.35, transition: 'color 0.15s' }}>
             {product.name}
           </h3>
-          <div style={{ fontSize: 13, color: '#60A5FA', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, marginTop: 4 }}>
+          <div style={{ fontSize: 15, color: '#38BDF8', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, marginTop: 4 }}>
             {product.sku}
           </div>
         </div>
       </div>
 
       {/* Manufacturer & Category */}
-      <div style={{ fontSize: 13, color: '#E2E8F0', fontWeight: 600, display: 'flex', gap: 6, alignItems: 'center' }}>
+      <div style={{ fontSize: 15, color: '#E2E8F0', fontWeight: 600, display: 'flex', gap: 6, alignItems: 'center' }}>
         <span>{product.manufacturer}</span>
         <span style={{ color: '#475569' }}>·</span>
         <span style={{ color: '#38BDF8', fontWeight: 700 }}>{product.category}</span>
@@ -311,18 +311,18 @@ function ProductCard({
 
       {/* AI-Extracted Specs Preview Chips */}
       {specPreview.length > 0 && (
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {specPreview.map(([key, val], idx) => (
             <span
               key={idx}
               style={{
-                fontSize: 11,
+                fontSize: 14,
                 fontWeight: 700,
                 color: '#CBD5E1',
-                background: '#0F172A',
-                border: '1px solid #334155',
-                padding: '3px 8px',
-                borderRadius: 6,
+                background: '#0B0F17',
+                border: '1px solid rgba(56, 189, 248, 0.35)',
+                padding: '6px 12px',
+                borderRadius: 8,
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
               }}
             >
@@ -333,15 +333,15 @@ function ProductCard({
       )}
 
       {/* Completeness Bar */}
-      <div style={{ paddingTop: 12, borderTop: '1px solid #334155' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+      <div style={{ paddingTop: 14, borderTop: '1px solid rgba(56, 189, 248, 0.25)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15, fontWeight: 700, marginBottom: 8 }}>
           <span style={{ color: '#94A3B8' }}>Data Completeness</span>
-          <span style={{ color: product.completeness >= 80 ? '#34D399' : '#FFFFFF', fontWeight: 800 }}>
+          <span style={{ color: product.completeness >= 80 ? '#34D399' : '#FFFFFF', fontWeight: 800, fontSize: 17 }}>
             {product.completeness}%
           </span>
         </div>
-        <div style={{ height: 6, background: '#0F172A', borderRadius: 3, overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: `${product.completeness}%`, background: product.completeness >= 80 ? '#10B981' : '#3B82F6', borderRadius: 3, transition: 'width 0.6s ease' }} />
+        <div style={{ height: 8, background: '#0B0F17', borderRadius: 4, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${product.completeness}%`, background: product.completeness >= 80 ? '#10B981' : '#3B82F6', borderRadius: 4, transition: 'width 0.6s ease' }} />
         </div>
       </div>
 
