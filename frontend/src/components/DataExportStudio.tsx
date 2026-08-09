@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Download, FileJson, FileSpreadsheet, FileText, BarChart3, Check, Code2, Info, Copy, CheckSquare, Sparkles, SlidersHorizontal, ShieldCheck, Database } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { generateProductDatasheet } from '../services/pdfGenerator';
 
 const DataExportStudio: React.FC = () => {
   const [downloading, setDownloading] = useState<string | null>(null);
@@ -14,7 +15,7 @@ const DataExportStudio: React.FC = () => {
   const [includeProvenance, setIncludeProvenance] = useState(true);
   const [includeAnomalies, setIncludeAnomalies] = useState(true);
 
-  const handleExport = (id: string) => {
+  const handleExport = async (id: string) => {
     setDownloading(id);
     setExportStep('Packaging 12,450 enriched records...');
     
@@ -26,7 +27,87 @@ const DataExportStudio: React.FC = () => {
       setExportStep('Generating SHA-256 integrity checksum...');
     }, 1200);
 
-    setTimeout(() => {
+    setTimeout(async () => {
+      // Trigger actual browser file download based on format ID
+      if (id === 'json') {
+        const jsonPayload = {
+          exportMetadata: {
+            source: "IntelliProduct AI Intelligence Platform",
+            timestamp: new Date().toISOString(),
+            totalRecords: 12450,
+            schemaVersion: "2.4.0",
+            isoComplianceVerified: includeIso,
+            provenanceCitationsIncluded: includeProvenance,
+          },
+          sampleEnrichedProducts: [
+            {
+              sku: "MX-1000-V2",
+              name: "Industrial Servo Motor MX-1000",
+              manufacturer: "Parker Hannifin",
+              category: "Motors & Drives",
+              status: "COMMERCE_READY",
+              completeness: 98,
+              attributes: [
+                { key: "maxTorque", value: "15.0 Nm", confidence: includeConfidence ? 0.984 : undefined, isoStandard: includeIso ? "ISO 8608" : undefined },
+                { key: "ipRating", value: "IP65", confidence: includeConfidence ? 0.962 : undefined, isoStandard: includeIso ? "IEC 60529" : undefined },
+                { key: "voltage", value: "400V 3-Phase", confidence: includeConfidence ? 0.991 : undefined, isoStandard: includeIso ? "UL 508A" : undefined },
+              ],
+              anomalies: includeAnomalies ? [{ field: "maxTorque", note: "10x typo auto-corrected from 150 Nm to 15.0 Nm" }] : []
+            }
+          ]
+        };
+        const blob = new Blob([JSON.stringify(jsonPayload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'product_intelligence_catalog_export.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      } else if (id === 'csv') {
+        let csvContent = 'SKU,Product Name,Manufacturer,Category,Status,Completeness,Attribute,Value,ISO Standard,Confidence\n';
+        csvContent += `MX-1000-V2,Industrial Servo Motor MX-1000,Parker Hannifin,Motors & Drives,COMMERCE_READY,98%,maxTorque,15.0 Nm,${includeIso ? 'ISO 8608' : 'N/A'},${includeConfidence ? '98.4%' : 'N/A'}\n`;
+        csvContent += `MX-1000-V2,Industrial Servo Motor MX-1000,Parker Hannifin,Motors & Drives,COMMERCE_READY,98%,ipRating,IP65,${includeIso ? 'IEC 60529' : 'N/A'},${includeConfidence ? '96.2%' : 'N/A'}\n`;
+        csvContent += `MX-1000-V2,Industrial Servo Motor MX-1000,Parker Hannifin,Motors & Drives,COMMERCE_READY,98%,voltage,400V 3-Phase,${includeIso ? 'UL 508A' : 'N/A'},${includeConfidence ? '99.1%' : 'N/A'}\n`;
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'product_intelligence_catalog_export.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      } else if (id === 'pdf') {
+        const sampleProduct = {
+          id: 'prod-0',
+          name: 'Industrial Servo Motor MX-1000',
+          sku: 'MX-1000-V2',
+          manufacturer: 'Parker Hannifin',
+          status: 'commerce_ready' as const,
+          category: 'Motors & Drives',
+          completeness: 98,
+          lastUpdated: new Date().toISOString(),
+          specs: {
+            power: '2.5 kW',
+            voltage: '400V AC',
+            speed: '1450 RPM',
+            torque: '15.0 Nm',
+            ipRating: 'IP65',
+            weight: '18.5 kg',
+            dimensions: '250x200x300mm',
+            material: 'Cast Iron Housing',
+            color: null,
+            certification: 'IEC 60034-30-1'
+          },
+          attributes: [
+            { key: 'maxTorque', value: '15.0 Nm', confidence: 98.4, source: 'Supplier Catalog Q3.pdf', sourceQuote: 'Continuous torque rating 15.0 Nm', enrichedBy: 'rag_enrichment' as const, flagged: false },
+            { key: 'ipRating', value: 'IP65', confidence: 96.2, source: 'IEC 60529 Table 4', sourceQuote: 'Washdown protected enclosure', enrichedBy: 'rag_enrichment' as const, flagged: false }
+          ],
+          anomalies: [],
+          auditLog: []
+        };
+        await generateProductDatasheet(sampleProduct);
+      }
+
       setDownloading(null);
       setExportStep(null);
       setDownloaded(id);
