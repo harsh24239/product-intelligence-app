@@ -308,22 +308,22 @@ function App() {
                         gap: 6,
                         padding: '14px 16px',
                         borderRadius: 10,
-                        background: '#0D1117',
-                        border: '1px solid #30363D',
+                        background: '#0B0F17',
+                        border: '1px solid rgba(59, 130, 246, 0.35)',
                       }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontSize: 11, fontWeight: 700, color: log.color, background: log.bg, border: `1px solid ${log.border}`, padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                           {log.tag}
                         </span>
-                        <span style={{ fontSize: 12, color: '#8B949E', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>
+                        <span style={{ fontSize: 12, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>
                           {log.time}
                         </span>
                       </div>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: '#F0F6FC', marginTop: 2 }}>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', marginTop: 2 }}>
                         {log.msg}
                       </div>
-                      <div style={{ fontSize: 13, color: '#C9D1D9', lineHeight: 1.5 }}>
+                      <div style={{ fontSize: 13, color: '#E2E8F0', lineHeight: 1.5 }}>
                         {log.sub}
                       </div>
                     </div>
