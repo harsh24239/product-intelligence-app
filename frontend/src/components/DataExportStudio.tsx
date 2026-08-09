@@ -1,19 +1,40 @@
 import React, { useState } from 'react';
-import { Download, FileJson, FileSpreadsheet, FileText, BarChart3, Check, Code2, Info, Copy, Play } from 'lucide-react';
+import { Download, FileJson, FileSpreadsheet, FileText, BarChart3, Check, Code2, Info, Copy, CheckSquare, Sparkles, SlidersHorizontal, ShieldCheck } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 const DataExportStudio: React.FC = () => {
   const [downloading, setDownloading] = useState<string | null>(null);
   const [downloaded, setDownloaded] = useState<string | null>(null);
-  const [apiExecuted, setApiExecuted] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [exportStep, setExportStep] = useState<string | null>(null);
+
+  // Export Customization Toggles
+  const [includeConfidence, setIncludeConfidence] = useState(true);
+  const [includeIso, setIncludeIso] = useState(true);
+  const [includeProvenance, setIncludeProvenance] = useState(true);
+  const [includeAnomalies, setIncludeAnomalies] = useState(true);
 
   const handleExport = (id: string) => {
     setDownloading(id);
+    setExportStep('Packaging 12,450 enriched records...');
+    
+    setTimeout(() => {
+      setExportStep('Injecting ISO/IEC compliance metadata...');
+    }, 600);
+
+    setTimeout(() => {
+      setExportStep('Generating SHA-256 integrity checksum...');
+    }, 1200);
+
     setTimeout(() => {
       setDownloading(null);
+      setExportStep(null);
       setDownloaded(id);
-      setTimeout(() => setDownloaded(null), 3000);
-    }, 1500);
+      try {
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+      } catch {}
+      setTimeout(() => setDownloaded(null), 3500);
+    }, 1800);
   };
 
   const handleCopy = () => {
@@ -34,6 +55,7 @@ const DataExportStudio: React.FC = () => {
       bg: 'rgba(59,130,246,0.18)',
       border: 'rgba(59,130,246,0.4)',
       badge: 'Commerce-Ready',
+      targetSystem: 'JSON Feed / Webhooks',
     },
     {
       id: 'csv',
@@ -46,6 +68,7 @@ const DataExportStudio: React.FC = () => {
       bg: 'rgba(16,185,129,0.18)',
       border: 'rgba(16,185,129,0.4)',
       badge: 'ERP Ready',
+      targetSystem: 'SAP / Oracle ERP',
     },
     {
       id: 'pdf',
@@ -58,6 +81,7 @@ const DataExportStudio: React.FC = () => {
       bg: 'rgba(245,158,11,0.18)',
       border: 'rgba(245,158,11,0.4)',
       badge: 'With QR Code',
+      targetSystem: 'Customer Portal',
     },
     {
       id: 'api',
@@ -70,26 +94,57 @@ const DataExportStudio: React.FC = () => {
       bg: 'rgba(139,92,246,0.18)',
       border: 'rgba(139,92,246,0.4)',
       badge: 'Live Stream',
+      targetSystem: 'Microservices / PIM',
     },
   ];
 
-  const sampleJsonResponse = `{
-  "sku": "MX-1000-V2",
-  "productName": "Industrial Servo Motor MX-1000",
-  "manufacturer": "Parker Hannifin",
-  "status": "COMMERCE_READY",
-  "aiConfidence": 0.984,
-  "provenance": {
-    "sourceDocument": "Supplier_Catalog_Q3.pdf",
-    "extractedPage": 14,
-    "model": "Gemini-1.5-VLM"
-  },
-  "attributes": {
-    "maxTorque": { "value": "15.0 Nm", "status": "HUMAN_APPROVED", "isoStandard": "ISO 8608" },
-    "ipRating": { "value": "IP65", "status": "RAG_INFERRED", "isoStandard": "IEC 60529" },
-    "voltage": { "value": "400V 3-Phase", "status": "EXTRACTED", "isoStandard": "UL 508A" }
-  }
-}`;
+  // Dynamic payload generator based on toggle selections
+  const generateDynamicPayload = () => {
+    let payload: any = {
+      sku: "MX-1000-V2",
+      productName: "Industrial Servo Motor MX-1000",
+      manufacturer: "Parker Hannifin",
+      status: "COMMERCE_READY",
+    };
+
+    if (includeConfidence) {
+      payload.aiConfidence = 0.984;
+    }
+
+    if (includeProvenance) {
+      payload.provenance = {
+        sourceDocument: "Supplier_Catalog_Q3.pdf",
+        extractedPage: 14,
+        model: "Gemini-1.5-VLM",
+      };
+    }
+
+    payload.attributes = {
+      maxTorque: {
+        value: "15.0 Nm",
+        status: "HUMAN_APPROVED",
+        ...(includeIso ? { isoStandard: "ISO 8608" } : {}),
+      },
+      ipRating: {
+        value: "IP65",
+        status: "RAG_INFERRED",
+        ...(includeIso ? { isoStandard: "IEC 60529" } : {}),
+      },
+      voltage: {
+        value: "400V 3-Phase",
+        status: "EXTRACTED",
+        ...(includeIso ? { isoStandard: "UL 508A" } : {}),
+      },
+    };
+
+    if (includeAnomalies) {
+      payload.auditFlags = [
+        { field: "maxTorque", anomaly: "Unit conversion typo fixed (150 Nm -> 15.0 Nm)", resolvedBy: "AI Agent + QA" }
+      ];
+    }
+
+    return JSON.stringify(payload, null, 2);
+  };
 
   return (
     <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -99,34 +154,86 @@ const DataExportStudio: React.FC = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
             <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(59, 130, 246, 0.18)', border: '1px solid rgba(59, 130, 246, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Download size={22} color="#60A5FA" />
+              <Download size={24} color="#60A5FA" />
             </div>
             <div>
               <h1 style={{ fontSize: 26, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.4px' }}>
-                Export Structured Product Data
+                Export & Data Handoff Studio
               </h1>
               <div style={{ fontSize: 14, color: '#CBD5E1' }}>
-                Multi-format publishing pipeline, REST API distribution, and ISO provenance tracking
+                Multi-format publishing pipeline, REST API distribution, and customizable ISO payload builder
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Quick KPI badge */}
+        <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <ShieldCheck size={20} color="#34D399" />
+          <div>
+            <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Catalog Readiness</div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>12,450 Verified Records</div>
           </div>
         </div>
       </div>
 
       {/* Explainer Banner */}
       <div style={{
-        padding: '16px 20px',
-        background: 'rgba(59, 130, 246, 0.12)',
+        padding: '18px 22px',
+        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%)',
         border: '1px solid rgba(59, 130, 246, 0.35)',
         borderRadius: 14,
         display: 'flex',
         alignItems: 'flex-start',
-        gap: 12,
+        gap: 14,
       }}>
-        <Info size={18} color="#60A5FA" style={{ flexShrink: 0, marginTop: 2 }} />
-        <div style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6 }}>
-          <strong style={{ color: '#FFFFFF' }}>AI Pipeline Handoff:</strong>{' '}
-          The multi-agent pipeline extracts product attributes from unstructured PDFs, normalizes specs via ISO/IEC knowledge graph RAG, and outputs clean, commerce-ready records available for ERP ingestion or direct API query.
+        <Info size={20} color="#60A5FA" style={{ flexShrink: 0, marginTop: 2 }} />
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
+            Enterprise Data Handoff Pipeline
+          </div>
+          <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6 }}>
+            The multi-agent pipeline turns unstructured PDFs into fully traceable, commerce-ready product data. Use this studio to customize JSON metadata tags, export spreadsheet tables for SAP/Oracle ERP, or distribute live records via REST API.
+          </p>
+        </div>
+      </div>
+
+      {/* Payload Customization Controls */}
+      <div className="card" style={{ padding: 22, background: '#1E293B', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <SlidersHorizontal size={18} color="#C084FC" />
+          <h3 style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>Export Payload Customization Options</h3>
+        </div>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+          {[
+            { label: 'AI Confidence Scores', state: includeConfidence, set: setIncludeConfidence, color: '#60A5FA' },
+            { label: 'ISO/IEC Mapped Standards', state: includeIso, set: setIncludeIso, color: '#38BDF8' },
+            { label: 'Document Provenance (PDF Citations)', state: includeProvenance, set: setIncludeProvenance, color: '#C084FC' },
+            { label: 'Audit Anomaly Notes', state: includeAnomalies, set: setIncludeAnomalies, color: '#F59E0B' },
+          ].map((toggle, idx) => (
+            <button
+              key={idx}
+              onClick={() => toggle.set(!toggle.state)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '8px 14px',
+                borderRadius: 8,
+                fontSize: 13,
+                fontWeight: 700,
+                background: toggle.state ? 'rgba(59, 130, 246, 0.18)' : '#0F172A',
+                color: toggle.state ? '#FFFFFF' : '#94A3B8',
+                border: `1px solid ${toggle.state ? '#3B82F6' : '#334155'}`,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <CheckSquare size={16} color={toggle.state ? toggle.color : '#64748B'} />
+              {toggle.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -151,44 +258,54 @@ const DataExportStudio: React.FC = () => {
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: opt.bg, border: `1px solid ${opt.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Icon size={22} color={opt.color} />
                 </div>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
                     <h3 style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>{opt.title}</h3>
                     <span style={{ fontSize: 10, fontWeight: 800, background: opt.bg, color: opt.color, border: `1px solid ${opt.border}`, padding: '2px 8px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                       {opt.badge}
                     </span>
                   </div>
-                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#94A3B8', background: '#0F172A', border: '1px solid #334155', padding: '2px 8px', borderRadius: 6 }}>
-                    {opt.format}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#94A3B8', background: '#0F172A', border: '1px solid #334155', padding: '2px 8px', borderRadius: 6 }}>
+                      {opt.format}
+                    </span>
+                    <span style={{ fontSize: 11, color: '#64748B' }}>Target: <strong style={{ color: '#CBD5E1' }}>{opt.targetSystem}</strong></span>
+                  </div>
                 </div>
               </div>
 
-              <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6, marginBottom: 16, flex: 1 }}>{opt.desc}</p>
+              <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6, marginBottom: 18, flex: 1 }}>{opt.desc}</p>
+
+              {/* Progress step feedback */}
+              {isDownloading && exportStep && (
+                <div style={{ marginBottom: 12, padding: '8px 12px', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, fontSize: 12, color: '#60A5FA', fontFamily: 'JetBrains Mono, monospace', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Sparkles size={14} className="animate-spin" /> {exportStep}
+                </div>
+              )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid #334155' }}>
                 <span style={{ fontSize: 12, color: '#94A3B8', fontWeight: 600 }}>{opt.size}</span>
                 {isAPI ? (
                   <button
                     className="btn btn-secondary"
-                    onClick={() => setApiExecuted(!apiExecuted)}
-                    style={{ fontSize: 13, padding: '7px 16px', fontWeight: 800 }}
+                    onClick={handleCopy}
+                    style={{ fontSize: 13, padding: '8px 16px', fontWeight: 800 }}
                   >
-                    <Play size={14} color="#8B5CF6" /> {apiExecuted ? 'Hide API Payload' : 'Test Endpoint'}
+                    {copied ? <><Check size={15} color="#34D399" /> Copied Curl</> : <><Copy size={15} color="#8B5CF6" /> Copy API Curl</>}
                   </button>
                 ) : (
                   <button
                     className={`btn ${isDownloaded ? 'btn-accent' : 'btn-primary'}`}
                     onClick={() => handleExport(opt.id)}
                     disabled={isDownloading || isDownloaded}
-                    style={{ fontSize: 13, padding: '7px 16px', fontWeight: 800 }}
+                    style={{ fontSize: 13, padding: '8px 18px', fontWeight: 800 }}
                   >
                     {isDownloading ? (
-                      <><span className="animate-spin" style={{ display: 'inline-block' }}>⟳</span> Generating...</>
+                      <><span className="animate-spin" style={{ display: 'inline-block' }}>⟳</span> Exporting...</>
                     ) : isDownloaded ? (
                       <><Check size={15} /> Downloaded</>
                     ) : (
-                      <><Download size={15} /> Download</>
+                      <><Download size={15} /> Export {opt.format}</>
                     )}
                   </button>
                 )}
@@ -198,23 +315,19 @@ const DataExportStudio: React.FC = () => {
         })}
       </div>
 
-      {/* REST API Live Response Payload Inspector (Collapsible / Interactive) */}
+      {/* REST API Live Response Payload Inspector */}
       <div className="card" style={{ padding: 24, background: '#1E293B' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <Code2 size={22} color="#8B5CF6" />
             <div>
-              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>REST API Payload Response Inspector</h3>
-              <div style={{ fontSize: 13, color: '#94A3B8' }}>Real-time JSON output format returned to downstream ERP/PIM systems</div>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>Live JSON Output Payload Inspector</h3>
+              <div style={{ fontSize: 13, color: '#94A3B8' }}>Updates in real-time as you toggle export payload options above</div>
             </div>
           </div>
-          <button
-            className="btn btn-secondary"
-            onClick={handleCopy}
-            style={{ fontSize: 13, padding: '6px 14px' }}
-          >
-            {copied ? <><Check size={14} color="#34D399" /> Copied Curl</> : <><Copy size={14} /> Copy Curl</>}
-          </button>
+          <span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 10px', borderRadius: 6, fontFamily: 'JetBrains Mono, monospace' }}>
+            ● Dynamic Preview
+          </span>
         </div>
 
         <pre style={{
@@ -228,7 +341,7 @@ const DataExportStudio: React.FC = () => {
           overflowX: 'auto',
           fontFamily: 'JetBrains Mono, monospace',
         }}>
-          {sampleJsonResponse}
+          {generateDynamicPayload()}
         </pre>
       </div>
 
@@ -238,7 +351,7 @@ const DataExportStudio: React.FC = () => {
           <BarChart3 size={20} color="#8B5CF6" />
           <span style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>Current Catalog Export Summary</span>
           <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 10px', borderRadius: 6 }}>
-            ✓ Export Pipeline Ready
+            ✓ Ready for Downstream PIM/ERP
           </span>
         </div>
 
