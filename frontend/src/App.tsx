@@ -336,74 +336,69 @@ function App() {
             <div>
               <div
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
+                  fontSize: 15,
+                  fontWeight: 800,
                   textTransform: 'uppercase',
                   letterSpacing: '0.06em',
-                  color: 'var(--text-muted)',
-                  marginBottom: 12,
+                  color: '#FFFFFF',
+                  marginBottom: 14,
                 }}
               >
-              Start Here — Try the AI Pipeline
+                Start Here — Try the AI Pipeline
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
                 {[
                   {
                     view: 'ingest' as View,
                     label: 'Step 1: Upload & Extract',
                     desc: 'Upload a product PDF or spec sheet',
-                    color: 'var(--blue)',
-                    bg: 'var(--blue-dim)',
-                    border: 'var(--blue-border)',
                   },
                   {
                     view: 'catalog' as View,
                     label: 'Step 2: Browse Catalog',
                     desc: 'View AI-enriched product records',
-                    color: '#8B5CF6',
-                    bg: 'var(--violet-dim)',
-                    border: 'var(--violet-border)',
                   },
                   {
                     view: 'validate' as View,
                     label: 'Step 3: Human Validation',
                     desc: 'Review anomalies and approve records',
-                    color: 'var(--amber)',
-                    bg: 'var(--amber-dim)',
-                    border: 'var(--amber-border)',
                   },
                   {
                     view: 'knowledge' as View,
                     label: 'Knowledge Graph',
                     desc: 'Visual product & standard relationships',
-                    color: 'var(--green)',
-                    bg: 'var(--green-dim)',
-                    border: 'var(--green-border)',
                   },
                 ].map((action) => (
                   <button
                     key={action.view}
                     onClick={() => navigateTo(action.view)}
                     style={{
-                      background: action.bg,
-                      border: `1px solid ${action.border}`,
-                      borderRadius: 10,
-                      padding: '14px 16px',
+                      background: '#1B2433',
+                      border: '1px solid rgba(56, 189, 248, 0.35)',
+                      borderRadius: 14,
+                      padding: '18px 20px',
                       textAlign: 'left',
                       cursor: 'pointer',
-                      transition: 'transform 0.15s ease',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 6,
                     }}
                     onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(56, 189, 248, 0.7)';
                       (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
                     }}
                     onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(56, 189, 248, 0.35)';
                       (e.currentTarget as HTMLButtonElement).style.transform = 'none';
                     }}
                   >
-                    <div style={{ fontSize: 13, fontWeight: 700, color: action.color, marginBottom: 4 }}>
+                    <div style={{ fontSize: 16, fontWeight: 800, color: '#60A5FA' }}>
                       {action.label}
                     </div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{action.desc}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#F1F5F9', lineHeight: 1.4 }}>
+                      {action.desc}
+                    </div>
                   </button>
                 ))}
               </div>
