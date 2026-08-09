@@ -313,29 +313,29 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                 id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id as any)}
                 style={{
-                  padding: '10px 16px',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: activeTab === tab.id ? 'var(--blue)' : 'var(--text-muted)',
-                  borderBottom: `2px solid ${activeTab === tab.id ? 'var(--blue)' : 'transparent'}`,
+                  padding: '12px 20px',
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: activeTab === tab.id ? '#6366F1' : 'var(--text-sub)',
+                  borderBottom: `3px solid ${activeTab === tab.id ? '#6366F1' : 'transparent'}`,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.15s',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 6,
+                  gap: 8,
                 }}
               >
                 {tab.label}
                 {tab.count !== null && (
                   <span
                     style={{
-                      fontSize: 10, fontWeight: 700,
-                      background: activeTab === tab.id ? 'var(--blue-dim)' : 'rgba(255,255,255,0.06)',
-                      color: activeTab === tab.id ? 'var(--blue)' : 'var(--text-muted)',
+                      fontSize: 11, fontWeight: 800,
+                      background: activeTab === tab.id ? 'var(--blue-dim)' : 'rgba(255,255,255,0.08)',
+                      color: activeTab === tab.id ? '#818CF8' : 'var(--text-muted)',
                       border: `1px solid ${activeTab === tab.id ? 'var(--blue-border)' : 'var(--border)'}`,
-                      padding: '1px 5px',
-                      borderRadius: 4,
+                      padding: '2px 7px',
+                      borderRadius: 6,
                     }}
                   >
                     {tab.count}
@@ -364,33 +364,33 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                     key={key}
                     className="card"
                     style={{
-                      padding: '12px 14px',
+                      padding: '14px 16px',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      gap: 8,
+                      gap: 10,
                     }}
                   >
                     <span
                       style={{
-                        fontSize: 11,
-                        color: 'var(--text-muted)',
+                        fontSize: 13,
+                        color: 'var(--text-sub)',
                         textTransform: 'capitalize',
-                        fontWeight: 600,
+                        fontWeight: 700,
                       }}
                     >
                       {key.replace(/([A-Z])/g, ' $1').trim()}
                     </span>
                     <span
                       style={{
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: value ? 'var(--text)' : 'var(--text-muted)',
+                        fontSize: 13,
+                        fontWeight: 800,
+                        color: value ? '#FFFFFF' : 'var(--text-muted)',
                         fontFamily: 'JetBrains Mono, monospace',
-                        background: 'var(--bg)',
+                        background: 'var(--bg-surface)',
                         border: '1px solid var(--border)',
-                        padding: '3px 8px',
-                        borderRadius: 4,
+                        padding: '4px 10px',
+                        borderRadius: 6,
                         flexShrink: 0,
                         fontStyle: value ? 'normal' : 'italic',
                       }}

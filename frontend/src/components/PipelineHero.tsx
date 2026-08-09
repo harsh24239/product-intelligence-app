@@ -86,44 +86,46 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: 6,
-              background: 'rgba(59,130,246,0.08)',
-              border: '1px solid rgba(59,130,246,0.2)',
-              borderRadius: 6,
-              padding: '3px 10px',
-              fontSize: 11,
-              fontWeight: 600,
-              color: '#3B82F6',
-              marginBottom: 14,
+              gap: 8,
+              background: 'var(--blue-dim)',
+              border: '1px solid var(--blue-border)',
+              borderRadius: 8,
+              padding: '6px 14px',
+              fontSize: 13,
+              fontWeight: 800,
+              color: '#818CF8',
+              marginBottom: 16,
               letterSpacing: '0.04em',
               textTransform: 'uppercase',
             }}
           >
-            <Zap size={11} />
+            <Zap size={14} color="#818CF8" />
             UniHack 2026 · AI Product Intelligence Challenge
           </div>
 
           <h1
             style={{
-              fontSize: 26,
+              fontSize: 34,
               fontWeight: 800,
-              color: 'var(--text)',
-              letterSpacing: '-0.5px',
-              lineHeight: 1.25,
-              marginBottom: 10,
+              color: '#FFFFFF',
+              letterSpacing: '-0.8px',
+              lineHeight: 1.2,
+              marginBottom: 14,
             }}
           >
             AI-Powered Product Intelligence
             <br />
-            <span style={{ color: '#3B82F6' }}>for Industrial Commerce</span>
+            <span style={{ background: 'linear-gradient(135deg, #6366F1 0%, #38BDF8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              for Industrial Commerce
+            </span>
           </h1>
 
-          <p style={{ fontSize: 14, color: 'var(--text-sub)', maxWidth: 560, lineHeight: 1.65, marginBottom: 20 }}>
+          <p style={{ fontSize: 16, color: 'var(--text-body)', maxWidth: 620, lineHeight: 1.7, marginBottom: 24 }}>
             Industrial companies manage thousands of product records across scattered
-            catalogs, supplier PDFs, and spec sheets. This system uses a{' '}
-            <strong style={{ color: 'var(--text)' }}>3-agent AI pipeline</strong> to
-            automatically extract, enrich, and validate product data — turning raw,
-            unstructured text into commerce-ready structured records.
+            catalogs, supplier PDFs, and spec sheets. This platform deploys a{' '}
+            <strong style={{ color: '#FFFFFF', fontWeight: 800 }}>3-agent AI pipeline</strong> to
+            automatically extract, enrich, and validate product specifications — converting raw
+            unstructured documents into commerce-ready intelligence.
           </p>
 
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -191,14 +193,14 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
               style={{
                 background: 'var(--bg-surface)',
                 border: '1px solid var(--border)',
-                borderRadius: 10,
-                padding: '12px 14px',
+                borderRadius: 12,
+                padding: '16px 18px',
               }}
             >
-              <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.5px' }}>
+              <div style={{ fontSize: 24, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px' }}>
                 {m.value}
               </div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3, lineHeight: 1.4 }}>
+              <div style={{ fontSize: 13, color: 'var(--text-sub)', marginTop: 4, lineHeight: 1.4, fontWeight: 500 }}>
                 {m.label}
               </div>
             </div>
