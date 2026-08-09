@@ -442,7 +442,7 @@ function App() {
         return <IngestionStudio onExtractSuccess={() => navigateTo('catalog')} />;
 
       case 'export':
-        return <DataExportStudio />;
+        return <DataExportStudio products={products} />;
 
       case 'knowledge':
         return <KnowledgeGraphViewer />;

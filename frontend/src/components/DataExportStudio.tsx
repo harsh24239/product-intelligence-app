@@ -3,7 +3,13 @@ import { Download, FileJson, FileSpreadsheet, FileText, BarChart3, Check, Code2,
 import confetti from 'canvas-confetti';
 import { generateProductDatasheet } from '../services/pdfGenerator';
 
-const DataExportStudio: React.FC = () => {
+import { Product } from '../types/product';
+
+interface DataExportStudioProps {
+  products?: Product[];
+}
+
+const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) => {
   const [downloading, setDownloading] = useState<string | null>(null);
   const [downloaded, setDownloaded] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -17,7 +23,8 @@ const DataExportStudio: React.FC = () => {
 
   const handleExport = async (id: string) => {
     setDownloading(id);
-    setExportStep('Packaging 12,450 enriched records...');
+    const catalogCount = products.length > 0 ? products.length : 16;
+    setExportStep(`Packaging ${catalogCount} catalog product records...`);
     
     setTimeout(() => {
       setExportStep('Injecting ISO/IEC compliance metadata...');
@@ -28,57 +35,10 @@ const DataExportStudio: React.FC = () => {
     }, 1200);
 
     setTimeout(async () => {
-      // Trigger actual browser file download based on format ID
-      if (id === 'json') {
-        const jsonPayload = {
-          exportMetadata: {
-            source: "IntelliProduct AI Intelligence Platform",
-            timestamp: new Date().toISOString(),
-            totalRecords: 12450,
-            schemaVersion: "2.4.0",
-            isoComplianceVerified: includeIso,
-            provenanceCitationsIncluded: includeProvenance,
-          },
-          sampleEnrichedProducts: [
-            {
-              sku: "MX-1000-V2",
-              name: "Industrial Servo Motor MX-1000",
-              manufacturer: "Parker Hannifin",
-              category: "Motors & Drives",
-              status: "COMMERCE_READY",
-              completeness: 98,
-              attributes: [
-                { key: "maxTorque", value: "15.0 Nm", confidence: includeConfidence ? 0.984 : undefined, isoStandard: includeIso ? "ISO 8608" : undefined },
-                { key: "ipRating", value: "IP65", confidence: includeConfidence ? 0.962 : undefined, isoStandard: includeIso ? "IEC 60529" : undefined },
-                { key: "voltage", value: "400V 3-Phase", confidence: includeConfidence ? 0.991 : undefined, isoStandard: includeIso ? "UL 508A" : undefined },
-              ],
-              anomalies: includeAnomalies ? [{ field: "maxTorque", note: "10x typo auto-corrected from 150 Nm to 15.0 Nm" }] : []
-            }
-          ]
-        };
-        const blob = new Blob([JSON.stringify(jsonPayload, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'product_intelligence_catalog_export.json';
-        a.click();
-        URL.revokeObjectURL(url);
-      } else if (id === 'csv') {
-        let csvContent = 'SKU,Product Name,Manufacturer,Category,Status,Completeness,Attribute,Value,ISO Standard,Confidence\n';
-        csvContent += `MX-1000-V2,Industrial Servo Motor MX-1000,Parker Hannifin,Motors & Drives,COMMERCE_READY,98%,maxTorque,15.0 Nm,${includeIso ? 'ISO 8608' : 'N/A'},${includeConfidence ? '98.4%' : 'N/A'}\n`;
-        csvContent += `MX-1000-V2,Industrial Servo Motor MX-1000,Parker Hannifin,Motors & Drives,COMMERCE_READY,98%,ipRating,IP65,${includeIso ? 'IEC 60529' : 'N/A'},${includeConfidence ? '96.2%' : 'N/A'}\n`;
-        csvContent += `MX-1000-V2,Industrial Servo Motor MX-1000,Parker Hannifin,Motors & Drives,COMMERCE_READY,98%,voltage,400V 3-Phase,${includeIso ? 'UL 508A' : 'N/A'},${includeConfidence ? '99.1%' : 'N/A'}\n`;
-        
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'product_intelligence_catalog_export.csv';
-        a.click();
-        URL.revokeObjectURL(url);
-      } else if (id === 'pdf') {
-        const sampleProduct = {
-          id: 'prod-0',
+      // Build dataset from actual catalog products
+      const targetProducts = products.length > 0 ? products : [
+        {
+          id: 'prod-1',
           name: 'Industrial Servo Motor MX-1000',
           sku: 'MX-1000-V2',
           manufacturer: 'Parker Hannifin',
@@ -86,26 +46,104 @@ const DataExportStudio: React.FC = () => {
           category: 'Motors & Drives',
           completeness: 98,
           lastUpdated: new Date().toISOString(),
-          specs: {
-            power: '2.5 kW',
-            voltage: '400V AC',
-            speed: '1450 RPM',
-            torque: '15.0 Nm',
-            ipRating: 'IP65',
-            weight: '18.5 kg',
-            dimensions: '250x200x300mm',
-            material: 'Cast Iron Housing',
-            color: null,
-            certification: 'IEC 60034-30-1'
-          },
+          specs: { material: 'Cast Iron', dimensions: '250x200x300mm', weight: '18.5kg', color: null, voltage: '400V AC', ipRating: 'IP65', certification: 'IEC 60034-30-1' },
           attributes: [
-            { key: 'maxTorque', value: '15.0 Nm', confidence: 98.4, source: 'Supplier Catalog Q3.pdf', sourceQuote: 'Continuous torque rating 15.0 Nm', enrichedBy: 'rag_enrichment' as const, flagged: false },
-            { key: 'ipRating', value: 'IP65', confidence: 96.2, source: 'IEC 60529 Table 4', sourceQuote: 'Washdown protected enclosure', enrichedBy: 'rag_enrichment' as const, flagged: false }
+            { key: 'maxTorque', value: '15.0 Nm', confidence: 98.4, source: 'Datasheet.pdf', sourceQuote: '15.0 Nm rating', enrichedBy: 'rag_enrichment' as const, flagged: false },
+            { key: 'ipRating', value: 'IP65', confidence: 96.2, source: 'IEC 60529', sourceQuote: 'IP65 washdown', enrichedBy: 'rag_enrichment' as const, flagged: false }
           ],
           anomalies: [],
           auditLog: []
+        },
+        {
+          id: 'prod-2',
+          name: 'Hydraulic Relief Valve V-2200',
+          sku: 'SKU-1001',
+          manufacturer: 'Bosch Rexroth',
+          status: 'validated' as const,
+          category: 'Hydraulics',
+          completeness: 88,
+          lastUpdated: new Date().toISOString(),
+          specs: { material: 'Steel', dimensions: '150x120x90mm', weight: '4.2kg', color: null, voltage: '24V DC', ipRating: 'IP67', certification: 'ISO 4401' },
+          attributes: [
+            { key: 'maxPressure', value: '350 Bar', confidence: 94.1, source: 'Valve_Spec.pdf', sourceQuote: '350 Bar pressure rating', enrichedBy: 'llm_extraction' as const, flagged: false }
+          ],
+          anomalies: [],
+          auditLog: []
+        }
+      ];
+
+      if (id === 'json') {
+        const jsonPayload = {
+          exportMetadata: {
+            source: "IntelliProduct AI Intelligence Platform",
+            exportedAt: new Date().toISOString(),
+            totalProductsExported: targetProducts.length,
+            schemaVersion: "2.4.0",
+            isoComplianceVerified: includeIso,
+            provenanceCitationsIncluded: includeProvenance,
+            anomalyAuditIncluded: includeAnomalies,
+          },
+          catalogProducts: targetProducts.map(p => ({
+            id: p.id,
+            sku: p.sku,
+            name: p.name,
+            manufacturer: p.manufacturer,
+            category: p.category,
+            status: p.status.toUpperCase(),
+            completenessScore: `${p.completeness}%`,
+            specifications: p.specs,
+            extractedAttributes: p.attributes.map(a => ({
+              key: a.key,
+              value: a.value,
+              confidence: includeConfidence ? `${a.confidence}%` : undefined,
+              sourceDocument: includeProvenance ? a.source : undefined,
+              sourceQuote: includeProvenance ? a.sourceQuote : undefined,
+              isoStandard: includeIso ? (a.key === 'ipRating' ? 'IEC 60529' : a.key === 'voltage' ? 'UL 508A' : 'ISO 8608') : undefined
+            })),
+            anomalies: includeAnomalies ? p.anomalies : undefined,
+            auditTrailCount: p.auditLog?.length || 0
+          }))
         };
-        await generateProductDatasheet(sampleProduct);
+
+        const blob = new Blob([JSON.stringify(jsonPayload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `product_intelligence_full_catalog_${targetProducts.length}_items.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else if (id === 'csv') {
+        let csvContent = 'SKU,Product Name,Manufacturer,Category,Status,Completeness,Attribute Key,Attribute Value';
+        if (includeIso) csvContent += ',ISO Standard';
+        if (includeConfidence) csvContent += ',Confidence Score';
+        if (includeProvenance) csvContent += ',Source Citation';
+        csvContent += '\n';
+
+        targetProducts.forEach(p => {
+          if (p.attributes && p.attributes.length > 0) {
+            p.attributes.forEach(a => {
+              csvContent += `"${p.sku}","${p.name.replace(/"/g, '""')}","${p.manufacturer}","${p.category}","${p.status}",${p.completeness}%,"${a.key}","${a.value.replace(/"/g, '""')}"`;
+              if (includeIso) csvContent += `,"${a.key === 'ipRating' ? 'IEC 60529' : a.key === 'voltage' ? 'UL 508A' : 'ISO 8608'}"`;
+              if (includeConfidence) csvContent += `,${a.confidence}%`;
+              if (includeProvenance) csvContent += `,"${a.source || 'Datasheet.pdf'}"`;
+              csvContent += '\n';
+            });
+          } else {
+            csvContent += `"${p.sku}","${p.name.replace(/"/g, '""')}","${p.manufacturer}","${p.category}","${p.status}",${p.completeness}%,"N/A","N/A"\n`;
+          }
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `product_intelligence_full_catalog_${targetProducts.length}_items.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else if (id === 'pdf') {
+        // Export PDF Datasheet for first catalog product or selected product
+        const firstProd = targetProducts[0];
+        await generateProductDatasheet(firstProd);
       }
 
       setDownloading(null);
@@ -364,38 +402,38 @@ const DataExportStudio: React.FC = () => {
         </div>
 
         {/* Clean Structured Table Preview */}
-        <div style={{ background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, overflow: 'hidden' }}>
-          <table>
+        <div style={{ background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, overflowX: 'auto', width: '100%' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr>
-                <th>Attribute Field</th>
-                <th>Extracted Value</th>
-                <th>Validation Status</th>
-                {includeIso && <th>ISO / IEC Standard</th>}
-                {includeConfidence && <th>AI Confidence</th>}
+              <tr style={{ background: '#0F172A', borderBottom: '1px solid rgba(56, 189, 248, 0.35)' }}>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Attribute Field</th>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Extracted Value</th>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Validation Status</th>
+                {includeIso && <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>ISO / IEC Standard</th>}
+                {includeConfidence && <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>AI Confidence</th>}
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td style={{ fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>maxTorque</td>
-                <td style={{ fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>15.0 Nm</td>
-                <td><span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 8px', borderRadius: 6 }}>✓ Human Approved</span></td>
-                {includeIso && <td style={{ color: '#60A5FA', fontWeight: 700 }}>ISO 8608</td>}
-                {includeConfidence && <td style={{ color: '#FFFFFF', fontWeight: 800 }}>98.4%</td>}
+              <tr style={{ borderBottom: '1px solid rgba(56, 189, 248, 0.15)' }}>
+                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>maxTorque</td>
+                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>15.0 Nm</td>
+                <td style={{ padding: '14px 18px' }}><span style={{ fontSize: 13, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 10px', borderRadius: 6, display: 'inline-block' }}>✓ Human Approved</span></td>
+                {includeIso && <td style={{ padding: '14px 18px', color: '#60A5FA', fontWeight: 800, fontSize: 14 }}>ISO 8608</td>}
+                {includeConfidence && <td style={{ padding: '14px 18px', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>98.4%</td>}
+              </tr>
+              <tr style={{ borderBottom: '1px solid rgba(56, 189, 248, 0.15)' }}>
+                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>ipRating</td>
+                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>IP65</td>
+                <td style={{ padding: '14px 18px' }}><span style={{ fontSize: 13, fontWeight: 800, color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '4px 10px', borderRadius: 6, display: 'inline-block' }}>RAG Inferred</span></td>
+                {includeIso && <td style={{ padding: '14px 18px', color: '#60A5FA', fontWeight: 800, fontSize: 14 }}>IEC 60529</td>}
+                {includeConfidence && <td style={{ padding: '14px 18px', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>96.2%</td>}
               </tr>
               <tr>
-                <td style={{ fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>ipRating</td>
-                <td style={{ fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>IP65</td>
-                <td><span style={{ fontSize: 12, fontWeight: 800, color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '3px 8px', borderRadius: 6 }}>RAG Inferred</span></td>
-                {includeIso && <td style={{ color: '#60A5FA', fontWeight: 700 }}>IEC 60529</td>}
-                {includeConfidence && <td style={{ color: '#FFFFFF', fontWeight: 800 }}>96.2%</td>}
-              </tr>
-              <tr>
-                <td style={{ fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>voltage</td>
-                <td style={{ fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>400V 3-Phase</td>
-                <td><span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 8px', borderRadius: 6 }}>✓ Auto Verified</span></td>
-                {includeIso && <td style={{ color: '#60A5FA', fontWeight: 700 }}>UL 508A</td>}
-                {includeConfidence && <td style={{ color: '#FFFFFF', fontWeight: 800 }}>99.1%</td>}
+                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>voltage</td>
+                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>400V 3-Phase</td>
+                <td style={{ padding: '14px 18px' }}><span style={{ fontSize: 13, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 10px', borderRadius: 6, display: 'inline-block' }}>✓ Auto Verified</span></td>
+                {includeIso && <td style={{ padding: '14px 18px', color: '#60A5FA', fontWeight: 800, fontSize: 14 }}>UL 508A</td>}
+                {includeConfidence && <td style={{ padding: '14px 18px', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>99.1%</td>}
               </tr>
             </tbody>
           </table>
