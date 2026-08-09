@@ -77,34 +77,61 @@ const KnowledgeGraphViewer: React.FC = () => {
       <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-white mb-1 tracking-tight flex items-center gap-3">
-            Dynamic Force-Directed Knowledge Graph
-            <span className="badge badge-ai_enriched"><Sparkles size={11} /> Physics Engine V2</span>
+            AI Knowledge Graph
+            <span className="badge badge-ai_enriched"><Sparkles size={11} /> Semantic Enrichment</span>
           </h1>
-          <p className="text-gray text-sm">Visualizing multi-relational product ontologies, ISO/IEC industrial standards, and semantic attribute links.</p>
+          <p className="text-gray text-sm">How the AI uses product relationships, ISO standards, and attribute similarity to fill in missing data.</p>
         </div>
-        
-        {/* Node Filters */}
-        <div className="flex items-center gap-2">
-          <Filter size={14} color="#0284c7" />
-          <div style={{ display: 'flex', gap: 4, background: 'rgba(15,23,42,0.6)', padding: 3, borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }}>
-            {[
-              { id: 'all', label: 'All Nodes' },
-              { id: 'atex', label: 'ATEX Cluster' },
-              { id: 'motors', label: 'Motor Specs' },
-              { id: 'certs', label: 'ISO Certs' },
-            ].map(f => (
-              <button
-                key={f.id}
-                onClick={() => setActiveFilter(f.id as any)}
-                style={{
-                  padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 700,
-                  background: activeFilter === f.id ? '#4f46e5' : 'transparent',
-                  color: activeFilter === f.id ? '#fff' : '#64748b',
-                  cursor: 'pointer', transition: 'all 0.15s',
-                }}
-              >{f.label}</button>
-            ))}
+      </div>
+
+      {/* Annotation banner for judges */}
+      <div style={{
+        marginBottom: 20,
+        padding: '12px 16px',
+        background: 'rgba(139,92,246,0.08)',
+        border: '1px solid rgba(139,92,246,0.3)',
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 12,
+      }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Network size={16} color="#8B5CF6" />
+        </div>
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: '#8B5CF6', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            What This Shows — RAG Enrichment via Knowledge Graph
           </div>
+          <div style={{ fontSize: 12, color: '#94A3B8', lineHeight: 1.65 }}>
+            When the AI extracts a product attribute (e.g., IP Rating) and the source document is ambiguous or missing data, it queries this knowledge graph to find semantically similar products and ISO standards.
+            The graph links <strong style={{ color: '#E2E8F0' }}>product domains → safety standards → electrical specs → certifications</strong>, enabling the AI to infer missing values with traceable reasoning.
+            Click any node below to explore its connections and standards.
+          </div>
+        </div>
+      </div>
+
+
+      {/* Node Filters */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+        <Filter size={14} color="#0284c7" />
+        <div style={{ display: 'flex', gap: 4, background: 'rgba(15,23,42,0.6)', padding: 3, borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }}>
+          {[
+            { id: 'all', label: 'All Nodes' },
+            { id: 'atex', label: 'ATEX Cluster' },
+            { id: 'motors', label: 'Motor Specs' },
+            { id: 'certs', label: 'ISO Certs' },
+          ].map(f => (
+            <button
+              key={f.id}
+              onClick={() => setActiveFilter(f.id as any)}
+              style={{
+                padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 700,
+                background: activeFilter === f.id ? '#4f46e5' : 'transparent',
+                color: activeFilter === f.id ? '#fff' : '#64748b',
+                cursor: 'pointer', transition: 'all 0.15s',
+              }}
+            >{f.label}</button>
+          ))}
         </div>
       </div>
 

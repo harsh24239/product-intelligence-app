@@ -131,7 +131,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 IntelliProduct
               </div>
               <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 1 }}>
-                UniHack 2025
+                UniHack 2026 · AI Challenge
               </div>
             </div>
           </div>
@@ -162,10 +162,10 @@ const Navbar: React.FC<NavbarProps> = ({
           }}
         >
           <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>
-            Demo Flow
+            👆 Judge Quick-Start
           </div>
-          <div style={{ fontSize: 11, color: 'var(--text-sub)' }}>
-            Step 1 → 2 → 3 to see the full AI pipeline
+          <div style={{ fontSize: 11, color: 'var(--text-sub)', lineHeight: 1.5 }}>
+            Follow Steps 1→2→3 to see the full AI pipeline in action
           </div>
         </div>
 

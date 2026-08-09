@@ -113,8 +113,8 @@ code, pre, .mono {
 .card-interactive:hover {
   background: var(--bg-card-hover);
   border-color: var(--blue-border);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59,130,246,0.1);
 }
 
 /* Legacy glass-card used in some old components — keep working */
@@ -222,12 +222,25 @@ code, pre, .mono {
   background: var(--blue);
   color: white;
   border: 1px solid var(--blue);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  background: transparent;
+  border: 2px solid rgba(59, 130, 246, 0);
+  transition: border-color 0.3s ease;
+  pointer-events: none;
 }
 
 .btn-primary:hover:not(:disabled) {
   background: #2563EB;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.45), 0 0 0 3px rgba(59,130,246,0.15);
 }
 
 .btn-secondary {
@@ -524,6 +537,15 @@ tr:hover td { background: rgba(255, 255, 255, 0.02); }
 
 @keyframes laserDash {
   to { stroke-dashoffset: -20; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(59,130,246,0.4); }
+  50%       { box-shadow: 0 0 24px rgba(59,130,246,0.7), 0 0 8px rgba(59,130,246,0.3); }
+}
+
+.animate-glow {
+  animation: glowPulse 2.5s ease-in-out infinite;
 }
 
 .animate-fade-in-up {

@@ -129,23 +129,29 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Section description */}
+      {/* Section description + Status Legend */}
       <div
         style={{
-          padding: '12px 16px',
+          padding: '14px 16px',
           background: 'var(--bg-card)',
           border: '1px solid var(--border)',
           borderRadius: 10,
-          fontSize: 13,
-          color: 'var(--text-sub)',
-          lineHeight: 1.5,
         }}
       >
-        <strong style={{ color: 'var(--text)' }}>Product Catalog</strong> — Browse all
-        products ingested by the AI pipeline. Each card shows the product's enrichment
-        status, data completeness score, and flagged issues. Click any product to view
-        the full extracted attribute profile, 3D CAD viewer, and export options.
+        <div style={{ fontSize: 13, color: 'var(--text-sub)', lineHeight: 1.5, marginBottom: 12 }}>
+          <strong style={{ color: 'var(--text)' }}>AI-Enriched Product Catalog</strong> — Every product below was processed by the multi-agent AI pipeline: extracted from source documents, attribute-normalized, validated against ISO standards, and anomaly-checked. Click any card to see the full extraction detail, confidence scores, and 3D model.
+        </div>
+        {/* Status legend */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: 4 }}>Status Legend:</span>
+          {Object.entries(statusConfig).map(([key, cfg]) => (
+            <span key={key} title={cfg.desc} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 5, fontSize: 10, fontWeight: 600, color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}`, cursor: 'default' }}>
+              {cfg.label} <span style={{ fontWeight: 400, color: 'var(--text-muted)', fontSize: 9 }}>— {cfg.desc}</span>
+            </span>
+          ))}
+        </div>
       </div>
+
 
       {/* Filters toolbar */}
       <div

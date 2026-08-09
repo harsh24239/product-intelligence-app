@@ -100,7 +100,7 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
             }}
           >
             <Zap size={11} />
-            UniHack 2025 · AI Product Intelligence Challenge
+            UniHack 2026 · AI Product Intelligence Challenge
           </div>
 
           <h1
@@ -130,11 +130,11 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
             <button
               id="btn-start-demo"
               onClick={onStartDemo}
-              className="btn btn-primary"
-              style={{ fontSize: 14, padding: '10px 20px' }}
+              className="btn btn-primary animate-glow"
+              style={{ fontSize: 14, padding: '10px 22px', boxShadow: '0 0 20px rgba(59,130,246,0.4)', fontWeight: 700 }}
             >
               <Upload size={16} />
-              Try Live Demo — Upload a Document
+              ▶ Start AI Demo — Upload a Document
               <ArrowRight size={16} />
             </button>
             <button
@@ -146,8 +146,33 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
               }}
             >
               <GitBranch size={15} />
-              View AI Pipeline
+              How It Works
             </button>
+          </div>
+
+          {/* Judge callout */}
+          <div
+            style={{
+              marginTop: 16,
+              padding: '10px 14px',
+              background: 'rgba(16,185,129,0.07)',
+              border: '1px solid rgba(16,185,129,0.25)',
+              borderRadius: 8,
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 10,
+              maxWidth: 520,
+            }}
+          >
+            <span style={{ fontSize: 15, flexShrink: 0 }}>📋</span>
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#10B981', marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Evaluator Guide</div>
+              <div style={{ fontSize: 11, color: 'var(--text-sub)', lineHeight: 1.6 }}>
+                <strong style={{ color: 'var(--text)' }}>Step 1:</strong> Click “Start AI Demo” → paste or upload a product spec. &nbsp;
+                <strong style={{ color: 'var(--text)' }}>Step 2:</strong> Browse the enriched catalog. &nbsp;
+                <strong style={{ color: 'var(--text)' }}>Step 3:</strong> Review AI-flagged anomalies and approve records.
+              </div>
+            </div>
           </div>
         </div>
 

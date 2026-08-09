@@ -204,7 +204,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                 onClick={() => setShowPIMModal(true)}
                 style={{ fontSize: 12 }}
               >
-                <ShoppingBag size={14} /> Export to Shopify / SAP
+                <ShoppingBag size={14} /> Export Structured Data
               </button>
               <button
                 id="btn-pdf"

@@ -278,7 +278,7 @@ function App() {
                     {
                       time: '14:41:20',
                       msg: 'Anomaly flagged on SKU: MX-1002 — Torque mismatch',
-                      sub: 'Value 150 Nm is 10× the family average — flagged for review',
+                      sub: 'Gemini 1.5 · RAG · Validator — Value 150 Nm is 10× the family average — flagged for review',
                       type: 'warning',
                     },
                     {
@@ -306,10 +306,10 @@ function App() {
                             fontSize: 10,
                             color: 'var(--text-muted)',
                             fontFamily: 'JetBrains Mono, monospace',
-                            minWidth: 48,
+                            minWidth: 52,
                           }}
                         >
-                          {log.time}
+                          {['just now', '17s ago', '41s ago', '66s ago'][i]}
                         </span>
                         <div
                           style={{
@@ -349,7 +349,7 @@ function App() {
                   marginBottom: 12,
                 }}
               >
-                Quick Actions — Demo Navigation
+              Start Here — Try the AI Pipeline
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 10 }}>
                 {[
