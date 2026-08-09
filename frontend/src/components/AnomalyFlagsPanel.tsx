@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertTriangle, ChevronRight, Info } from 'lucide-react';
+import { ChevronRight, Info, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 interface AnomalyFlagsPanelProps {
   onSelectProduct: (id: string) => void;
@@ -12,8 +12,11 @@ const mockAnomalies = [
     name: 'Industrial Servo Motor MX-1000',
     sku: 'MX-1000-V2',
     field: 'maxTorque',
-    issue: 'Extracted value "150 Nm" is 10× higher than the family average (14 Nm). Likely a unit error — may be "15.0 Nm" or source data typo.',
+    extractedVal: '150 Nm',
+    expectedVal: '15.0 Nm',
+    issue: 'Extracted value "150 Nm" is 10× higher than motor family average (14.2 Nm). Unit conversion typo detected in source PDF.',
     severity: 'high',
+    confidence: 42,
   },
   {
     id: '2',
@@ -21,8 +24,11 @@ const mockAnomalies = [
     name: 'Hydraulic Pressure Relief Valve',
     sku: 'SAB-992',
     field: 'ipRating',
-    issue: 'Found "65" instead of standard format "IP65". AI inferred the correct value but confidence is low (54%).',
+    extractedVal: '65',
+    expectedVal: 'IP65',
+    issue: 'Found raw value "65" missing standard prefix. AI inferred "IP65" based on washdown enclosure context.',
     severity: 'medium',
+    confidence: 68,
   },
   {
     id: '3',
@@ -30,50 +36,55 @@ const mockAnomalies = [
     name: 'Control Unit C-40',
     sku: 'CU-40A',
     field: 'weight',
-    issue: 'Weight value extracted without unit. Defaulted to kg based on context, but original text said "12.5" with no unit specified.',
+    extractedVal: '12.5',
+    expectedVal: '12.5 kg',
+    issue: 'Weight extracted without unit specification. Imputed kg based on DIN EN unit standard.',
     severity: 'low',
+    confidence: 85,
   },
 ];
 
-const severityConfig: Record<string, { leftBorder: string; color: string; label: string }> = {
-  high:   { leftBorder: '#EF4444', color: '#F87171', label: 'High Priority — Review Immediately' },
-  medium: { leftBorder: '#F59E0B', color: '#FBBF24', label: 'Medium Priority — Review Soon' },
-  low:    { leftBorder: '#3B82F6', color: '#60A5FA', label: 'Low Priority — Optional Review' },
+const severityConfig: Record<string, { badgeBg: string; badgeColor: string; badgeBorder: string; leftBorder: string; label: string }> = {
+  high:   { badgeBg: 'rgba(239, 68, 68, 0.15)', badgeColor: '#F87171', badgeBorder: 'rgba(239, 68, 68, 0.4)', leftBorder: '#EF4444', label: 'High Priority' },
+  medium: { badgeBg: 'rgba(245, 158, 11, 0.15)', badgeColor: '#FBBF24', badgeBorder: 'rgba(245, 158, 11, 0.4)', leftBorder: '#F59E0B', label: 'Medium Priority' },
+  low:    { badgeBg: 'rgba(59, 130, 246, 0.15)', badgeColor: '#60A5FA', badgeBorder: 'rgba(59, 130, 246, 0.4)', leftBorder: '#3B82F6', label: 'Low Priority' },
 };
 
 const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }) => {
   const [filter, setFilter] = useState<'all' | 'high' | 'medium' | 'low'>('all');
-  const filtered =
-    filter === 'all' ? mockAnomalies : mockAnomalies.filter((a) => a.severity === filter);
+  const [resolvedIds, setResolvedIds] = useState<string[]>([]);
+
+  const filtered = (filter === 'all' ? mockAnomalies : mockAnomalies.filter((a) => a.severity === filter))
+    .filter(a => !resolvedIds.includes(a.id));
+
+  const handleResolve = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setResolvedIds([...resolvedIds, id]);
+  };
 
   return (
-    <div
-      className="card"
-      style={{ display: 'flex', flexDirection: 'column', padding: 20 }}
-    >
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <AlertTriangle size={18} color="#F59E0B" />
-          <span style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>
-            AI Anomaly Flags
-          </span>
+    <div className="card" style={{ display: 'flex', flexDirection: 'column', padding: 22, background: '#1E293B', borderRadius: 16 }}>
+      
+      {/* Panel Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(245, 158, 11, 0.15)', border: '1px solid rgba(245, 158, 11, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ShieldAlert size={20} color="#F59E0B" />
+          </div>
+          <div>
+            <h3 style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>AI Anomaly Queue</h3>
+            <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 1 }}>Requires human validation before catalog publishing</div>
+          </div>
         </div>
 
-        {/* Severity filter */}
-        <div
-          style={{
-            display: 'flex', gap: 4,
-            background: '#0F172A', padding: 4,
-            borderRadius: 8, border: '1px solid #334155',
-          }}
-        >
+        {/* Severity Filter Pills */}
+        <div style={{ display: 'flex', gap: 4, background: '#0F172A', padding: 4, borderRadius: 8, border: '1px solid #334155' }}>
           {(['all', 'high', 'medium', 'low'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               style={{
-                padding: '4px 10px',
+                padding: '5px 12px',
                 borderRadius: 6,
                 fontSize: 12,
                 fontWeight: 700,
@@ -89,8 +100,8 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
         </div>
       </div>
 
-      {/* Anomaly items */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {/* Cards List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {filtered.map((anomaly) => {
           const cfg = severityConfig[anomaly.severity];
           return (
@@ -98,63 +109,101 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
               key={anomaly.id}
               onClick={() => onSelectProduct(anomaly.productId)}
               style={{
-                padding: '14px 16px',
-                borderRadius: 10,
                 background: '#0F172A',
                 border: '1px solid #334155',
                 borderLeft: `4px solid ${cfg.leftBorder}`,
+                borderRadius: 14,
+                padding: 18,
                 cursor: 'pointer',
-                transition: 'all 0.15s ease',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 12,
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLDivElement).style.borderColor = cfg.leftBorder;
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLDivElement).style.borderColor = '#334155';
+                (e.currentTarget as HTMLDivElement).style.transform = 'none';
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: cfg.color }}>
-                  {cfg.label}
-                </span>
-                <ChevronRight size={16} color="#94A3B8" />
+              {/* Top Row: Title & Severity Badge */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: cfg.badgeColor, background: cfg.badgeBg, border: `1px solid ${cfg.badgeBorder}`, padding: '3px 9px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    {cfg.label}
+                  </span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace' }}>
+                    {anomaly.sku}
+                  </span>
+                </div>
+                <ChevronRight size={18} color="#94A3B8" />
               </div>
 
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#FFFFFF', marginBottom: 4 }}>
+              {/* Product Name */}
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>
                 {anomaly.name}
               </div>
 
-              <div style={{ fontSize: 13, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ color: '#94A3B8' }}>Flagged Field:</span>
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#60A5FA', fontWeight: 700 }}>
-                  {anomaly.field}
-                </span>
-                <span style={{ fontSize: 12, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace' }}>
-                  ({anomaly.sku})
-                </span>
+              {/* Field & Extracted Values Row */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, fontSize: 13 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#1E293B', padding: '4px 10px', borderRadius: 6, border: '1px solid #334155' }}>
+                  <span style={{ color: '#94A3B8', fontWeight: 600 }}>Field:</span>
+                  <span style={{ color: '#60A5FA', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
+                    {anomaly.field}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(239, 68, 68, 0.1)', padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(239, 68, 68, 0.3)' }}>
+                  <span style={{ color: '#94A3B8', fontWeight: 600 }}>AI Extracted:</span>
+                  <span style={{ color: '#F87171', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
+                    {anomaly.extractedVal}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(16, 185, 129, 0.1)', padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                  <span style={{ color: '#94A3B8', fontWeight: 600 }}>Suggested:</span>
+                  <span style={{ color: '#34D399', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
+                    {anomaly.expectedVal}
+                  </span>
+                </div>
               </div>
 
-              <p
-                style={{
-                  fontSize: 13, color: '#E2E8F0', lineHeight: 1.55,
-                  background: '#1E293B',
-                  border: '1px solid #334155',
-                  padding: '8px 12px', borderRadius: 8,
-                }}
-              >
-                <Info size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle', color: '#94A3B8' }} />
-                {anomaly.issue}
-              </p>
+              {/* Reasoning Description */}
+              <div style={{ padding: '10px 14px', background: '#1E293B', border: '1px solid #334155', borderRadius: 10, fontSize: 13, color: '#E2E8F0', lineHeight: 1.5, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                <Info size={16} color="#94A3B8" style={{ flexShrink: 0, marginTop: 2 }} />
+                <span>{anomaly.issue}</span>
+              </div>
+
+              {/* Bottom Action Row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 6 }}>
+                <div style={{ fontSize: 12, color: '#94A3B8', fontWeight: 600 }}>
+                  AI Confidence: <strong style={{ color: anomaly.confidence > 70 ? '#34D399' : '#F59E0B' }}>{anomaly.confidence}%</strong>
+                </div>
+
+                <button
+                  className="btn btn-accent"
+                  onClick={(e) => handleResolve(e, anomaly.id)}
+                  style={{ fontSize: 12, padding: '6px 14px' }}
+                >
+                  <CheckCircle2 size={14} /> Approve Correction
+                </button>
+              </div>
+
             </div>
           );
         })}
 
         {filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '24px 0', fontSize: 13, color: '#94A3B8' }}>
-            No anomalies for this severity filter.
+          <div style={{ textAlign: 'center', padding: '36px 0', fontSize: 14, color: '#34D399', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+            <CheckCircle2 size={32} color="#34D399" />
+            <span style={{ fontWeight: 700 }}>All anomalies resolved in this queue!</span>
           </div>
         )}
       </div>
+
     </div>
   );
 };

@@ -260,77 +260,71 @@ function App() {
                 </div>
                 <div
                   className="card"
-                  style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}
+                  style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, background: '#1E293B', borderRadius: 16 }}
                 >
                   {[
                     {
-                      time: '14:42:01',
+                      time: 'just now',
+                      tag: 'OCR PARSED',
                       msg: 'Parsed 42 pages from Supplier_Catalog_Q3.pdf',
-                      sub: 'Extracted 128 attributes across 6 products',
-                      type: 'info',
+                      sub: 'Extracted 128 attributes across 6 product lines with Gemini VLM',
+                      color: '#3B82F6',
+                      bg: 'rgba(59, 130, 246, 0.15)',
+                      border: 'rgba(59, 130, 246, 0.4)',
                     },
                     {
-                      time: '14:41:44',
-                      msg: 'AI Enrichment: 12 missing specs filled via RAG',
-                      sub: 'IP rating inferred from product family lookup',
-                      type: 'success',
+                      time: '17s ago',
+                      tag: 'RAG ENRICHED',
+                      msg: 'AI RAG Enrichment: 12 missing specs filled',
+                      sub: 'Inferred missing IP rating & insulation class from Knowledge Graph lookup',
+                      color: '#34D399',
+                      bg: 'rgba(16, 185, 129, 0.15)',
+                      border: 'rgba(16, 185, 129, 0.4)',
                     },
                     {
-                      time: '14:41:20',
-                      msg: 'Anomaly flagged on SKU: MX-1002 — Torque mismatch',
-                      sub: 'Gemini 1.5 · RAG · Validator — Value 150 Nm is 10× the family average — flagged for review',
-                      type: 'warning',
+                      time: '41s ago',
+                      tag: 'FLAGGED',
+                      msg: 'Anomaly Flagged: MX-1002 Torque mismatch',
+                      sub: 'Value 150 Nm exceeds family average 14.2 Nm — queued for review',
+                      color: '#F59E0B',
+                      bg: 'rgba(245, 158, 11, 0.15)',
+                      border: 'rgba(245, 158, 11, 0.4)',
                     },
                     {
-                      time: '14:40:55',
-                      msg: 'ISO 60034-30-1 compliance check passed for 8 motors',
-                      sub: 'Knowledge Graph updated with 3 new ISO certification nodes',
-                      type: 'info',
+                      time: '66s ago',
+                      tag: 'COMPLIANCE',
+                      msg: 'ISO 60034-30-1 check passed for 8 motors',
+                      sub: 'Knowledge Graph verified energy efficiency IE3/IE4 compliance',
+                      color: '#C084FC',
+                      bg: 'rgba(139, 92, 246, 0.15)',
+                      border: 'rgba(139, 92, 246, 0.4)',
                     },
                   ].map((log, i) => (
                     <div
                       key={i}
                       style={{
                         display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: 10,
-                        padding: '10px 12px',
-                        borderRadius: 8,
-                        background: 'var(--bg)',
-                        border: '1px solid var(--border)',
+                        flexDirection: 'column',
+                        gap: 6,
+                        padding: '14px 16px',
+                        borderRadius: 12,
+                        background: '#0F172A',
+                        border: '1px solid #334155',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                        <span
-                          style={{
-                            fontSize: 12,
-                            color: '#94A3B8',
-                            fontFamily: 'JetBrains Mono, monospace',
-                            fontWeight: 600,
-                            minWidth: 56,
-                          }}
-                        >
-                          {['just now', '17s ago', '41s ago', '66s ago'][i]}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 11, fontWeight: 800, color: log.color, background: log.bg, border: `1px solid ${log.border}`, padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          {log.tag}
                         </span>
-                        <div
-                          style={{
-                            width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
-                            background:
-                              log.type === 'success'
-                                ? 'var(--green)'
-                                : log.type === 'warning'
-                                ? 'var(--amber)'
-                                : 'var(--blue)',
-                          }}
-                        />
+                        <span style={{ fontSize: 12, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>
+                          {log.time}
+                        </span>
                       </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 600 }}>
-                          {log.msg}
-                        </p>
-                        <p style={{ fontSize: 12, color: '#E2E8F0', marginTop: 2 }}>
-                          {log.sub}
-                        </p>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: '#FFFFFF', marginTop: 2 }}>
+                        {log.msg}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#E2E8F0', lineHeight: 1.5 }}>
+                        {log.sub}
                       </div>
                     </div>
                   ))}
