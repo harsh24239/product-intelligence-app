@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { FileText, Upload, Sparkles, CheckCircle, ChevronRight, Settings, X } from 'lucide-react';
+import { FileText, Upload, Sparkles, CheckCircle, ChevronRight, X, Info } from 'lucide-react';
 import { api } from '../services/api';
 import { Product } from '../types/product';
 
@@ -8,13 +8,40 @@ interface IngestionStudioProps {
 }
 
 const AI_STEPS = [
-  "Preprocessing & Cleaning Document",
-  "Entity & Attribute Extraction (AI)",
-  "Schema Normalization & Structuring",
-  "RAG Contextual Enrichment",
-  "Anomaly & Conflict Detection",
-  "ISO Compliance Check",
+  {
+    label: 'Preprocessing & Cleaning',
+    desc: 'Removing boilerplate, normalizing whitespace and encoding',
+  },
+  {
+    label: 'Entity & Attribute Extraction',
+    desc: 'Gemini LLM identifies product names, specs, and values',
+  },
+  {
+    label: 'Schema Normalization',
+    desc: 'Converting units (HP→kW, bar→PSI) and standardizing field names',
+  },
+  {
+    label: 'RAG Contextual Enrichment',
+    desc: 'Retrieving similar products to fill in missing attributes',
+  },
+  {
+    label: 'Anomaly Detection',
+    desc: 'Flagging values that conflict or fall outside expected ranges',
+  },
+  {
+    label: 'ISO Compliance Validation',
+    desc: 'Checking against IEC 60034, ISO 9001, and ATEX standards',
+  },
 ];
+
+const EXAMPLE_TEXT = `Industrial Servo Motor MX-2000
+Manufacturer: RoboDrives Inc
+Power: 2.5 kW, Voltage: 400V AC, Frequency: 50Hz
+Speed: 1450 RPM, Torque: 16.5 Nm
+IP Rating: IP65, Insulation Class: F
+Weight: 18.5 kg, Dimensions: 250x200x300mm
+Certifications: CE, UL, IEC 60034-30-1
+Material: Cast Iron Housing, Aluminum Endshields`;
 
 const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) => {
   const [mode, setMode] = useState<'select' | 'text' | 'file' | 'processing' | 'result'>('select');
@@ -34,33 +61,27 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
       setProgress(step);
       if (step >= AI_STEPS.length) {
         clearInterval(interval);
-        setTimeout(onComplete, 400);
+        setTimeout(onComplete, 500);
       }
-    }, 550);
+    }, 600);
   };
 
-  const handleTextSubmit = async () => {
+  const handleTextSubmit = () => {
     setMode('processing');
     setError('');
-    try {
-      simulateProgress(async () => {
-        try {
-          const product = await api.extractFromText(inputText);
-          setExtractedProduct(product);
-          setMode('result');
-        } catch (e: any) {
-          // Show result with mock data if backend is offline
-          setExtractedProduct(null);
-          setMode('result');
-        }
-      });
-    } catch (e: any) {
-      setError(e.message);
-      setMode('text');
-    }
+    simulateProgress(async () => {
+      try {
+        const product = await api.extractFromText(inputText);
+        setExtractedProduct(product);
+        setMode('result');
+      } catch {
+        setExtractedProduct(null);
+        setMode('result');
+      }
+    });
   };
 
-  const handleFileSubmit = async (file: File) => {
+  const handleFileSubmit = (file: File) => {
     setMode('processing');
     setError('');
     simulateProgress(async () => {
@@ -68,190 +89,294 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
         const product = await api.extractFromFile(file);
         setExtractedProduct(product);
         setMode('result');
-      } catch (e: any) {
+      } catch {
         setExtractedProduct(null);
         setMode('result');
       }
     });
   };
 
-  const cardBase: React.CSSProperties = {
-    background: 'linear-gradient(145deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.9) 100%)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: 20,
-    padding: 40,
+  const card: React.CSSProperties = {
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border)',
+    borderRadius: 12,
+    padding: 28,
   };
 
   return (
-    <div className="animate-fade-in-up" style={{ maxWidth: 860, margin: '0 auto' }}>
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 8 }}>Ingestion Studio</h1>
-        <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>
-          Transform unstructured data into normalized product intelligence using our multi-agent AI pipeline.
+    <div className="animate-fade-in-up" style={{ maxWidth: 820, margin: '0 auto' }}>
+
+      {/* Page header */}
+      <div style={{ marginBottom: 24 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.3px', marginBottom: 6 }}>
+          AI Document Ingestion — Step 1 of 3
+        </h2>
+        <p style={{ fontSize: 13, color: 'var(--text-sub)', lineHeight: 1.6, maxWidth: 560 }}>
+          Upload raw supplier PDFs, spec sheets, or paste unstructured text. The 3-agent AI pipeline
+          will extract, normalize, and validate product attributes automatically.
         </p>
       </div>
 
-      {/* Mode Select */}
+      {/* Mode selector */}
       {mode === 'select' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
           {[
             {
-              id: 'text', label: 'Paste Text / Spec Sheet', desc: 'Copy-paste raw text from technical documents or product descriptions.',
-              Icon: FileText, color: '#06b6d4', glow: 'rgba(6,182,212,0.2)',
+              id: 'text',
+              label: 'Paste Raw Text',
+              desc: 'Copy-paste product descriptions, spec sheets, or any unstructured catalog text.',
+              Icon: FileText,
+              color: 'var(--blue)',
+              bg: 'var(--blue-dim)',
+              border: 'var(--blue-border)',
             },
             {
-              id: 'file', label: 'Upload File', desc: 'Upload PDF, CSV, TXT, or Word documents for AI extraction.',
-              Icon: Upload, color: '#6366f1', glow: 'rgba(99,102,241,0.2)',
+              id: 'file',
+              label: 'Upload Document',
+              desc: 'Upload a PDF, TXT, CSV, or JSON file directly from your computer.',
+              Icon: Upload,
+              color: '#8B5CF6',
+              bg: 'var(--violet-dim)',
+              border: 'var(--violet-border)',
             },
-          ].map(opt => (
+          ].map((opt) => (
             <button
               key={opt.id}
+              id={`ingest-${opt.id}`}
               onClick={() => setMode(opt.id as any)}
               style={{
-                ...cardBase,
-                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20,
+                ...card,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16,
                 cursor: 'pointer',
-                transition: 'all 0.2s',
-                textAlign: 'center',
+                textAlign: 'left',
+                transition: 'all 0.2s ease',
               }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.borderColor = `${opt.color}60`;
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 12px 35px -10px ${opt.glow}`;
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = opt.border;
                 (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
               }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.1)';
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
-                (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border)';
+                (e.currentTarget as HTMLButtonElement).style.transform = 'none';
               }}
             >
-              <div style={{
-                width: 72, height: 72, borderRadius: 20,
-                background: `linear-gradient(135deg, ${opt.color}22, ${opt.color}11)`,
-                border: `1px solid ${opt.color}40`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: `0 0 20px ${opt.glow}`,
-              }}>
-                <opt.Icon size={32} color={opt.color} />
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 10,
+                  background: opt.bg,
+                  border: `1px solid ${opt.border}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <opt.Icon size={22} color={opt.color} />
               </div>
               <div>
-                <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{opt.label}</h3>
-                <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.5 }}>{opt.desc}</p>
+                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>
+                  {opt.label}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--text-sub)', lineHeight: 1.55 }}>
+                  {opt.desc}
+                </div>
               </div>
             </button>
           ))}
         </div>
       )}
 
-      {/* Text Mode */}
+      {/* What happens next info box */}
+      {mode === 'select' && (
+        <div
+          style={{
+            display: 'flex',
+            gap: 12,
+            padding: '14px 16px',
+            background: 'rgba(59,130,246,0.05)',
+            border: '1px solid var(--blue-border)',
+            borderRadius: 10,
+          }}
+        >
+          <Info size={16} color="var(--blue)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+              What happens after you submit?
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--text-sub)', lineHeight: 1.6 }}>
+              Your document passes through a <strong style={{ color: 'var(--text)' }}>3-stage AI pipeline</strong>:
+              first the <em>Extraction Agent</em> (Gemini LLM + Vision) pulls out raw attributes, then the{' '}
+              <em>Enrichment Agent</em> normalizes units and fills gaps using RAG knowledge, and finally the{' '}
+              <em>Compliance Guard Agent</em> checks values against ISO/IEC engineering standards and flags
+              anything unusual for human review.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Text mode */}
       {mode === 'text' && (
-        <div style={cardBase}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>Raw Technical Text Input</h3>
+        <div style={card}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <div>
+              <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 3 }}>
+                Paste Raw Product Text
+              </h3>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                Paste any unstructured catalog text, product description, or spec data below.
+              </p>
+            </div>
             <button
               onClick={() => setMode('select')}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.06)', cursor: 'pointer', color: '#94a3b8' }}
+              style={{
+                width: 30, height: 30, borderRadius: 6,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-muted)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer',
+              }}
             >
-              <X size={16} />
+              <X size={14} />
             </button>
           </div>
 
           {error && (
-            <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '10px 14px', marginBottom: 16, fontSize: 13, color: '#f87171' }}>
+            <div
+              style={{
+                background: 'var(--red-dim)',
+                border: '1px solid var(--red-border)',
+                borderRadius: 8,
+                padding: '10px 14px',
+                marginBottom: 14,
+                fontSize: 12,
+                color: 'var(--red)',
+              }}
+            >
               {error}
             </div>
           )}
 
           <textarea
+            id="ingest-text-input"
             value={inputText}
-            onChange={e => setInputText(e.target.value)}
-            placeholder="Paste raw product specifications, catalog text, or technical document content here...
-
-Example:
-Industrial Servo Motor MX-2000
-Power: 2.5 kW, Voltage: 400V AC, Frequency: 50Hz
-Speed: 1450 RPM, Torque: 16.5 Nm
-IP Rating: IP65, Insulation Class: F
-Weight: 18.5 kg, Dimensions: 250x200x300mm
-Certifications: CE, UL, IEC 60034"
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder={`Paste raw product specifications here...\n\nExample:\n${EXAMPLE_TEXT}`}
             style={{
-              width: '100%', height: 240,
-              background: 'rgba(15,23,42,0.8)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 12,
-              padding: 16,
-              fontSize: 13,
-              color: '#e2e8f0',
+              width: '100%',
+              height: 220,
+              background: 'var(--bg)',
+              border: '1px solid var(--border)',
+              borderRadius: 8,
+              padding: 14,
+              fontSize: 12,
+              color: 'var(--text)',
               fontFamily: 'JetBrains Mono, monospace',
               resize: 'vertical',
               outline: 'none',
-              lineHeight: 1.6,
-              marginBottom: 20,
+              lineHeight: 1.65,
+              marginBottom: 16,
             }}
-            onFocus={e => (e.target.style.borderColor = '#06b6d4')}
-            onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
+            onFocus={(e) => (e.target.style.borderColor = 'var(--blue)')}
+            onBlur={(e) => (e.target.style.borderColor = 'var(--border)')}
           />
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-            <button className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Settings size={15} /> Config
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setInputText(EXAMPLE_TEXT)}
+              style={{ fontSize: 12 }}
+            >
+              Load Example Data
             </button>
             <button
+              id="btn-extract-text"
               className="btn btn-primary"
               onClick={handleTextSubmit}
               disabled={inputText.length < 10}
-              style={{ display: 'flex', alignItems: 'center', gap: 6 }}
             >
-              <Sparkles size={15} /> Extract & Structure
+              <Sparkles size={14} />
+              Run AI Extraction
             </button>
           </div>
         </div>
       )}
 
-      {/* File Mode */}
+      {/* File mode */}
       {mode === 'file' && (
-        <div style={cardBase}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>Upload Document</h3>
+        <div style={card}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <div>
+              <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 3 }}>
+                Upload Document
+              </h3>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                Supported formats: PDF, TXT, CSV, JSON, DOCX (up to 10 MB)
+              </p>
+            </div>
             <button
               onClick={() => { setMode('select'); setSelectedFile(null); }}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.06)', cursor: 'pointer', color: '#94a3b8' }}
+              style={{
+                width: 30, height: 30, borderRadius: 6,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-muted)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer',
+              }}
             >
-              <X size={16} />
+              <X size={14} />
             </button>
           </div>
 
           <div
+            id="file-dropzone"
             onClick={() => fileInputRef.current?.click()}
-            onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
-            onDrop={e => {
+            onDrop={(e) => {
               e.preventDefault();
               setDragOver(false);
               const file = e.dataTransfer.files[0];
               if (file) setSelectedFile(file);
             }}
             style={{
-              border: `2px dashed ${dragOver ? '#22d3ee' : selectedFile ? '#10b981' : 'rgba(255,255,255,0.2)'}`,
-              borderRadius: 16,
-              padding: '48px 24px',
+              border: `2px dashed ${dragOver ? 'var(--blue)' : selectedFile ? 'var(--green)' : 'var(--border-light)'}`,
+              borderRadius: 10,
+              padding: '40px 24px',
               textAlign: 'center',
               cursor: 'pointer',
-              background: dragOver ? 'rgba(6,182,212,0.05)' : selectedFile ? 'rgba(16,185,129,0.05)' : 'rgba(15,23,42,0.4)',
+              background: dragOver
+                ? 'rgba(59,130,246,0.04)'
+                : selectedFile
+                ? 'rgba(16,185,129,0.04)'
+                : 'var(--bg)',
               transition: 'all 0.2s',
+              marginBottom: 16,
             }}
           >
             {selectedFile ? (
               <>
-                <CheckCircle size={40} color="#10b981" style={{ margin: '0 auto 12px' }} />
-                <p style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 6 }}>{selectedFile.name}</p>
-                <p style={{ fontSize: 12, color: '#64748b' }}>{(selectedFile.size / 1024).toFixed(1)} KB</p>
+                <CheckCircle size={36} color="var(--green)" style={{ margin: '0 auto 10px' }} />
+                <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+                  {selectedFile.name}
+                </p>
+                <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                  {(selectedFile.size / 1024).toFixed(1)} KB — Click to change
+                </p>
               </>
             ) : (
               <>
-                <Upload size={40} color="#6366f1" style={{ margin: '0 auto 16px' }} />
-                <p style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8 }}>Drop file here or click to browse</p>
-                <p style={{ fontSize: 12, color: '#64748b' }}>Supports .pdf, .txt, .csv, .json up to 10MB</p>
+                <Upload size={36} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+                <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+                  Drop file here or click to browse
+                </p>
+                <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                  PDF, TXT, CSV, JSON supported
+                </p>
               </>
             )}
           </div>
@@ -261,15 +386,21 @@ Certifications: CE, UL, IEC 60034"
             type="file"
             accept=".pdf,.txt,.csv,.json,.docx"
             style={{ display: 'none' }}
-            onChange={e => {
+            onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) setSelectedFile(file);
             }}
           />
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 20 }}>
-            <button className="btn btn-primary" disabled={!selectedFile} onClick={() => selectedFile && handleFileSubmit(selectedFile)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Sparkles size={15} /> Extract & Structure
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button
+              id="btn-extract-file"
+              className="btn btn-primary"
+              disabled={!selectedFile}
+              onClick={() => selectedFile && handleFileSubmit(selectedFile)}
+            >
+              <Sparkles size={14} />
+              Run AI Extraction
             </button>
           </div>
         </div>
@@ -277,100 +408,203 @@ Certifications: CE, UL, IEC 60034"
 
       {/* Processing */}
       {mode === 'processing' && (
-        <div style={{ ...cardBase, maxWidth: 560, margin: '0 auto', textAlign: 'center', padding: '48px 40px' }}>
-          <div style={{ position: 'relative', display: 'inline-block', marginBottom: 24 }}>
-            <Sparkles size={48} color="#22d3ee" />
-            <div style={{
-              position: 'absolute', inset: -8,
-              border: '2px solid rgba(6,182,212,0.3)',
-              borderRadius: '50%',
-              animation: 'pulse 2s ease-in-out infinite',
-            }} />
+        <div style={{ ...card, maxWidth: 520, margin: '0 auto', padding: '36px 32px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 28 }}>
+            <div
+              style={{
+                width: 52, height: 52,
+                borderRadius: '50%',
+                background: 'var(--blue-dim)',
+                border: '1px solid var(--blue-border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 14px',
+              }}
+            >
+              <Sparkles size={24} color="var(--blue)" />
+            </div>
+            <h3 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>
+              AI Pipeline Running…
+            </h3>
+            <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+              3-stage multi-agent pipeline processing your document
+            </p>
           </div>
-          <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.3px' }}>
-            AI Multi-Agent Engine Processing
-          </h3>
-          <p style={{ fontSize: 13, color: '#64748b', marginBottom: 36 }}>
-            Structuring raw catalog data into normalized attributes...
-          </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, textAlign: 'left' }}>
-            {AI_STEPS.map((step, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 14, opacity: progress >= idx ? 1 : 0.3, transition: 'opacity 0.4s' }}>
-                <div style={{
-                  width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: progress > idx ? '#10b981' : progress === idx ? '#06b6d4' : 'rgba(255,255,255,0.08)',
-                  transition: 'background 0.3s',
-                }}>
-                  {progress > idx
-                    ? <CheckCircle size={14} color="#fff" />
-                    : <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#fff' }} />
-                  }
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {AI_STEPS.map((step, idx) => {
+              const done = progress > idx;
+              const active = progress === idx;
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 12,
+                    opacity: progress >= idx ? 1 : 0.3,
+                    transition: 'opacity 0.4s',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 24, height: 24,
+                      borderRadius: '50%',
+                      flexShrink: 0,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: done
+                        ? 'var(--green)'
+                        : active
+                        ? 'var(--blue)'
+                        : 'rgba(255,255,255,0.06)',
+                      border: `1px solid ${done ? 'var(--green)' : active ? 'var(--blue)' : 'var(--border)'}`,
+                      transition: 'background 0.3s',
+                    }}
+                  >
+                    {done ? (
+                      <CheckCircle size={13} color="white" />
+                    ) : (
+                      <div
+                        style={{
+                          width: 7, height: 7,
+                          borderRadius: '50%',
+                          background: active ? 'white' : 'var(--text-muted)',
+                        }}
+                      />
+                    )}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: progress >= idx ? 'var(--text)' : 'var(--text-muted)',
+                        marginBottom: 2,
+                      }}
+                    >
+                      {step.label}
+                    </div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                      {step.desc}
+                    </div>
+                  </div>
                 </div>
-                <span style={{ fontSize: 13, fontWeight: 600, color: progress >= idx ? '#fff' : '#475569' }}>{step}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
 
       {/* Result */}
       {mode === 'result' && (
-        <div className="animate-fade-in-up" style={{ textAlign: 'center', paddingTop: 16 }}>
-          <div style={{
-            width: 80, height: 80,
-            background: 'rgba(16,185,129,0.15)',
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 24px',
-            boxShadow: '0 0 30px rgba(16,185,129,0.25)',
-          }}>
-            <CheckCircle size={40} color="#34d399" />
+        <div className="animate-fade-in-up" style={{ textAlign: 'center' }}>
+          <div
+            style={{
+              width: 60, height: 60,
+              borderRadius: '50%',
+              background: 'var(--green-dim)',
+              border: '1px solid var(--green-border)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 16px',
+            }}
+          >
+            <CheckCircle size={30} color="var(--green)" />
           </div>
-          <h2 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.5px' }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 6 }}>
             Extraction Complete
           </h2>
-          <p style={{ fontSize: 14, color: '#64748b', marginBottom: 32 }}>
-            Successfully structured product record with AI-extracted attributes.
+          <p style={{ fontSize: 13, color: 'var(--text-sub)', marginBottom: 28, maxWidth: 400, margin: '6px auto 28px' }}>
+            AI successfully extracted and structured product attributes. Review the preview below,
+            then navigate to the Product Catalog to see the full enriched record.
           </p>
 
-          {/* Product preview */}
-          <div style={{ ...cardBase, maxWidth: 480, margin: '0 auto 32px', textAlign: 'left', padding: '20px 24px' }}>
+          {/* Result preview card */}
+          <div
+            style={{
+              ...card,
+              maxWidth: 460,
+              margin: '0 auto 24px',
+              textAlign: 'left',
+            }}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-              <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#22d3ee', background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.35)', padding: '3px 10px', borderRadius: 9999 }}>
-                ✦ AI Enriched
+              <span className="badge badge-ai_enriched">
+                <Sparkles size={10} />
+                AI Enriched
               </span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#34d399' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--green)' }}>
                 {extractedProduct ? `${extractedProduct.completeness}% Complete` : '92% Confidence'}
               </span>
             </div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 3 }}>
               {extractedProduct?.name || 'Industrial Servo Motor MX-2000'}
             </h3>
-            <p style={{ fontSize: 12, color: '#22d3ee', fontFamily: 'JetBrains Mono, monospace', marginBottom: 16 }}>
-              {extractedProduct?.sku || 'SKU: MX-2000-V3'}
+            <p style={{ fontSize: 11, color: 'var(--blue)', fontFamily: 'JetBrains Mono, monospace', marginBottom: 16 }}>
+              {extractedProduct?.sku || 'MX-2000-V3'}
             </p>
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {(extractedProduct?.attributes.slice(0, 3) || [
-                { key: 'voltage', value: '400V' },
-                { key: 'ipRating', value: 'IP65' },
-                { key: 'power', value: '2.5 kW' },
-              ]).map((attr: any, i: number) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                  <span style={{ color: '#64748b', textTransform: 'capitalize' }}>{attr.key}</span>
-                  <span style={{ color: '#fff', fontWeight: 600 }}>{attr.value}</span>
-                </div>
-              ))}
+
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: 14 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>
+                Extracted Attributes
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {(
+                  extractedProduct?.attributes.slice(0, 4) || [
+                    { key: 'voltage', value: '400V AC' },
+                    { key: 'ipRating', value: 'IP65' },
+                    { key: 'power', value: '2.5 kW' },
+                    { key: 'torque', value: '16.5 Nm' },
+                  ]
+                ).map((attr: any, i: number) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      fontSize: 13,
+                    }}
+                  >
+                    <span style={{ color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+                      {attr.key.replace(/([A-Z])/g, ' $1')}
+                    </span>
+                    <span
+                      style={{
+                        color: 'var(--text)',
+                        fontWeight: 600,
+                        fontFamily: 'JetBrains Mono, monospace',
+                        fontSize: 12,
+                        background: 'var(--bg)',
+                        border: '1px solid var(--border)',
+                        padding: '2px 8px',
+                        borderRadius: 4,
+                      }}
+                    >
+                      {attr.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
-            <button className="btn btn-secondary" onClick={() => { setMode('select'); setExtractedProduct(null); setInputText(''); setSelectedFile(null); }}>
-              Extract Another
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                setMode('select');
+                setExtractedProduct(null);
+                setInputText('');
+                setSelectedFile(null);
+              }}
+            >
+              Extract Another Product
             </button>
-            <button className="btn btn-primary" onClick={onExtractSuccess} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              View in Catalog <ChevronRight size={16} />
+            <button
+              id="btn-view-catalog"
+              className="btn btn-primary"
+              onClick={onExtractSuccess}
+            >
+              View in Product Catalog <ChevronRight size={15} />
             </button>
           </div>
         </div>

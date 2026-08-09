@@ -1,6 +1,14 @@
 import React from 'react';
 import { CatalogMetrics } from '../types/product';
-import { PackageSearch, CheckCircle2, FileText, AlertTriangle, Activity, Cpu, TrendingUp } from 'lucide-react';
+import {
+  Package,
+  CheckCircle2,
+  AlertTriangle,
+  Activity,
+  Cpu,
+  TrendingUp,
+  TrendingDown,
+} from 'lucide-react';
 
 interface MetricsOverviewProps {
   metrics: CatalogMetrics | null;
@@ -10,9 +18,9 @@ interface MetricsOverviewProps {
 const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) => {
   if (loading || !metrics) {
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="glass-card animate-shimmer" style={{ height: 140, borderRadius: 16 }} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="animate-shimmer" style={{ height: 110, borderRadius: 10, border: '1px solid var(--border)' }} />
         ))}
       </div>
     );
@@ -21,150 +29,169 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
   const cards = [
     {
       title: 'Total Products',
+      tooltip: 'Total number of product records in the catalog (raw + enriched)',
       value: metrics.totalProducts.toLocaleString(),
-      change: '+14.2% this week',
-      icon: PackageSearch,
-      subtitle: `${Object.keys(metrics.byCategory).length} active categories`,
-      color: '#6366f1',
-      bgGlow: 'rgba(99,102,241,0.12)',
-      iconColor: '#a5b4fc',
+      sub: `${Object.keys(metrics.byCategory).length} product categories`,
+      trend: '+14.2% this week',
+      trendUp: true,
+      icon: Package,
+      iconColor: '#3B82F6',
+      iconBg: 'var(--blue-dim)',
+      iconBorder: 'var(--blue-border)',
+      barColor: '#3B82F6',
     },
     {
       title: 'Commerce Ready',
+      tooltip: 'Products fully enriched, validated, and ready to publish on a commerce platform',
       value: `${metrics.commerceReadyPercent}%`,
-      change: '+5.8% quality bump',
+      sub: 'Enriched & validated',
+      trend: '+5.8% this month',
+      trendUp: true,
       icon: CheckCircle2,
-      subtitle: 'Fully enriched & validated',
-      color: '#10b981',
-      bgGlow: 'rgba(16,185,129,0.12)',
-      iconColor: '#34d399',
-      showBar: true,
+      iconColor: '#10B981',
+      iconBg: 'var(--green-dim)',
+      iconBorder: 'var(--green-border)',
       barValue: metrics.commerceReadyPercent,
+      barColor: '#10B981',
     },
     {
-      title: 'Avg Completeness',
+      title: 'Avg Data Completeness',
+      tooltip: 'Average % of required fields successfully extracted from source documents',
       value: `${metrics.averageCompleteness}%`,
-      change: 'Target: >85%',
-      icon: FileText,
-      subtitle: '42 extracted attributes',
-      color: '#06b6d4',
-      bgGlow: 'rgba(6,182,212,0.12)',
-      iconColor: '#22d3ee',
-      showBar: true,
-      barValue: metrics.averageCompleteness,
-    },
-    {
-      title: 'Anomalies Detected',
-      value: metrics.anomaliesDetected.toLocaleString(),
-      change: 'Requires review',
-      icon: AlertTriangle,
-      subtitle: `${metrics.anomaliesBySeverity.high} high severity`,
-      color: '#f59e0b',
-      bgGlow: 'rgba(245,158,11,0.12)',
-      iconColor: '#fbbf24',
-    },
-    {
-      title: 'Data Health Index',
-      value: `${metrics.dataHealthScore}/100`,
-      change: 'Optimal status',
+      sub: 'Target: >85%',
+      trend: metrics.averageCompleteness >= 85 ? 'On target' : 'Below target',
+      trendUp: metrics.averageCompleteness >= 85,
       icon: Activity,
-      subtitle: 'Based on ISO 8000',
-      color: '#8b5cf6',
-      bgGlow: 'rgba(139,92,246,0.12)',
-      iconColor: '#c4b5fd',
-      showBar: true,
-      barValue: metrics.dataHealthScore,
+      iconColor: '#8B5CF6',
+      iconBg: 'var(--violet-dim)',
+      iconBorder: 'var(--violet-border)',
+      barValue: metrics.averageCompleteness,
+      barColor: '#8B5CF6',
+    },
+    {
+      title: 'Anomalies to Review',
+      tooltip: 'AI-flagged data issues (conflicts, out-of-range values) requiring human validation',
+      value: metrics.anomaliesDetected.toLocaleString(),
+      sub: `${metrics.anomaliesBySeverity.high} high priority`,
+      trend: 'Needs review',
+      trendUp: false,
+      icon: AlertTriangle,
+      iconColor: '#F59E0B',
+      iconBg: 'var(--amber-dim)',
+      iconBorder: 'var(--amber-border)',
+      barColor: '#F59E0B',
     },
     {
       title: 'AI Pipeline',
-      value: metrics.pipelineStatus === 'running' ? 'Processing' : 'Standby',
-      change: 'RAG Model Ready',
+      tooltip: 'Status of the multi-agent extraction and enrichment pipeline',
+      value: metrics.pipelineStatus === 'running' ? 'Running' : 'Ready',
+      sub: 'Gemini 1.5 · RAG · Guard',
+      trend: 'Model loaded',
+      trendUp: true,
       icon: Cpu,
-      subtitle: 'Ready for new ingestion',
-      color: '#ec4899',
-      bgGlow: 'rgba(236,72,153,0.12)',
-      iconColor: '#f9a8d4',
+      iconColor: '#06B6D4',
+      iconBg: 'var(--cyan-dim)',
+      iconBorder: 'var(--cyan-border)',
+      barColor: '#06B6D4',
     },
   ];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
           <div
             key={idx}
-            className="glass-card"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              gap: 16,
-              borderRadius: 16,
-              padding: '20px 22px',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-              cursor: 'default',
-            }}
+            className="card"
+            style={{ padding: 18 }}
+            title={card.tooltip}
           >
-            {/* Top row */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#64748b', marginBottom: 6 }}>
+            {/* Icon + title row */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
+              <div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: 'var(--text-muted)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    marginBottom: 6,
+                  }}
+                >
                   {card.title}
-                </p>
-                <div style={{ fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.5px' }}>
+                </div>
+                <div
+                  style={{
+                    fontSize: 26,
+                    fontWeight: 800,
+                    color: 'var(--text)',
+                    letterSpacing: '-0.5px',
+                    lineHeight: 1,
+                  }}
+                >
                   {card.value}
                 </div>
               </div>
-              <div style={{
-                width: 44, height: 44,
-                borderRadius: 12,
-                background: card.bgGlow,
-                border: `1px solid ${card.color}40`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
-                marginLeft: 12,
-              }}>
-                <Icon size={22} color={card.iconColor} />
+              <div
+                style={{
+                  width: 36, height: 36,
+                  borderRadius: 8,
+                  background: card.iconBg,
+                  border: `1px solid ${card.iconBorder}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <Icon size={18} color={card.iconColor} />
               </div>
             </div>
 
-            {/* Bottom row */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: card.showBar ? 8 : 0 }}>
-                <span style={{ fontSize: 12, color: '#64748b' }}>{card.subtitle}</span>
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 4,
-                  fontSize: 11, fontWeight: 700, color: '#22d3ee',
-                  background: 'rgba(6,182,212,0.1)',
-                  padding: '2px 8px', borderRadius: 6,
-                  border: '1px solid rgba(6,182,212,0.2)',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                  marginLeft: 8,
-                }}>
-                  <TrendingUp size={10} />
-                  {card.change}
-                </span>
-              </div>
-
-              {card.showBar && card.barValue !== undefined && (
-                <div style={{
-                  width: '100%', height: 5,
-                  background: 'rgba(15,23,42,0.8)',
-                  borderRadius: 4, overflow: 'hidden',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                }}>
-                  <div style={{
+            {/* Progress bar */}
+            {card.barValue !== undefined && (
+              <div
+                style={{
+                  height: 3,
+                  background: 'var(--border)',
+                  borderRadius: 2,
+                  overflow: 'hidden',
+                  marginBottom: 10,
+                }}
+              >
+                <div
+                  style={{
                     height: '100%',
                     width: `${card.barValue}%`,
-                    borderRadius: 4,
-                    background: `linear-gradient(90deg, ${card.color}, ${card.color}cc)`,
-                    boxShadow: `0 0 8px ${card.color}80`,
-                    transition: 'width 1s ease',
-                  }} />
-                </div>
-              )}
+                    background: card.barColor,
+                    borderRadius: 2,
+                    transition: 'width 0.8s ease',
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Sub + trend */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {card.sub}
+              </span>
+              <span
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 3,
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: card.trendUp ? 'var(--green)' : 'var(--amber)',
+                  background: card.trendUp ? 'var(--green-dim)' : 'var(--amber-dim)',
+                  border: `1px solid ${card.trendUp ? 'var(--green-border)' : 'var(--amber-border)'}`,
+                  padding: '2px 7px',
+                  borderRadius: 4,
+                  flexShrink: 0,
+                }}
+              >
+                {card.trendUp ? <TrendingUp size={9} /> : <TrendingDown size={9} />}
+                {card.trend}
+              </span>
             </div>
           </div>
         );

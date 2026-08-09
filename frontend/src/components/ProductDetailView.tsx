@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Product } from '../types/product';
-import { ArrowLeft, Sparkles, AlertTriangle, Clock, ShieldAlert, Check, ShoppingBag, FileText, RefreshCw } from 'lucide-react';
+import {
+  ArrowLeft,
+  Sparkles,
+  AlertTriangle,
+  Clock,
+  ShieldAlert,
+  Check,
+  ShoppingBag,
+  FileText,
+  RefreshCw,
+  Info,
+  ChevronDown,
+} from 'lucide-react';
 import HITLValidationModal from './HITLValidationModal';
 import CADPreview3D from './CADPreview3D';
 import PIMConnectorsModal from './PIMConnectorsModal';
@@ -13,13 +25,22 @@ interface ProductDetailViewProps {
   isDark?: boolean;
 }
 
-const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack, isDark = false }) => {
+const statusConfig: Record<string, { label: string; color: string; bg: string; border: string }> = {
+  raw:            { label: 'Raw — Not yet AI processed', color: '#94A3B8', bg: 'rgba(148,163,184,0.1)',  border: 'rgba(148,163,184,0.25)' },
+  ai_enriched:    { label: 'AI Enriched',                color: '#06B6D4', bg: 'rgba(6,182,212,0.1)',   border: 'rgba(6,182,212,0.25)'   },
+  validated:      { label: 'Human Validated',            color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)',  border: 'rgba(139,92,246,0.25)'  },
+  commerce_ready: { label: 'Commerce Ready',             color: '#10B981', bg: 'rgba(16,185,129,0.1)',  border: 'rgba(16,185,129,0.25)'  },
+  flagged:        { label: 'Flagged — Needs Review',     color: '#EF4444', bg: 'rgba(239,68,68,0.1)',   border: 'rgba(239,68,68,0.25)'   },
+};
+
+const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }) => {
   const [activeTab, setActiveTab] = useState<'specs' | 'attributes' | 'anomalies' | 'audit'>('specs');
   const [showValidation, setShowValidation] = useState(false);
   const [showPIMModal, setShowPIMModal] = useState(false);
   const [downloadingPDF, setDownloadingPDF] = useState(false);
   const [substitutes, setSubstitutes] = useState<any[]>([]);
   const [loadingSubstitutes, setLoadingSubstitutes] = useState(false);
+  const [showCAD, setShowCAD] = useState(false);
 
   useEffect(() => {
     const fetchSubstitutes = async () => {
@@ -27,10 +48,24 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack, 
       try {
         const res = await api.getSubstitutes(product.id);
         setSubstitutes(res.substitutes || []);
-      } catch (err) {
+      } catch {
         setSubstitutes([
-          { id: 'sub-1', name: 'Bosch Rexroth Servo Motor MS2N05', sku: 'MS2N05-D01', manufacturer: 'Bosch Rexroth', matchPercentage: '98.4%', recommendation: '100% Drop-in Substitute — Identical mounting & 400V drive rating' },
-          { id: 'sub-2', name: 'Siemens 1FK7 Synchronous Servo', sku: '1FK7060-2AC71', manufacturer: 'Siemens AG', matchPercentage: '95.1%', recommendation: 'Compatible alternative — verify terminal box orientation' }
+          {
+            id: 'sub-1',
+            name: 'Bosch Rexroth Servo Motor MS2N05',
+            sku: 'MS2N05-D01',
+            manufacturer: 'Bosch Rexroth',
+            matchPercentage: '98.4%',
+            recommendation: '100% Drop-in — identical mounting & voltage rating',
+          },
+          {
+            id: 'sub-2',
+            name: 'Siemens 1FK7 Synchronous Servo',
+            sku: '1FK7060-2AC71',
+            manufacturer: 'Siemens AG',
+            matchPercentage: '95.1%',
+            recommendation: 'Compatible — verify terminal box orientation',
+          },
         ]);
       }
       setLoadingSubstitutes(false);
@@ -48,280 +83,706 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack, 
     setDownloadingPDF(false);
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'raw': return <span className="badge badge-raw">Raw</span>;
-      case 'ai_enriched': return <span className="badge badge-ai_enriched"><Sparkles size={10} /> AI Enriched</span>;
-      case 'validated': return <span className="badge badge-validated">Validated</span>;
-      case 'commerce_ready': return <span className="badge badge-commerce_ready">Ready</span>;
-      case 'flagged': return <span className="badge badge-flagged"><AlertTriangle size={10} /> Flagged</span>;
-      default: return null;
-    }
-  };
+  const cfg = statusConfig[product.status] || statusConfig.raw;
 
-  const textColor = isDark ? '#ffffff' : '#0f172a';
-  const subtextColor = isDark ? '#64748b' : '#64748b';
-  const cardBg = isDark ? 'linear-gradient(145deg, rgba(30,41,59,0.65) 0%, rgba(15,23,42,0.85) 100%)' : '#ffffff';
-  const cardBorder = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
+  const tabs = [
+    { id: 'specs',      label: 'Technical Specs',        count: null },
+    { id: 'attributes', label: 'AI Extracted Attributes', count: product.attributes.length },
+    { id: 'anomalies',  label: 'Anomaly Flags',           count: product.anomalies.length },
+    { id: 'audit',      label: 'AI Audit Trail',          count: null },
+  ];
 
   return (
-    <div className="animate-fade-in-up min-w-0">
-      <button 
-        onClick={onBack} 
+    <div className="animate-fade-in-up">
+      {/* Back button */}
+      <button
+        onClick={onBack}
         style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
-          color: isDark ? '#cbd5e1' : '#475569',
-          background: isDark ? 'rgba(255,255,255,0.04)' : '#ffffff',
-          padding: '6px 14px', borderRadius: 10,
-          border: `1px solid ${cardBorder}`,
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontSize: 12, fontWeight: 600,
+          color: 'var(--text-muted)',
+          background: 'var(--bg-card)',
+          padding: '6px 12px', borderRadius: 7,
+          border: '1px solid var(--border)',
           marginBottom: 20, cursor: 'pointer',
+          transition: 'color 0.15s',
         }}
+        onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = 'var(--text)')}
+        onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)')}
       >
-        <ArrowLeft size={14} /> Back to Catalog
+        <ArrowLeft size={13} /> Back to Catalog
       </button>
 
-      {/* Header Profile Card */}
-      <div className="glass-card" style={{ marginBottom: 24, borderRadius: 16, padding: 24, background: cardBg, border: `1px solid ${cardBorder}` }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
+      {/* Header card */}
+      <div
+        className="card"
+        style={{ marginBottom: 20, padding: '22px 24px' }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Title row */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              flexWrap: 'wrap',
+              gap: 16,
+            }}
+          >
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                <h1 style={{ fontSize: 24, fontWeight: 800, color: textColor, letterSpacing: '-0.5px' }}>{product.name}</h1>
-                {getStatusBadge(product.status)}
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12, fontSize: 13, color: subtextColor, fontFamily: 'JetBrains Mono, monospace' }}>
-                <span>SKU: <strong style={{ color: isDark ? '#22d3ee' : '#0284c7' }}>{product.sku}</strong></span>
-                <span>•</span>
-                <span>Manufacturer: <strong style={{ color: textColor }}>{product.manufacturer}</strong></span>
-                <span>•</span>
-                <span>Category: <strong style={{ color: textColor }}>{product.category}</strong></span>
+              {/* Status badge */}
+              <span
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  padding: '3px 10px', borderRadius: 5,
+                  fontSize: 10, fontWeight: 600,
+                  color: cfg.color,
+                  background: cfg.bg,
+                  border: `1px solid ${cfg.border}`,
+                  marginBottom: 10,
+                }}
+              >
+                {cfg.label}
+              </span>
+
+              <h1
+                style={{
+                  fontSize: 22,
+                  fontWeight: 800,
+                  color: 'var(--text)',
+                  letterSpacing: '-0.4px',
+                  marginBottom: 8,
+                }}
+              >
+                {product.name}
+              </h1>
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 16,
+                  fontSize: 12,
+                  color: 'var(--text-muted)',
+                }}
+              >
+                <span>
+                  SKU:{' '}
+                  <strong
+                    style={{
+                      color: 'var(--blue)',
+                      fontFamily: 'JetBrains Mono, monospace',
+                    }}
+                  >
+                    {product.sku}
+                  </strong>
+                </span>
+                <span>
+                  Manufacturer:{' '}
+                  <strong style={{ color: 'var(--text)' }}>{product.manufacturer}</strong>
+                </span>
+                <span>
+                  Category:{' '}
+                  <strong style={{ color: 'var(--text)' }}>{product.category}</strong>
+                </span>
               </div>
             </div>
-            
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
-              <button className="btn btn-primary" onClick={() => setShowValidation(true)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Sparkles size={16} /> Human Validation & AI Enrich
-              </button>
 
-              <button className="btn btn-accent" onClick={() => setShowPIMModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <ShoppingBag size={16} /> Push to Shopify / SAP
+            {/* Action buttons */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+              <button
+                id="btn-validate"
+                className="btn btn-primary"
+                onClick={() => setShowValidation(true)}
+                style={{ fontSize: 12 }}
+              >
+                <Sparkles size={14} /> Validate with AI
               </button>
-
-              <button className="btn btn-secondary" onClick={handleDownloadDatasheet} disabled={downloadingPDF} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <FileText size={16} color="#0284c7" />
-                {downloadingPDF ? 'Generating...' : 'PDF Datasheet + QR'}
+              <button
+                id="btn-push-pim"
+                className="btn btn-accent"
+                onClick={() => setShowPIMModal(true)}
+                style={{ fontSize: 12 }}
+              >
+                <ShoppingBag size={14} /> Export to Shopify / SAP
+              </button>
+              <button
+                id="btn-pdf"
+                className="btn btn-secondary"
+                onClick={handleDownloadDatasheet}
+                disabled={downloadingPDF}
+                style={{ fontSize: 12 }}
+              >
+                <FileText size={14} />
+                {downloadingPDF ? 'Generating...' : 'Download PDF + QR'}
               </button>
             </div>
           </div>
 
-          {/* Spec Overview Bar */}
-          <div style={{ paddingTop: 16, borderTop: `1px solid ${cardBorder}`, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
-             <div>
-               <p style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: subtextColor, marginBottom: 6 }}>Completeness Score</p>
-               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                 <div style={{ flex: 1, height: 6, background: isDark ? 'rgba(15,23,42,0.8)' : '#e2e8f0', borderRadius: 4, overflow: 'hidden' }}>
-                   <div style={{ height: '100%', width: `${product.completeness}%`, background: 'linear-gradient(90deg, #4f46e5, #0284c7)', borderRadius: 4 }} />
-                 </div>
-                 <span style={{ fontSize: 14, fontWeight: 800, color: textColor }}>{product.completeness}%</span>
-               </div>
-             </div>
-             <div>
-               <p style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: subtextColor, marginBottom: 6 }}>Anomalies Detected</p>
-               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                 <AlertTriangle size={16} color={product.anomalies.length > 0 ? '#d97706' : '#059669'} />
-                 <span style={{ fontSize: 14, fontWeight: 700, color: textColor }}>{product.anomalies.length} flag{product.anomalies.length !== 1 ? 's' : ''}</span>
-               </div>
-             </div>
-             <div>
-               <p style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: subtextColor, marginBottom: 6 }}>Pipeline Engine</p>
-               <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: isDark ? '#22d3ee' : '#0284c7', fontWeight: 600 }}>
-                 <Clock size={15} />
-                 <span>{product.extractionMethod || 'Gemini 1.5 Multi-Agent'}</span>
-               </div>
-             </div>
+          {/* Stats bar */}
+          <div
+            style={{
+              paddingTop: 16,
+              borderTop: '1px solid var(--border)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+              gap: 16,
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                Data Completeness
+                <span style={{ marginLeft: 4, fontSize: 9, fontWeight: 400 }}>(% fields filled)</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div
+                  style={{
+                    flex: 1, height: 5,
+                    background: 'var(--bg)',
+                    borderRadius: 3, overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      height: '100%',
+                      width: `${product.completeness}%`,
+                      background: product.completeness >= 80 ? '#10B981' : 'var(--blue)',
+                      borderRadius: 3,
+                    }}
+                  />
+                </div>
+                <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)' }}>
+                  {product.completeness}%
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                Anomaly Flags
+                <span style={{ marginLeft: 4, fontSize: 9, fontWeight: 400 }}>(AI-detected issues)</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <AlertTriangle
+                  size={15}
+                  color={product.anomalies.length > 0 ? '#F59E0B' : '#10B981'}
+                />
+                <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>
+                  {product.anomalies.length} flag{product.anomalies.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                AI Engine Used
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--blue)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>
+                <Clock size={13} />
+                {product.extractionMethod || 'Gemini 1.5 Multi-Agent'}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Grid Layout: 3D CAD Preview + Navigation Tabs */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24, marginBottom: 24 }}>
-        {/* Left Column: Tabs & Main Data */}
-        <div style={{ minWidth: 0 }}>
-          {/* Navigation Tabs */}
-          <div style={{ display: 'flex', gap: 8, borderBottom: `1px solid ${cardBorder}`, marginBottom: 20 }}>
-            {[
-              { id: 'specs', label: 'Technical Specifications' },
-              { id: 'attributes', label: `Attributes (${product.attributes.length})` },
-              { id: 'anomalies', label: `Anomalies (${product.anomalies.length})` },
-              { id: 'audit', label: 'Multi-Agent Audit Trail' }
-            ].map(tab => (
+      {/* Main content grid */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 320px',
+          gap: 20,
+          alignItems: 'start',
+        }}
+      >
+        {/* Left: Tabs */}
+        <div>
+          {/* Tab navigation */}
+          <div
+            style={{
+              display: 'flex',
+              gap: 0,
+              borderBottom: '1px solid var(--border)',
+              marginBottom: 20,
+              overflow: 'auto',
+            }}
+          >
+            {tabs.map((tab) => (
               <button
                 key={tab.id}
+                id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id as any)}
                 style={{
-                  paddingBottom: 10, paddingLeft: 12, paddingRight: 12,
-                  fontWeight: 700, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em',
-                  color: activeTab === tab.id ? '#4f46e5' : subtextColor,
-                  borderBottom: activeTab === tab.id ? '2px solid #4f46e5' : '2px solid transparent',
-                  cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
+                  padding: '10px 16px',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: activeTab === tab.id ? 'var(--blue)' : 'var(--text-muted)',
+                  borderBottom: `2px solid ${activeTab === tab.id ? 'var(--blue)' : 'transparent'}`,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
                 }}
               >
                 {tab.label}
+                {tab.count !== null && (
+                  <span
+                    style={{
+                      fontSize: 10, fontWeight: 700,
+                      background: activeTab === tab.id ? 'var(--blue-dim)' : 'rgba(255,255,255,0.06)',
+                      color: activeTab === tab.id ? 'var(--blue)' : 'var(--text-muted)',
+                      border: `1px solid ${activeTab === tab.id ? 'var(--blue-border)' : 'var(--border)'}`,
+                      padding: '1px 5px',
+                      borderRadius: 4,
+                    }}
+                  >
+                    {tab.count}
+                  </span>
+                )}
               </button>
             ))}
           </div>
 
-          {/* Tab Contents */}
+          {/* Specs tab */}
           {activeTab === 'specs' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 12 }}>
-              {Object.entries(product.specs).map(([key, value]) => (
-                <div key={key} className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderRadius: 12, background: cardBg, border: `1px solid ${cardBorder}` }}>
-                  <span style={{ fontSize: 11, color: subtextColor, textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>{key.replace(/([A-Z])/g, ' $1')}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: textColor, fontFamily: 'JetBrains Mono, monospace', background: isDark ? 'rgba(255,255,255,0.04)' : '#f1f5f9', padding: '4px 10px', borderRadius: 6 }}>
-                    {value || <span style={{ color: '#94a3b8', fontStyle: 'italic', fontWeight: 400 }}>N/A</span>}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {activeTab === 'attributes' && (
-            <div style={{ borderRadius: 16, overflow: 'hidden', border: `1px solid ${cardBorder}`, background: cardBg }}>
-              <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
-                <thead>
-                  <tr>
-                    {['Attribute Name', 'Extracted Value', 'Confidence', 'Enriched By', 'Source Citation'].map((h, i) => (
-                      <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: subtextColor, borderBottom: `1px solid ${cardBorder}`, background: isDark ? 'rgba(255,255,255,0.02)' : '#f8fafc' }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {product.attributes.map((attr, idx) => (
-                    <tr key={idx}>
-                      <td style={{ padding: '12px 16px', borderBottom: `1px solid ${cardBorder}`, fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: isDark ? '#22d3ee' : '#0284c7', fontWeight: 700 }}>{attr.key}</td>
-                      <td style={{ padding: '12px 16px', borderBottom: `1px solid ${cardBorder}`, fontSize: 13, fontWeight: 700, color: textColor }}>{attr.value}</td>
-                      <td style={{ padding: '12px 16px', borderBottom: `1px solid ${cardBorder}`, width: 140 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <div style={{ flex: 1, height: 5, background: isDark ? 'rgba(15,23,42,0.8)' : '#e2e8f0', borderRadius: 4, overflow: 'hidden' }}>
-                            <div style={{ height: '100%', width: `${attr.confidence * 100}%`, background: 'linear-gradient(90deg, #4f46e5, #0284c7)', borderRadius: 4 }} />
-                          </div>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: textColor }}>{Math.round(attr.confidence * 100)}%</span>
-                        </div>
-                      </td>
-                      <td style={{ padding: '12px 16px', borderBottom: `1px solid ${cardBorder}` }}>
-                        <span className="source-tag">{attr.enrichedBy}</span>
-                      </td>
-                      <td style={{ padding: '12px 16px', borderBottom: `1px solid ${cardBorder}`, fontSize: 12, color: subtextColor, fontStyle: 'italic' }}>
-                        "{attr.sourceQuote}"
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {activeTab === 'anomalies' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {product.anomalies.length === 0 ? (
-                <div className="glass-card" style={{ textAlign: 'center', padding: '48px 24px', borderRadius: 16, background: cardBg, border: `1px solid ${cardBorder}` }}>
-                  <Check size={40} color="#059669" style={{ margin: '0 auto 12px' }} />
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: textColor, marginBottom: 4 }}>Zero Anomalies Detected</h3>
-                  <p style={{ fontSize: 13, color: subtextColor }}>All extracted attributes comply with ISO standard engineering baselines.</p>
-                </div>
-              ) : (
-                product.anomalies.map((anom, idx) => (
-                  <div key={idx} className="glass-card" style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: 18, borderRadius: 14, background: cardBg, border: `1px solid ${cardBorder}`, borderLeft: '4px solid #d97706' }}>
-                    <ShieldAlert size={20} color="#d97706" style={{ flexShrink: 0, marginTop: 2 }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, fontWeight: 800, color: '#d97706', textTransform: 'uppercase' }}>{anom.field}</span>
-                        <span style={{ fontSize: 10, fontWeight: 800, background: '#fef3c7', color: '#d97706', padding: '2px 8px', borderRadius: 9999 }}>{anom.severity}</span>
-                      </div>
-                      <p style={{ fontSize: 13, color: textColor, fontWeight: 600 }}>{anom.issue}</p>
-                    </div>
-                    <button className="btn btn-secondary" style={{ fontSize: 12 }}>Resolve Flag</button>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          {activeTab === 'audit' && (
-            <div className="glass-card" style={{ padding: 24, borderRadius: 16, background: cardBg, border: `1px solid ${cardBorder}` }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                {product.auditLog.map((log, idx) => (
-                  <div key={idx} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                    <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#4f46e5', marginTop: 4, flexShrink: 0, boxShadow: '0 0 8px #4f46e5' }} />
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: 14, fontWeight: 700, color: textColor }}>{log.action}</span>
-                        <span style={{ fontSize: 12, color: subtextColor }}>by {log.actor}</span>
-                      </div>
-                      <p style={{ fontSize: 13, color: subtextColor, marginTop: 4 }}>{log.details}</p>
-                      <span style={{ fontSize: 11, color: isDark ? '#22d3ee' : '#0284c7', fontFamily: 'JetBrains Mono, monospace', marginTop: 4, display: 'block' }}>
-                        {new Date(log.timestamp).toLocaleString()}
-                      </span>
-                    </div>
+            <div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.5 }}>
+                <Info size={12} style={{ display: 'inline', marginRight: 4 }} />
+                Raw technical specifications extracted from the source document. Fields marked N/A were not found in the original text.
+              </div>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                  gap: 10,
+                }}
+              >
+                {Object.entries(product.specs).map(([key, value]) => (
+                  <div
+                    key={key}
+                    className="card"
+                    style={{
+                      padding: '12px 14px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      gap: 8,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: 'var(--text-muted)',
+                        textTransform: 'capitalize',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {key.replace(/([A-Z])/g, ' $1').trim()}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: value ? 'var(--text)' : 'var(--text-muted)',
+                        fontFamily: 'JetBrains Mono, monospace',
+                        background: 'var(--bg)',
+                        border: '1px solid var(--border)',
+                        padding: '3px 8px',
+                        borderRadius: 4,
+                        flexShrink: 0,
+                        fontStyle: value ? 'normal' : 'italic',
+                      }}
+                    >
+                      {value || 'N/A'}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
           )}
+
+          {/* Attributes tab */}
+          {activeTab === 'attributes' && (
+            <div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.5 }}>
+                <Info size={12} style={{ display: 'inline', marginRight: 4 }} />
+                Each attribute shows the AI's extracted value, confidence score (how certain the model is), and the exact quote from the source document that justified the extraction.
+              </div>
+              <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ minWidth: 560 }}>
+                    <thead>
+                      <tr>
+                        <th>Attribute</th>
+                        <th>Extracted Value</th>
+                        <th>AI Confidence</th>
+                        <th>Source Method</th>
+                        <th>Evidence Quote</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {product.attributes.map((attr, idx) => (
+                        <tr key={idx}>
+                          <td>
+                            <span
+                              style={{
+                                fontFamily: 'JetBrains Mono, monospace',
+                                fontSize: 11,
+                                color: 'var(--blue)',
+                                fontWeight: 600,
+                              }}
+                            >
+                              {attr.key}
+                            </span>
+                          </td>
+                          <td>
+                            <span
+                              style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}
+                            >
+                              {attr.value}
+                            </span>
+                          </td>
+                          <td style={{ minWidth: 120 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <div
+                                style={{
+                                  flex: 1,
+                                  height: 4,
+                                  background: 'var(--bg)',
+                                  borderRadius: 2,
+                                  overflow: 'hidden',
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    height: '100%',
+                                    width: `${attr.confidence * 100}%`,
+                                    background:
+                                      attr.confidence > 0.8
+                                        ? '#10B981'
+                                        : attr.confidence > 0.5
+                                        ? 'var(--blue)'
+                                        : '#F59E0B',
+                                    borderRadius: 2,
+                                  }}
+                                />
+                              </div>
+                              <span
+                                style={{
+                                  fontSize: 11,
+                                  fontWeight: 700,
+                                  color:
+                                    attr.confidence > 0.8
+                                      ? 'var(--green)'
+                                      : attr.confidence > 0.5
+                                      ? 'var(--blue)'
+                                      : 'var(--amber)',
+                                }}
+                              >
+                                {Math.round(attr.confidence * 100)}%
+                              </span>
+                            </div>
+                          </td>
+                          <td>
+                            <span className="source-tag">{attr.enrichedBy}</span>
+                          </td>
+                          <td
+                            style={{
+                              fontSize: 11,
+                              color: 'var(--text-muted)',
+                              fontStyle: 'italic',
+                              maxWidth: 180,
+                            }}
+                          >
+                            "{attr.sourceQuote}"
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Anomalies tab */}
+          {activeTab === 'anomalies' && (
+            <div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.5 }}>
+                <Info size={12} style={{ display: 'inline', marginRight: 4 }} />
+                Anomalies are data quality issues detected by the AI's Compliance Guard Agent — values that conflict with each other, fall outside engineering norms, or are inconsistent with ISO standards.
+              </div>
+              {product.anomalies.length === 0 ? (
+                <div
+                  className="card"
+                  style={{ textAlign: 'center', padding: '40px 24px' }}
+                >
+                  <Check size={32} color="var(--green)" style={{ margin: '0 auto 10px' }} />
+                  <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+                    No Anomalies Detected
+                  </h3>
+                  <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                    All extracted values passed ISO engineering baseline validation.
+                  </p>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {product.anomalies.map((anom, idx) => (
+                    <div
+                      key={idx}
+                      className="card"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: 14,
+                        padding: '16px 18px',
+                        borderLeft: '3px solid var(--amber)',
+                      }}
+                    >
+                      <ShieldAlert
+                        size={18}
+                        color="var(--amber)"
+                        style={{ flexShrink: 0, marginTop: 1 }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                          <span
+                            style={{
+                              fontFamily: 'JetBrains Mono, monospace',
+                              fontSize: 11,
+                              fontWeight: 700,
+                              color: 'var(--amber)',
+                            }}
+                          >
+                            {anom.field}
+                          </span>
+                          <span
+                            className={`badge badge-severity-${anom.severity}`}
+                            style={{ fontSize: 9 }}
+                          >
+                            {anom.severity} severity
+                          </span>
+                        </div>
+                        <p style={{ fontSize: 13, color: 'var(--text)', lineHeight: 1.5 }}>
+                          {anom.issue}
+                        </p>
+                      </div>
+                      <button className="btn btn-secondary" style={{ fontSize: 11, flexShrink: 0 }}>
+                        Mark Resolved
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Audit trail tab */}
+          {activeTab === 'audit' && (
+            <div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.5 }}>
+                <Info size={12} style={{ display: 'inline', marginRight: 4 }} />
+                Complete audit trail of every AI and human action taken on this product record — for traceability and compliance.
+              </div>
+              <div className="card" style={{ padding: '20px 22px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                  {product.auditLog.map((log, idx) => (
+                    <div
+                      key={idx}
+                      style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}
+                    >
+                      <div
+                        style={{
+                          width: 8, height: 8,
+                          borderRadius: '50%',
+                          background: 'var(--blue)',
+                          marginTop: 5,
+                          flexShrink: 0,
+                        }}
+                      />
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
+                            {log.action}
+                          </span>
+                          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                            by {log.actor}
+                          </span>
+                        </div>
+                        <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                          {log.details}
+                        </p>
+                        <span
+                          style={{
+                            fontSize: 10,
+                            color: 'var(--blue)',
+                            fontFamily: 'JetBrains Mono, monospace',
+                            marginTop: 4,
+                            display: 'block',
+                          }}
+                        >
+                          {new Date(log.timestamp).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Right Column: 3D CAD WebGL Model & Vector Substitutes */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {/* 3D WebGL CAD Model Preview */}
-          <CADPreview3D product={product} isDark={isDark} />
+        {/* Right sidebar */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-          {/* Vector Similarity Interchangeable Drop-in Substitutes */}
-          <div className="glass-card" style={{ padding: 18, borderRadius: 16, background: cardBg, border: `1px solid ${cardBorder}` }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <RefreshCw size={15} color="#4f46e5" />
-                <h4 style={{ fontSize: 13, fontWeight: 800, color: textColor }}>Interchangeable Substitutes</h4>
+          {/* 3D CAD Preview collapsible */}
+          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            <button
+              onClick={() => setShowCAD(!showCAD)}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                width: '100%', padding: '14px 16px',
+                cursor: 'pointer',
+                borderBottom: showCAD ? '1px solid var(--border)' : 'none',
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>
+                  3D CAD Preview
+                </div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                  Interactive WebGL model from extracted specs
+                </div>
               </div>
-              <span style={{ fontSize: 10, fontWeight: 800, background: 'rgba(79,70,229,0.12)', color: '#4f46e5', padding: '2px 8px', borderRadius: 9999 }}>
-                Vector Cosine Similarity
-              </span>
+              <ChevronDown
+                size={16}
+                color="var(--text-muted)"
+                style={{ transform: showCAD ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+              />
+            </button>
+            {showCAD && (
+              <div style={{ padding: 12 }}>
+                <CADPreview3D product={product} isDark={true} />
+              </div>
+            )}
+          </div>
+
+          {/* Vector Substitute Finder */}
+          <div className="card">
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                <RefreshCw size={14} color="var(--text-muted)" />
+                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
+                  Drop-in Substitutes
+                </span>
+                <span
+                  style={{
+                    fontSize: 9, fontWeight: 700,
+                    background: 'var(--blue-dim)',
+                    color: 'var(--blue)',
+                    border: '1px solid var(--blue-border)',
+                    padding: '1px 5px', borderRadius: 4,
+                  }}
+                >
+                  AI
+                </span>
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                Interchangeable parts found using vector cosine similarity across the catalog
+              </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {loadingSubstitutes ? (
-                <div style={{ fontSize: 12, color: subtextColor, textAlign: 'center', padding: '20px 0' }}>Computing embeddings...</div>
-              ) : substitutes.map((sub, i) => (
-                <div key={i} style={{ padding: 12, borderRadius: 10, background: isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc', border: `1px solid ${cardBorder}` }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: textColor }}>{sub.name}</span>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: '#059669', background: isDark ? 'rgba(16,185,129,0.12)' : '#d1fae5', padding: '2px 6px', borderRadius: 4 }}>
-                      {sub.matchPercentage}
-                    </span>
-                  </div>
-                  <p style={{ fontSize: 11, color: isDark ? '#22d3ee' : '#0284c7', fontFamily: 'JetBrains Mono, monospace', marginBottom: 4 }}>{sub.sku} • {sub.manufacturer}</p>
-                  <p style={{ fontSize: 11, color: subtextColor, fontStyle: 'italic' }}>{sub.recommendation}</p>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>
+                  Computing attribute embeddings…
                 </div>
-              ))}
+              ) : (
+                substitutes.map((sub, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      padding: '12px 14px',
+                      background: 'var(--bg)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 8,
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>
+                        {sub.name}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: 11, fontWeight: 700,
+                          color: 'var(--green)',
+                          background: 'var(--green-dim)',
+                          border: '1px solid var(--green-border)',
+                          padding: '2px 6px', borderRadius: 4,
+                          flexShrink: 0,
+                        }}
+                      >
+                        {sub.matchPercentage}
+                      </span>
+                    </div>
+                    <p
+                      style={{
+                        fontSize: 10,
+                        color: 'var(--blue)',
+                        fontFamily: 'JetBrains Mono, monospace',
+                        marginBottom: 4,
+                      }}
+                    >
+                      {sub.sku} · {sub.manufacturer}
+                    </p>
+                    <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                      {sub.recommendation}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Quick export panel */}
+          <div className="card">
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
+              Export & Integrate
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 14 }}>
+              Push this product to external commerce & ERP systems
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <button
+                className="btn btn-accent"
+                onClick={() => setShowPIMModal(true)}
+                style={{ fontSize: 12, width: '100%', justifyContent: 'flex-start' }}
+              >
+                <ShoppingBag size={13} />
+                Push to Shopify / SAP IDoc / Akeneo
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={handleDownloadDatasheet}
+                disabled={downloadingPDF}
+                style={{ fontSize: 12, width: '100%', justifyContent: 'flex-start' }}
+              >
+                <FileText size={13} />
+                {downloadingPDF ? 'Generating PDF…' : 'Download PDF Datasheet + QR Code'}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Modals */}
       {showValidation && (
-        <HITLValidationModal 
-          product={product} 
-          onClose={() => setShowValidation(false)} 
-        />
+        <HITLValidationModal product={product} onClose={() => setShowValidation(false)} />
       )}
-
       {showPIMModal && (
-        <PIMConnectorsModal
-          product={product}
-          onClose={() => setShowPIMModal(false)}
-          isDark={isDark}
-        />
+        <PIMConnectorsModal product={product} onClose={() => setShowPIMModal(false)} isDark={true} />
       )}
     </div>
   );
