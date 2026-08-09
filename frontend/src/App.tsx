@@ -268,36 +268,36 @@ function App() {
                       tag: 'OCR PARSED',
                       msg: 'Parsed 42 pages from Supplier_Catalog_Q3.pdf',
                       sub: 'Extracted 128 attributes across 6 product lines with Gemini VLM',
-                      color: '#1E40AF',
-                      bg: '#DBEAFE',
-                      border: '#93C5FD',
+                      color: '#38BDF8',
+                      bg: 'rgba(56, 189, 248, 0.1)',
+                      border: 'rgba(56, 189, 248, 0.3)',
                     },
                     {
                       time: '17s ago',
                       tag: 'RAG ENRICHED',
                       msg: 'AI RAG Enrichment: 12 missing specs filled',
                       sub: 'Inferred missing IP rating & insulation class from Knowledge Graph lookup',
-                      color: '#166534',
-                      bg: '#DCFCE7',
-                      border: '#86EFAC',
+                      color: '#34D399',
+                      bg: 'rgba(52, 211, 153, 0.1)',
+                      border: 'rgba(52, 211, 153, 0.3)',
                     },
                     {
                       time: '41s ago',
                       tag: 'FLAGGED',
                       msg: 'Anomaly Flagged: MX-1002 Torque mismatch',
                       sub: 'Value 150 Nm exceeds family average 14.2 Nm — queued for review',
-                      color: '#92400E',
-                      bg: '#FEF3C7',
-                      border: '#FDE68A',
+                      color: '#FBBF24',
+                      bg: 'rgba(251, 191, 36, 0.1)',
+                      border: 'rgba(251, 191, 36, 0.3)',
                     },
                     {
                       time: '66s ago',
                       tag: 'COMPLIANCE',
                       msg: 'ISO 60034-30-1 check passed for 8 motors',
                       sub: 'Knowledge Graph verified energy efficiency IE3/IE4 compliance',
-                      color: '#6B21A8',
-                      bg: '#F3E8FF',
-                      border: '#D8B4FE',
+                      color: '#818CF8',
+                      bg: 'rgba(129, 140, 248, 0.1)',
+                      border: 'rgba(129, 140, 248, 0.3)',
                     },
                   ].map((log, i) => (
                     <div
@@ -307,23 +307,23 @@ function App() {
                         flexDirection: 'column',
                         gap: 6,
                         padding: '14px 16px',
-                        borderRadius: 12,
-                        background: '#0F172A',
-                        border: '1px solid #334155',
+                        borderRadius: 10,
+                        background: '#0D1117',
+                        border: '1px solid #30363D',
                       }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: 12, fontWeight: 800, color: log.color, background: log.bg, border: `1px solid ${log.border}`, padding: '3px 9px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: log.color, background: log.bg, border: `1px solid ${log.border}`, padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                           {log.tag}
                         </span>
-                        <span style={{ fontSize: 13, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>
+                        <span style={{ fontSize: 12, color: '#8B949E', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>
                           {log.time}
                         </span>
                       </div>
-                      <div style={{ fontSize: 15, fontWeight: 800, color: '#FFFFFF', marginTop: 3 }}>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: '#F0F6FC', marginTop: 2 }}>
                         {log.msg}
                       </div>
-                      <div style={{ fontSize: 13, color: '#E2E8F0', lineHeight: 1.55 }}>
+                      <div style={{ fontSize: 13, color: '#C9D1D9', lineHeight: 1.5 }}>
                         {log.sub}
                       </div>
                     </div>
