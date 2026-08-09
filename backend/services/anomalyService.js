@@ -38,40 +38,65 @@ export function computeDataHealthScore(products) {
 }
 
 export function getCatalogMetrics(products) {
-  const metrics = {
-    total: products.length,
-    byStatus: { raw: 0, ai_enriched: 0, validated: 0, commerce_ready: 0, flagged: 0 },
-    byCategory: {},
-    avgCompleteness: 0,
-    anomalyCount: 0,
-    unresolvedAnomalies: 0,
-    healthScore: computeDataHealthScore(products),
-    commerceReadyPct: 0
-  };
-
-  if (products.length === 0) return metrics;
-
+  const byStatus = { raw: 0, ai_enriched: 0, validated: 0, commerce_ready: 0, flagged: 0 };
+  const byCategory = {};
+  const anomaliesBySeverity = { high: 0, medium: 0, low: 0 };
   let totalCompleteness = 0;
+  let totalAnomalies = 0;
+  let unresolvedAnomalies = 0;
+
+  if (!products || products.length === 0) {
+    return {
+      totalProducts: 0,
+      byCategory: {},
+      byStatus,
+      averageCompleteness: 0,
+      anomaliesDetected: 0,
+      anomaliesBySeverity,
+      dataHealthScore: 0,
+      commerceReadyPercent: 0,
+      pipelineStatus: 'idle'
+    };
+  }
 
   products.forEach(p => {
-    if (p.status && metrics.byStatus[p.status] !== undefined) {
-      metrics.byStatus[p.status]++;
+    if (p.status && byStatus[p.status] !== undefined) {
+      byStatus[p.status]++;
     }
     
     if (p.category) {
-      metrics.byCategory[p.category] = (metrics.byCategory[p.category] || 0) + 1;
+      byCategory[p.category] = (byCategory[p.category] || 0) + 1;
     }
 
     totalCompleteness += (p.completeness || 0);
 
-    if (p.anomalies) {
-      metrics.anomalyCount += p.anomalies.length;
-      metrics.unresolvedAnomalies += p.anomalies.filter(a => !a.resolved).length;
+    if (p.anomalies && Array.isArray(p.anomalies)) {
+      totalAnomalies += p.anomalies.length;
+      p.anomalies.forEach(a => {
+        if (!a.resolved) unresolvedAnomalies++;
+        const sev = (a.severity || 'low').toLowerCase();
+        if (anomaliesBySeverity[sev] !== undefined) {
+          anomaliesBySeverity[sev]++;
+        } else {
+          anomaliesBySeverity.low++;
+        }
+      });
     }
   });
 
-  metrics.avgCompleteness = Math.round(totalCompleteness / products.length);
-  metrics.commerceReadyPct = Math.round((metrics.byStatus.commerce_ready / products.length) * 100);
+  const averageCompleteness = Math.round(totalCompleteness / products.length);
+  const commerceReadyPercent = Math.round((byStatus.commerce_ready / products.length) * 100);
+  const healthObj = computeDataHealthScore(products);
 
-  return metrics;
+  return {
+    totalProducts: products.length,
+    byCategory,
+    byStatus,
+    averageCompleteness,
+    anomaliesDetected: totalAnomalies,
+    anomaliesBySeverity,
+    dataHealthScore: healthObj.score,
+    commerceReadyPercent,
+    pipelineStatus: 'idle'
+  };
 }
