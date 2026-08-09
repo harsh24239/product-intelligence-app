@@ -131,44 +131,44 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
               {/* Top Row: Severity Tag & SKU */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 12, fontWeight: 800, color: cfg.badgeColor, background: cfg.badgeBg, border: `1px solid ${cfg.badgeBorder}`, padding: '4px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: cfg.badgeColor, background: cfg.badgeBg, border: `1px solid ${cfg.badgeBorder}`, padding: '5px 12px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     {cfg.label}
                   </span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#60A5FA', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  <span style={{ fontSize: 15, fontWeight: 800, color: '#38BDF8', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {anomaly.sku}
                   </span>
                 </div>
                 <ChevronRight size={20} color="#94A3B8" />
               </div>
 
-              {/* Product Name in Electric Sky Blue (Matching Image) */}
-              <div style={{ fontSize: 18, fontWeight: 800, color: '#60A5FA' }}>
+              {/* Product Name in Electric Sky Blue */}
+              <div style={{ fontSize: 20, fontWeight: 800, color: '#FFFFFF' }}>
                 {anomaly.name}
               </div>
 
-              {/* Inset Spec Preview Chips (Matching Image) */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, fontSize: 14 }}>
+              {/* Inset Spec Preview Chips */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, fontSize: 15 }}>
                 
                 {/* 1. Field Name Chip */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(56, 189, 248, 0.25)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '8px 14px', borderRadius: 8, border: '1px solid rgba(56, 189, 248, 0.35)' }}>
                   <span style={{ color: '#94A3B8', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>field:</span>
-                  <span style={{ color: '#FFFFFF', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  <span style={{ color: '#FFFFFF', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {anomaly.field}
                   </span>
                 </div>
 
                 {/* 2. AI Extracted Value Chip */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(245, 158, 11, 0.35)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '8px 14px', borderRadius: 8, border: '1px solid rgba(245, 158, 11, 0.45)' }}>
                   <span style={{ color: '#FBBF24', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>extracted:</span>
-                  <span style={{ color: '#FBBF24', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  <span style={{ color: '#FBBF24', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {anomaly.extractedVal}
                   </span>
                 </div>
 
                 {/* 3. Suggested Value Chip */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(16, 185, 129, 0.35)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '8px 14px', borderRadius: 8, border: '1px solid rgba(16, 185, 129, 0.45)' }}>
                   <span style={{ color: '#34D399', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>suggested:</span>
-                  <span style={{ color: '#34D399', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  <span style={{ color: '#34D399', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {anomaly.expectedVal}
                   </span>
                 </div>
@@ -176,23 +176,23 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
               </div>
 
               {/* Reasoning Description */}
-              <div style={{ padding: '14px 18px', background: '#141C2E', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: 10, fontSize: 14, color: '#E2E8F0', lineHeight: 1.6, display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <Info size={18} color="#94A3B8" style={{ flexShrink: 0, marginTop: 2 }} />
+              <div style={{ padding: '16px 20px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, fontSize: 15, color: '#FFFFFF', lineHeight: 1.6, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <Info size={20} color="#60A5FA" style={{ flexShrink: 0, marginTop: 2 }} />
                 <span>{anomaly.issue}</span>
               </div>
 
               {/* Bottom Action Row */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 4 }}>
-                <div style={{ fontSize: 13, color: '#94A3B8', fontWeight: 600 }}>
-                  AI Confidence: <strong style={{ color: '#FFFFFF', fontSize: 14, fontWeight: 800 }}>{anomaly.confidence}%</strong>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 6 }}>
+                <div style={{ fontSize: 14, color: '#CBD5E1', fontWeight: 600 }}>
+                  AI Confidence: <strong style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 800 }}>{anomaly.confidence}%</strong>
                 </div>
 
                 <button
                   className="btn btn-accent"
                   onClick={(e) => handleResolve(e, anomaly.id)}
-                  style={{ fontSize: 13, padding: '8px 18px', fontWeight: 800 }}
+                  style={{ fontSize: 14, padding: '10px 20px', fontWeight: 800 }}
                 >
-                  <CheckCircle2 size={16} /> Approve Correction
+                  <CheckCircle2 size={18} /> Approve Correction
                 </button>
               </div>
 

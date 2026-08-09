@@ -128,9 +128,9 @@ GET /api/metrics`;
               <Sparkles size={16} color="var(--blue)" />
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>Export Structured Product Data</div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 1 }}>
-                AI-extracted intelligence for <strong style={{ color: 'var(--text)' }}>{product.name}</strong>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>Export Structured Product Data</div>
+              <div style={{ fontSize: 14, color: '#94A3B8', marginTop: 2, fontWeight: 600 }}>
+                AI-extracted intelligence for <strong style={{ color: '#38BDF8' }}>{product.name}</strong>
               </div>
             </div>
           </div>
@@ -142,13 +142,13 @@ GET /api/metrics`;
         <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
 
           {/* What this shows */}
-          <div style={{ padding: '10px 14px', background: 'rgba(59,130,246,0.06)', border: '1px solid var(--blue-border)', borderRadius: 8, fontSize: 12, color: 'var(--text-sub)', lineHeight: 1.6 }}>
-            <strong style={{ color: 'var(--text)' }}>AI Extraction Output:</strong>{' '}
-            This product has been processed through the multi-agent pipeline — {product.attributes.length} attributes extracted, {product.anomalies.length} anomaly flags detected, data completeness at <strong style={{ color: 'var(--text)' }}>{product.completeness}%</strong>. Select a format to export the structured output.
+          <div style={{ padding: '12px 16px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 10, fontSize: 14, color: '#FFFFFF', lineHeight: 1.6 }}>
+            <strong style={{ color: '#38BDF8' }}>AI Extraction Output:</strong>{' '}
+            This product has been processed through the multi-agent pipeline — {product.attributes.length} attributes extracted, {product.anomalies.length} anomaly flags detected, data completeness at <strong style={{ color: '#34D399' }}>{product.completeness}%</strong>. Select a format to export the structured output.
           </div>
 
           {/* Format selector */}
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 10 }}>
             {(Object.entries(formatConfig) as [ExportFormat, typeof formatConfig[ExportFormat]][]).map(([key, cfg]) => {
               const Icon = cfg.icon;
               const isActive = format === key;
@@ -157,17 +157,17 @@ GET /api/metrics`;
                   key={key}
                   onClick={() => setFormat(key)}
                   style={{
-                    flex: 1, padding: '10px 12px', borderRadius: 8, cursor: 'pointer',
-                    background: isActive ? 'var(--blue-dim)' : 'var(--bg)',
-                    border: `1px solid ${isActive ? 'var(--blue-border)' : 'var(--border)'}`,
+                    flex: 1, padding: '12px 14px', borderRadius: 10, cursor: 'pointer',
+                    background: isActive ? 'rgba(56, 189, 248, 0.2)' : '#0B0F17',
+                    border: `1px solid ${isActive ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
                     textAlign: 'left', transition: 'all 0.15s',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                    <Icon size={13} color={isActive ? 'var(--blue)' : 'var(--text-muted)'} />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: isActive ? 'var(--blue)' : 'var(--text)' }}>{cfg.label}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                    <Icon size={16} color={isActive ? '#38BDF8' : '#94A3B8'} />
+                    <span style={{ fontSize: 14, fontWeight: 800, color: isActive ? '#FFFFFF' : '#CBD5E1' }}>{cfg.label}</span>
                   </div>
-                  <div style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.4 }}>{cfg.desc}</div>
+                  <div style={{ fontSize: 12, color: '#94A3B8', lineHeight: 1.4, fontWeight: 600 }}>{cfg.desc}</div>
                 </button>
               );
             })}
@@ -207,19 +207,19 @@ GET /api/metrics`;
 
           {/* Action row */}
           <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-            <button className="btn btn-secondary" onClick={onClose} style={{ fontSize: 12 }}>Cancel</button>
+            <button className="btn btn-secondary" onClick={onClose} style={{ fontSize: 14, padding: '8px 18px' }}>Cancel</button>
             <button
               className={`btn ${exportedSuccess ? 'btn-accent' : 'btn-primary'}`}
               onClick={handleExport}
               disabled={exporting || exportedSuccess}
-              style={{ fontSize: 12 }}
+              style={{ fontSize: 14, padding: '8px 18px', fontWeight: 800 }}
             >
               {exporting ? (
                 <><span style={{ display: 'inline-block', animation: 'spin 1s linear infinite' }}>⟳</span> Exporting...</>
               ) : exportedSuccess ? (
-                <><CheckCircle2 size={14} /> Exported Successfully</>
+                <><CheckCircle2 size={16} /> Exported Successfully</>
               ) : (
-                <><Download size={14} /> Export {formatConfig[format].label}</>
+                <><Download size={16} /> Export {formatConfig[format].label}</>
               )}
             </button>
           </div>

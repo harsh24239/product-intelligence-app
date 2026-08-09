@@ -97,10 +97,10 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
           01
         </div>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.4px' }}>
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.4px' }}>
             AI Document Ingestion & Extraction Studio
           </h1>
-          <p style={{ fontSize: 14, color: 'var(--text-sub)' }}>
+          <p style={{ fontSize: 16, color: '#F1F5F9' }}>
             Upload raw PDF datasheets, technical drawings, or text to extract structured product intelligence
           </p>
         </div>
@@ -214,7 +214,7 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
             rows={7}
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 13, lineHeight: 1.6 }}
+            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 15, lineHeight: 1.6, padding: 16 }}
           />
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>

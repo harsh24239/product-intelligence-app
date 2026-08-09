@@ -141,10 +141,10 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
             { label: 'RAG Enrichment', val: '48 Standards', sub: 'Knowledge Graph' },
             { label: 'Data Quality Index', val: '98 / 100', sub: 'Audited records' },
           ].map((item, idx) => (
-            <div key={idx} style={{ padding: '14px 16px', background: '#0F172A', border: '1px solid #334155', borderRadius: 12 }}>
-              <div style={{ fontSize: 22, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px' }}>{item.val}</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#FFFFFF', marginTop: 2 }}>{item.label}</div>
-              <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{item.sub}</div>
+            <div key={idx} style={{ padding: '16px 18px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12 }}>
+              <div style={{ fontSize: 24, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px' }}>{item.val}</div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: '#38BDF8', marginTop: 3 }}>{item.label}</div>
+              <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{item.sub}</div>
             </div>
           ))}
         </div>
@@ -192,20 +192,20 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
                 </div>
 
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     {step.agent}
                   </div>
-                  <h4 style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF', marginTop: 3 }}>
+                  <h4 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF', marginTop: 4 }}>
                     {step.title}
                   </h4>
                 </div>
 
-                <p style={{ fontSize: 13, color: '#E2E8F0', lineHeight: 1.6 }}>
+                <p style={{ fontSize: 15, color: '#FFFFFF', lineHeight: 1.6 }}>
                   {step.desc}
                 </p>
 
-                <div style={{ marginTop: 'auto', paddingTop: 10, borderTop: '1px solid #334155', display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: step.color, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                  <CheckCircle2 size={13} /> {step.model}
+                <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: '1px solid rgba(56, 189, 248, 0.25)', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 800, color: step.color, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  <CheckCircle2 size={15} /> {step.model}
                 </div>
               </div>
             );

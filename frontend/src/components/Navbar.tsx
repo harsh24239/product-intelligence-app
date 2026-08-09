@@ -121,10 +121,10 @@ const Navbar: React.FC<NavbarProps> = ({
               <Zap size={20} color="white" />
             </div>
             <div>
-              <div style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.3px' }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.3px' }}>
                 IntelliProduct
               </div>
-              <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600, marginTop: 1 }}>
+              <div style={{ fontSize: 13, color: '#38BDF8', fontWeight: 700, marginTop: 1 }}>
                 AI Data Platform
               </div>
             </div>
@@ -156,7 +156,7 @@ const Navbar: React.FC<NavbarProps> = ({
             gap: 6,
           }}
         >
-          <div style={{ fontSize: 11, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', padding: '0 8px 6px' }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.08em', padding: '0 8px 6px' }}>
             Navigation
           </div>
 
@@ -211,8 +211,8 @@ const Navbar: React.FC<NavbarProps> = ({
                 <span
                   style={{
                     flex: 1,
-                    fontSize: 14,
-                    fontWeight: isActive ? 700 : 600,
+                    fontSize: 15,
+                    fontWeight: isActive ? 800 : 600,
                     color: isActive ? '#FFFFFF' : '#E2E8F0',
                   }}
                 >
@@ -222,11 +222,11 @@ const Navbar: React.FC<NavbarProps> = ({
                 {item.step && (
                   <span
                     style={{
-                      fontSize: 10, fontWeight: 800,
-                      background: 'rgba(59, 130, 246, 0.2)',
-                      color: '#60A5FA',
-                      border: '1px solid rgba(59, 130, 246, 0.4)',
-                      padding: '2px 6px',
+                      fontSize: 12, fontWeight: 800,
+                      background: 'rgba(56, 189, 248, 0.2)',
+                      color: '#38BDF8',
+                      border: '1px solid rgba(56, 189, 248, 0.4)',
+                      padding: '3px 8px',
                       borderRadius: 6,
                     }}
                   >
@@ -243,10 +243,10 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '16px', borderTop: '1px solid #334155' }}>
-          <div style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', border: '1px solid #334155', borderRadius: 8 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#60A5FA', textTransform: 'uppercase' }}>UniHack 2026</div>
-            <div style={{ fontSize: 12, color: '#E2E8F0', marginTop: 2, fontWeight: 500 }}>Product Intelligence Challenge</div>
+        <div style={{ padding: '16px', borderTop: '1px solid rgba(56, 189, 248, 0.35)' }}>
+          <div style={{ padding: '12px 14px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 10 }}>
+            <div style={{ fontSize: 13, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase' }}>UniHack 2026</div>
+            <div style={{ fontSize: 14, color: '#FFFFFF', marginTop: 3, fontWeight: 600 }}>Product Intelligence Platform</div>
           </div>
         </div>
       </nav>

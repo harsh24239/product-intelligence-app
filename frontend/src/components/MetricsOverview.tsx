@@ -144,17 +144,17 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
               <div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
                       {card.title}
                     </div>
-                    <div style={{ fontSize: 28, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px', lineHeight: 1.1 }}>
+                    <div style={{ fontSize: 32, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px', lineHeight: 1.1 }}>
                       {card.value}
                     </div>
                   </div>
                   <div
                     style={{
-                      width: 44,
-                      height: 44,
+                      width: 46,
+                      height: 46,
                       borderRadius: 12,
                       background: card.iconBg,
                       border: `1px solid ${card.iconBorder}`,
@@ -164,27 +164,27 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
                       flexShrink: 0,
                     }}
                   >
-                    <Icon size={22} color={card.iconColor} />
+                    <Icon size={24} color={card.iconColor} />
                   </div>
                 </div>
 
-                <div style={{ fontSize: 13, color: '#CBD5E1', marginBottom: 14, fontWeight: 600 }}>
+                <div style={{ fontSize: 15, color: '#FFFFFF', marginBottom: 14, fontWeight: 600 }}>
                   {card.sub}
                 </div>
                 
                 {card.barValue !== undefined && (
-                  <div style={{ height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 3, overflow: 'hidden', marginBottom: 14 }}>
-                    <div style={{ height: '100%', width: `${card.barValue}%`, background: card.barColor, borderRadius: 3, transition: 'width 0.8s ease' }} />
+                  <div style={{ height: 8, background: '#0B0F17', borderRadius: 4, overflow: 'hidden', marginBottom: 14 }}>
+                    <div style={{ height: '100%', width: `${card.barValue}%`, background: card.barColor, borderRadius: 4, transition: 'width 0.8s ease' }} />
                   </div>
                 )}
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, paddingTop: 10, borderTop: '1px solid var(--border)' }}>
-                <span style={{ fontSize: 12, color: 'var(--text-sub)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, paddingTop: 12, borderTop: '1px solid rgba(56, 189, 248, 0.25)' }}>
+                <span style={{ fontSize: 13, color: '#94A3B8', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {card.sub}
                 </span>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700, color: card.trendUp ? '#34D399' : '#FBBF24', background: card.trendUp ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)', border: `1px solid ${card.trendUp ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}`, padding: '3px 8px', borderRadius: 6, flexShrink: 0 }}>
-                  {card.trendUp ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 800, color: card.trendUp ? '#34D399' : '#FBBF24', background: card.trendUp ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)', border: `1px solid ${card.trendUp ? 'rgba(16,185,129,0.35)' : 'rgba(245,158,11,0.35)'}`, padding: '4px 10px', borderRadius: 6, flexShrink: 0 }}>
+                  {card.trendUp ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
                   {card.trend}
                 </span>
               </div>
@@ -197,16 +197,16 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 20 }}>
         
         {/* Growth & Readiness Chart */}
-        <div className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column' }}>
+        <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
             <div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h3 style={{ fontSize: 19, fontWeight: 800, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: 10 }}>
                 AI Catalog Processing Velocity
-                <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--cyan)', background: 'var(--cyan-dim)', border: '1px solid var(--cyan-border)', padding: '2px 8px', borderRadius: 6 }}>
+                <span style={{ fontSize: 12, fontWeight: 800, color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '3px 10px', borderRadius: 6 }}>
                   Live Recharts Visualizer
                 </span>
               </h3>
-              <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
+              <p style={{ fontSize: 15, color: '#CBD5E1', marginTop: 4 }}>
                 Product ingestion, AI enrichment, and commerce publication trend (7-day cumulative)
               </p>
             </div>

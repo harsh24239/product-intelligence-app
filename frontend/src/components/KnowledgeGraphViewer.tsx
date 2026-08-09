@@ -321,10 +321,10 @@ const KnowledgeGraphViewer: React.FC = () => {
                   <Cpu size={22} color={node.color} style={{ marginBottom: 4 }} />
                 )}
 
-                <div style={{ fontSize: isRoot ? 13 : 11, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.25 }}>
+                <div style={{ fontSize: isRoot ? 15 : 13, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.25 }}>
                   {node.name.split(' (')[0]}
                 </div>
-                <div style={{ fontSize: 10, fontWeight: 800, color: node.color, fontFamily: 'Plus Jakarta Sans, sans-serif', marginTop: 4 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: node.color, fontFamily: 'Plus Jakarta Sans, sans-serif', marginTop: 4 }}>
                   {node.connectedNodes.toLocaleString()} nodes
                 </div>
               </div>
@@ -379,14 +379,14 @@ const KnowledgeGraphViewer: React.FC = () => {
               </div>
 
               {/* Interactive RAG Vector Simulation Box */}
-              <div style={{ marginTop: 10, padding: 16, background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 800, color: '#FBBF24', textTransform: 'uppercase' }}>
-                  <Zap size={15} color="#FBBF24" />
+              <div style={{ marginTop: 10, padding: 18, background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 800, color: '#FBBF24', textTransform: 'uppercase' }}>
+                  <Zap size={16} color="#FBBF24" />
                   RAG Vector Search Simulator
                 </div>
 
                 {/* Preset Query Chips */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {[
                     'Infer SAB-992 IP Rating',
                     'Check IE3 Efficiency',
@@ -395,33 +395,33 @@ const KnowledgeGraphViewer: React.FC = () => {
                     <button
                       key={i}
                       onClick={() => runSimulatedRag(q)}
-                      style={{ fontSize: 11, fontWeight: 700, padding: '4px 8px', borderRadius: 6, background: '#1B2433', color: '#60A5FA', border: '1px solid rgba(56, 189, 248, 0.35)', cursor: 'pointer' }}
+                      style={{ fontSize: 13, fontWeight: 700, padding: '6px 12px', borderRadius: 8, background: '#1B2433', color: '#60A5FA', border: '1px solid rgba(56, 189, 248, 0.35)', cursor: 'pointer' }}
                     >
                       ⚡ {q}
                     </button>
                   ))}
                 </div>
 
-                <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
                   <input
                     type="text"
                     value={ragQuery}
                     onChange={(e) => setRagQuery(e.target.value)}
-                    style={{ height: 36, fontSize: 12, padding: '0 10px' }}
+                    style={{ height: 40, fontSize: 14, padding: '0 12px' }}
                   />
                   <button
                     className="btn btn-primary"
                     onClick={() => runSimulatedRag(ragQuery)}
-                    style={{ fontSize: 12, padding: '0 14px', height: 36 }}
+                    style={{ fontSize: 14, padding: '0 18px', height: 40, fontWeight: 800 }}
                     disabled={ragRunning}
                   >
-                    <Play size={13} /> Run
+                    <Play size={15} /> Run
                   </button>
                 </div>
 
                 {ragRunning && (
-                  <div style={{ fontSize: 12, color: '#60A5FA', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Activity size={14} className="animate-spin" /> Executing Vector Similarity Search...
+                  <div style={{ fontSize: 13, color: '#60A5FA', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <Activity size={16} className="animate-spin" /> Executing Vector Similarity Search...
                   </div>
                 )}
 

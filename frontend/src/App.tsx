@@ -313,17 +313,17 @@ function App() {
                       }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: log.color, background: log.bg, border: `1px solid ${log.border}`, padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        <span style={{ fontSize: 13, fontWeight: 800, color: log.color, background: log.bg, border: `1px solid ${log.border}`, padding: '4px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                           {log.tag}
                         </span>
-                        <span style={{ fontSize: 12, color: '#94A3B8', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600 }}>
+                        <span style={{ fontSize: 14, color: '#94A3B8', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700 }}>
                           {log.time}
                         </span>
                       </div>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', marginTop: 2 }}>
+                      <div style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF', marginTop: 4 }}>
                         {log.msg}
                       </div>
-                      <div style={{ fontSize: 13, color: '#E2E8F0', lineHeight: 1.5 }}>
+                      <div style={{ fontSize: 15, color: '#E2E8F0', lineHeight: 1.5 }}>
                         {log.sub}
                       </div>
                     </div>
