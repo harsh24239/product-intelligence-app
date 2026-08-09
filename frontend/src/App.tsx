@@ -14,8 +14,8 @@ import { Menu, Search, Bell, PanelLeftOpen } from 'lucide-react';
 
 type View = 'dashboard' | 'catalog' | 'ingest' | 'validate' | 'export' | 'knowledge';
 
-const SIDEBAR_WIDTH = 240;
-const HEADER_HEIGHT = 56;
+const SIDEBAR_WIDTH = 260;
+const HEADER_HEIGHT = 60;
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -192,11 +192,11 @@ function App() {
               >
                 <span
                   style={{
-                    fontSize: 11,
-                    fontWeight: 700,
+                    fontSize: 13,
+                    fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: 'var(--text-muted)',
+                    color: 'var(--text)',
                   }}
                 >
                   Live Catalog Metrics
@@ -226,11 +226,11 @@ function App() {
               <div>
                 <div
                   style={{
-                    fontSize: 11,
-                    fontWeight: 700,
+                    fontSize: 13,
+                    fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: 'var(--text-muted)',
+                    color: 'var(--text)',
                     marginBottom: 12,
                   }}
                 >
@@ -248,11 +248,11 @@ function App() {
               <div>
                 <div
                   style={{
-                    fontSize: 11,
-                    fontWeight: 700,
+                    fontSize: 13,
+                    fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: 'var(--text-muted)',
+                    color: 'var(--text)',
                     marginBottom: 12,
                   }}
                 >

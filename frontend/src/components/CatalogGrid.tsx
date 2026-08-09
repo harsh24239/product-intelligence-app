@@ -108,10 +108,10 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
           display: 'inline-flex',
           alignItems: 'center',
           gap: 4,
-          padding: '3px 8px',
-          borderRadius: 5,
-          fontSize: 10,
-          fontWeight: 600,
+          padding: '5px 10px',
+          borderRadius: 6,
+          fontSize: 11,
+          fontWeight: 700,
           color: cfg.color,
           background: cfg.bg,
           border: `1px solid ${cfg.border}`,
@@ -119,9 +119,9 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
           cursor: 'default',
         }}
       >
-        {status === 'ai_enriched' && <Sparkles size={9} />}
-        {status === 'flagged' && <AlertCircle size={9} />}
-        {status === 'commerce_ready' && <span style={{ fontSize: 9 }}>✓</span>}
+        {status === 'ai_enriched' && <Sparkles size={11} />}
+        {status === 'flagged' && <AlertCircle size={11} />}
+        {status === 'commerce_ready' && <span style={{ fontSize: 10 }}>✓</span>}
         {cfg.label}
       </span>
     );
@@ -489,13 +489,13 @@ function ProductCard({
           <span
             title={`${product.anomalies.length} AI-flagged data issue(s) need review`}
             style={{
-              fontSize: 10,
-              fontWeight: 600,
+              fontSize: 11,
+              fontWeight: 700,
               color: 'var(--amber)',
               background: 'var(--amber-dim)',
               border: '1px solid var(--amber-border)',
-              padding: '2px 7px',
-              borderRadius: 4,
+              padding: '3px 9px',
+              borderRadius: 6,
               cursor: 'default',
             }}
           >
@@ -524,10 +524,10 @@ function ProductCard({
         <div style={{ minWidth: 0, flex: 1 }}>
           <h3
             style={{
-              fontSize: 13,
-              fontWeight: 700,
+              fontSize: 15,
+              fontWeight: 800,
               color: hovered ? 'var(--blue)' : 'var(--text)',
-              lineHeight: 1.4,
+              lineHeight: 1.35,
               transition: 'color 0.15s',
               overflow: 'hidden',
               display: '-webkit-box',
@@ -539,10 +539,11 @@ function ProductCard({
           </h3>
           <p
             style={{
-              fontSize: 10,
-              color: 'var(--text-muted)',
+              fontSize: 12,
+              color: 'var(--blue)',
               fontFamily: 'JetBrains Mono, monospace',
-              marginTop: 2,
+              fontWeight: 600,
+              marginTop: 3,
             }}
           >
             {product.sku}
@@ -551,10 +552,10 @@ function ProductCard({
       </div>
 
       {/* Manufacturer + category */}
-      <div style={{ fontSize: 11, color: 'var(--text-muted)', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+      <div style={{ fontSize: 12, color: 'var(--text-sub)', display: 'flex', gap: 6, flexWrap: 'wrap', fontWeight: 600 }}>
         <span>{product.manufacturer}</span>
-        <span>·</span>
-        <span>{product.category}</span>
+        <span style={{ color: 'var(--border-light)' }}>·</span>
+        <span style={{ color: 'var(--cyan)' }}>{product.category}</span>
       </div>
 
       {/* Completeness bar */}
@@ -563,28 +564,29 @@ function ProductCard({
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            fontSize: 10,
-            fontWeight: 600,
-            marginBottom: 5,
+            fontSize: 12,
+            fontWeight: 700,
+            marginBottom: 6,
           }}
         >
-          <span style={{ color: 'var(--text-muted)' }}>
+          <span style={{ color: 'var(--text-sub)' }}>
             Data Completeness
             <span
               style={{
                 marginLeft: 5,
-                fontSize: 9,
+                fontSize: 11,
                 color: 'var(--text-muted)',
-                fontWeight: 400,
+                fontWeight: 500,
               }}
             >
-              (% of fields extracted)
+              (% extracted)
             </span>
           </span>
           <span
             style={{
               color: product.completeness >= 80 ? 'var(--green)' : 'var(--text)',
-              fontWeight: 700,
+              fontWeight: 800,
+              fontSize: 13,
             }}
           >
             {product.completeness}%

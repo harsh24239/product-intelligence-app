@@ -87,7 +87,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
       <nav
         style={{
-          width: 240,
+          width: 260,
           height: '100vh',
           position: 'fixed',
           left: 0, top: 0,
@@ -127,10 +127,10 @@ const Navbar: React.FC<NavbarProps> = ({
               <Zap size={18} color="white" />
             </div>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.3px' }}>
+              <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.3px' }}>
                 IntelliProduct
               </div>
-              <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 1 }}>
+              <div style={{ fontSize: 11, color: 'var(--blue)', fontWeight: 700, marginTop: 1 }}>
                 UniHack 2026 · AI Challenge
               </div>
             </div>
@@ -161,10 +161,10 @@ const Navbar: React.FC<NavbarProps> = ({
             borderRadius: 8,
           }}
         >
-          <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>
+          <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>
             👆 Judge Quick-Start
           </div>
-          <div style={{ fontSize: 11, color: 'var(--text-sub)', lineHeight: 1.5 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-sub)', lineHeight: 1.5, fontWeight: 500 }}>
             Follow Steps 1→2→3 to see the full AI pipeline in action
           </div>
         </div>
@@ -232,8 +232,8 @@ const Navbar: React.FC<NavbarProps> = ({
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span
                       style={{
-                        fontSize: 13,
-                        fontWeight: isActive ? 600 : 500,
+                        fontSize: 14,
+                        fontWeight: isActive ? 700 : 600,
                         color: isActive ? 'var(--text)' : 'var(--text-sub)',
                         transition: 'color 0.15s',
                       }}
@@ -243,11 +243,11 @@ const Navbar: React.FC<NavbarProps> = ({
                     {item.step && (
                       <span
                         style={{
-                          fontSize: 9, fontWeight: 700,
+                          fontSize: 10, fontWeight: 800,
                           background: 'var(--blue-dim)',
                           color: 'var(--blue)',
                           border: '1px solid var(--blue-border)',
-                          padding: '1px 5px',
+                          padding: '2px 6px',
                           borderRadius: 4,
                         }}
                       >
@@ -257,9 +257,9 @@ const Navbar: React.FC<NavbarProps> = ({
                   </div>
                   <div
                     style={{
-                      fontSize: 11,
+                      fontSize: 12,
                       color: 'var(--text-muted)',
-                      marginTop: 1,
+                      marginTop: 2,
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
