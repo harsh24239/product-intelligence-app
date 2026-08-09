@@ -62,8 +62,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   overflow-x: hidden;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.65;
 }
 
 code, pre, .mono {
@@ -106,10 +106,10 @@ code, pre, .mono {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 11px 22px;
+  padding: 12px 24px;
   border-radius: 10px;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
@@ -169,9 +169,9 @@ code, pre, .mono {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -187,9 +187,9 @@ input, textarea, select {
   border: 1px solid var(--border);
   color: #FFFFFF;
   border-radius: 10px;
-  padding: 11px 16px;
+  padding: 12px 18px;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 16px;
   width: 100%;
   transition: all 0.15s ease;
 }
@@ -277,12 +277,12 @@ tr:hover td { background: rgba(255, 255, 255, 0.03); }
 .h-full { height: 100%; }
 .rounded-full { border-radius: 9999px; }
 
-.text-xs { font-size: 13px; }
-.text-sm { font-size: 15px; }
-.text-base { font-size: 16px; }
-.text-lg { font-size: 18px; }
-.text-xl { font-size: 22px; }
-.text-2xl { font-size: 28px; }
+.text-xs { font-size: 14px; }
+.text-sm { font-size: 16px; }
+.text-base { font-size: 17px; }
+.text-lg { font-size: 19px; }
+.text-xl { font-size: 24px; }
+.text-2xl { font-size: 30px; }
 
 .font-normal { font-weight: 400; }
 .font-semibold { font-weight: 600; }
