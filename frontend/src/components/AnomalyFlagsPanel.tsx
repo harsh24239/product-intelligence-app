@@ -44,11 +44,11 @@ const mockAnomalies = [
   },
 ];
 
-/* Harmonious 3-Color Palette Matching Dark Slate UI */
+/* Strict 2-Color Scheme: Cyan-Blue for All UI Elements + Red for Errors/High Priority */
 const severityConfig: Record<string, { bg: string; color: string; border: string; label: string }> = {
-  high:   { bg: 'rgba(248, 113, 113, 0.1)', color: '#F87171', border: 'rgba(248, 113, 113, 0.3)', label: 'High Priority' },
-  medium: { bg: 'rgba(56, 189, 248, 0.1)', color: '#38BDF8', border: 'rgba(56, 189, 248, 0.3)', label: 'Medium Priority' },
-  low:    { bg: 'rgba(56, 189, 248, 0.1)', color: '#38BDF8', border: 'rgba(56, 189, 248, 0.3)', label: 'Low Priority' },
+  high:   { bg: 'rgba(248, 113, 113, 0.12)', color: '#F87171', border: 'rgba(248, 113, 113, 0.35)', label: 'High Priority' },
+  medium: { bg: 'rgba(56, 189, 248, 0.12)', color: '#38BDF8', border: 'rgba(56, 189, 248, 0.35)', label: 'Medium Priority' },
+  low:    { bg: 'rgba(56, 189, 248, 0.12)', color: '#38BDF8', border: 'rgba(56, 189, 248, 0.35)', label: 'Low Priority' },
 };
 
 const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }) => {
@@ -69,7 +69,7 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
       {/* Panel Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ShieldAlert size={20} color="#38BDF8" />
           </div>
           <div>
@@ -85,12 +85,12 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
               key={f}
               onClick={() => setFilter(f)}
               style={{
-                padding: '5px 12px',
+                padding: '6px 14px',
                 borderRadius: 6,
-                fontSize: 12,
+                fontSize: 13,
                 fontWeight: 700,
                 textTransform: 'capitalize',
-                background: filter === f ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                background: filter === f ? 'rgba(56, 189, 248, 0.25)' : 'transparent',
                 color: filter === f ? '#FFFFFF' : '#94A3B8',
                 cursor: 'pointer',
               }}
@@ -111,7 +111,7 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
               onClick={() => onSelectProduct(anomaly.productId)}
               style={{
                 background: '#0B0F17',
-                border: '1px solid rgba(56, 189, 248, 0.25)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
                 borderRadius: 12,
                 padding: 20,
                 cursor: 'pointer',
@@ -125,11 +125,11 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
                 (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(56, 189, 248, 0.25)';
+                (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(56, 189, 248, 0.3)';
                 (e.currentTarget as HTMLDivElement).style.transform = 'none';
               }}
             >
-              {/* Top Row: Tag & SKU */}
+              {/* Top Row: Severity Tag & SKU */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ fontSize: 11, fontWeight: 700, color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}`, padding: '3px 9px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -147,29 +147,29 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
                 {anomaly.name}
               </div>
 
-              {/* Harmonious 3-Color Spec Chips */}
+              {/* 2-Color Spec Chips: Cyan-Blue for Field & Suggested + Red for AI Extracted Error */}
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, fontSize: 14 }}>
                 
-                {/* 1. Primary Blue (Field Name) */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(56, 189, 248, 0.1)', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                {/* 1. Cyan Blue (Field Name) */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(56, 189, 248, 0.12)', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(56, 189, 248, 0.35)' }}>
                   <span style={{ color: '#94A3B8', fontWeight: 600 }}>Field:</span>
                   <span style={{ color: '#38BDF8', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
                     {anomaly.field}
                   </span>
                 </div>
 
-                {/* 2. Soft Red (AI Extracted Value) */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(248, 113, 113, 0.1)', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(248, 113, 113, 0.3)' }}>
+                {/* 2. Soft Red (AI Extracted Error) */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(248, 113, 113, 0.12)', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(248, 113, 113, 0.35)' }}>
                   <span style={{ color: '#F87171', fontWeight: 600 }}>AI Extracted:</span>
                   <span style={{ color: '#F87171', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
                     {anomaly.extractedVal}
                   </span>
                 </div>
 
-                {/* 3. Soft Green (Suggested Value) */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(52, 211, 153, 0.1)', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(52, 211, 153, 0.3)' }}>
-                  <span style={{ color: '#34D399', fontWeight: 600 }}>Suggested:</span>
-                  <span style={{ color: '#34D399', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
+                {/* 3. Cyan Blue (Suggested Fix) */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(56, 189, 248, 0.12)', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(56, 189, 248, 0.35)' }}>
+                  <span style={{ color: '#38BDF8', fontWeight: 600 }}>Suggested:</span>
+                  <span style={{ color: '#38BDF8', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
                     {anomaly.expectedVal}
                   </span>
                 </div>
@@ -191,9 +191,9 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
                 <button
                   className="btn btn-secondary"
                   onClick={(e) => handleResolve(e, anomaly.id)}
-                  style={{ fontSize: 13, padding: '7px 16px', color: '#34D399', border: '1px solid rgba(52, 211, 153, 0.35)', background: 'rgba(52, 211, 153, 0.1)' }}
+                  style={{ fontSize: 13, padding: '7px 16px', color: '#38BDF8', border: '1px solid rgba(56, 189, 248, 0.35)', background: 'rgba(56, 189, 248, 0.12)' }}
                 >
-                  <CheckCircle2 size={15} color="#34D399" /> Approve Correction
+                  <CheckCircle2 size={15} color="#38BDF8" /> Approve Correction
                 </button>
               </div>
 
@@ -202,7 +202,7 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
         })}
 
         {filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '28px 0', fontSize: 14, color: '#34D399', fontWeight: 700 }}>
+          <div style={{ textAlign: 'center', padding: '28px 0', fontSize: 14, color: '#38BDF8', fontWeight: 700 }}>
             ✓ All anomalies resolved in this queue
           </div>
         )}
