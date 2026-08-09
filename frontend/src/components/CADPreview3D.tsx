@@ -305,33 +305,33 @@ const CADPreview3D: React.FC<CADPreview3DProps> = ({ product, isDark = false }) 
     };
   }, [product.id, product.category, isDark, autoRotate]);
 
-  const cardBg = isDark ? 'rgba(15,23,42,0.8)' : '#ffffff';
-  const cardBorder = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
+  const cardBg = '#1B2433';
+  const cardBorder = 'rgba(56, 189, 248, 0.35)';
 
   return (
-    <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, borderRadius: 16, padding: 16, position: 'relative', overflow: 'hidden', boxShadow: isDark ? 'none' : '0 2px 10px rgba(15,23,42,0.04)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Box size={16} color="#0284c7" />
-          <h4 style={{ fontSize: 13, fontWeight: 800, color: isDark ? '#fff' : '#0f172a' }}>
+    <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, borderRadius: 16, padding: 20, position: 'relative', overflow: 'hidden', boxShadow: '0 6px 24px rgba(0,0,0,0.35)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Box size={20} color="#60A5FA" />
+          <h4 style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>
             3D Product Model Preview
           </h4>
-          <span style={{ fontSize: 10, fontWeight: 800, background: 'rgba(2,132,199,0.12)', color: '#0284c7', border: '1px solid rgba(2,132,199,0.3)', padding: '2px 8px', borderRadius: 9999 }}>
+          <span style={{ fontSize: 12, fontWeight: 800, background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '3px 10px', borderRadius: 8 }}>
             Scaled from Extracted Specs
           </span>
         </div>
-        <button onClick={() => setAutoRotate(!autoRotate)} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 8, background: autoRotate?(isDark?'rgba(6,182,212,0.15)':'#e0f2fe'):(isDark?'rgba(255,255,255,0.06)':'#f1f5f9'), color: autoRotate?'#0284c7':(isDark?'#94a3b8':'#64748b'), cursor: 'pointer', border: 'none' }}>
-          <RotateCw size={12} />{autoRotate ? 'Auto-Rotate ON' : 'Rotate Paused'}
+        <button onClick={() => setAutoRotate(!autoRotate)} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, padding: '6px 14px', borderRadius: 8, background: autoRotate ? 'rgba(56, 189, 248, 0.2)' : '#0B0F17', color: autoRotate ? '#FFFFFF' : '#94A3B8', cursor: 'pointer', border: '1px solid rgba(56, 189, 248, 0.35)' }}>
+          <RotateCw size={14} />{autoRotate ? 'Auto-Rotate ON' : 'Rotate Paused'}
         </button>
       </div>
-      <div ref={mountRef} style={{ width: '100%', height: 280, borderRadius: 12, overflow: 'hidden', cursor: 'grab' }} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, fontSize: 11, color: isDark ? '#94a3b8' : '#64748b' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Sparkles size={13} color="#4f46e5" />
-          <span>Click any 3D part to inspect extracted CAD parameters</span>
+      <div ref={mountRef} style={{ width: '100%', height: 320, borderRadius: 14, overflow: 'hidden', cursor: 'grab' }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, fontSize: 13, color: '#CBD5E1' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Sparkles size={16} color="#60A5FA" />
+          <span style={{ fontWeight: 600 }}>Click any 3D part to inspect extracted CAD parameters</span>
         </div>
         {selectedPart && (
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#0284c7', background: 'rgba(2,132,199,0.1)', padding: '3px 10px', borderRadius: 6, border: '1px solid rgba(2,132,199,0.25)' }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', padding: '4px 12px', borderRadius: 8, border: '1px solid rgba(56, 189, 248, 0.4)' }}>
             {selectedPart}
           </div>
         )}

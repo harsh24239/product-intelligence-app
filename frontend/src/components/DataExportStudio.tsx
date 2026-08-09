@@ -199,18 +199,18 @@ const DataExportStudio: React.FC = () => {
       </div>
 
       {/* Payload Customization Controls */}
-      <div className="card" style={{ padding: 22, background: '#1E293B', display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div className="card" style={{ padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SlidersHorizontal size={18} color="#C084FC" />
-          <h3 style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>Export Payload Customization Options</h3>
+          <SlidersHorizontal size={20} color="#60A5FA" />
+          <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>Export Payload Customization Options</h3>
         </div>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
           {[
             { label: 'AI Confidence Scores', state: includeConfidence, set: setIncludeConfidence, color: '#60A5FA' },
             { label: 'ISO/IEC Mapped Standards', state: includeIso, set: setIncludeIso, color: '#38BDF8' },
-            { label: 'Document Provenance (PDF Citations)', state: includeProvenance, set: setIncludeProvenance, color: '#C084FC' },
-            { label: 'Audit Anomaly Notes', state: includeAnomalies, set: setIncludeAnomalies, color: '#F59E0B' },
+            { label: 'Document Provenance (PDF Citations)', state: includeProvenance, set: setIncludeProvenance, color: '#60A5FA' },
+            { label: 'Audit Anomaly Notes', state: includeAnomalies, set: setIncludeAnomalies, color: '#FBBF24' },
           ].map((toggle, idx) => (
             <button
               key={idx}
@@ -219,13 +219,13 @@ const DataExportStudio: React.FC = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                padding: '8px 14px',
+                padding: '10px 16px',
                 borderRadius: 8,
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: 700,
-                background: toggle.state ? 'rgba(59, 130, 246, 0.18)' : '#0F172A',
+                background: toggle.state ? 'rgba(56, 189, 248, 0.2)' : '#0B0F17',
                 color: toggle.state ? '#FFFFFF' : '#94A3B8',
-                border: `1px solid ${toggle.state ? '#3B82F6' : '#334155'}`,
+                border: `1px solid ${toggle.state ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
               }}
@@ -249,7 +249,7 @@ const DataExportStudio: React.FC = () => {
             <div
               key={opt.id}
               className="card"
-              style={{ display: 'flex', flexDirection: 'column', padding: 24, background: '#1E293B', border: '1px solid #334155', position: 'relative', borderRadius: 16 }}
+              style={{ display: 'flex', flexDirection: 'column', padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', position: 'relative', borderRadius: 16 }}
             >
               {/* Top Accent Bar */}
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: opt.color, borderRadius: '16px 16px 0 0' }} />

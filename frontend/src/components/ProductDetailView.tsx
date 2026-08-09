@@ -98,25 +98,23 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
       <button
         onClick={onBack}
         style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          fontSize: 12, fontWeight: 600,
-          color: 'var(--text-muted)',
-          background: 'var(--bg-card)',
-          padding: '6px 12px', borderRadius: 7,
-          border: '1px solid var(--border)',
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          fontSize: 14, fontWeight: 700,
+          color: '#60A5FA',
+          background: '#1B2433',
+          padding: '8px 16px', borderRadius: 8,
+          border: '1px solid rgba(56, 189, 248, 0.35)',
           marginBottom: 20, cursor: 'pointer',
-          transition: 'color 0.15s',
+          transition: 'all 0.15s ease',
         }}
-        onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = 'var(--text)')}
-        onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)')}
       >
-        <ArrowLeft size={13} /> Back to Catalog
+        <ArrowLeft size={16} /> Back to Catalog
       </button>
 
       {/* Header card */}
       <div
         className="card"
-        style={{ marginBottom: 20, padding: '22px 24px' }}
+        style={{ marginBottom: 20, padding: '28px 30px', background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Title row */}
@@ -133,13 +131,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
               {/* Status badge */}
               <span
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 4,
-                  padding: '3px 10px', borderRadius: 5,
-                  fontSize: 10, fontWeight: 600,
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '5px 12px', borderRadius: 6,
+                  fontSize: 13, fontWeight: 800,
                   color: cfg.color,
                   background: cfg.bg,
                   border: `1px solid ${cfg.border}`,
-                  marginBottom: 10,
+                  marginBottom: 12,
                 }}
               >
                 {cfg.label}
@@ -147,11 +145,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
 
               <h1
                 style={{
-                  fontSize: 22,
+                  fontSize: 28,
                   fontWeight: 800,
-                  color: 'var(--text)',
+                  color: '#FFFFFF',
                   letterSpacing: '-0.4px',
-                  marginBottom: 8,
+                  marginBottom: 10,
                 }}
               >
                 {product.name}
@@ -161,17 +159,18 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                 style={{
                   display: 'flex',
                   flexWrap: 'wrap',
-                  gap: 16,
-                  fontSize: 12,
-                  color: 'var(--text-muted)',
+                  gap: 18,
+                  fontSize: 15,
+                  color: '#94A3B8',
                 }}
               >
                 <span>
                   SKU:{' '}
                   <strong
                     style={{
-                      color: 'var(--blue)',
+                      color: '#38BDF8',
                       fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontWeight: 800,
                     }}
                   >
                     {product.sku}
@@ -179,41 +178,41 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                 </span>
                 <span>
                   Manufacturer:{' '}
-                  <strong style={{ color: 'var(--text)' }}>{product.manufacturer}</strong>
+                  <strong style={{ color: '#FFFFFF', fontWeight: 700 }}>{product.manufacturer}</strong>
                 </span>
                 <span>
                   Category:{' '}
-                  <strong style={{ color: 'var(--text)' }}>{product.category}</strong>
+                  <strong style={{ color: '#38BDF8', fontWeight: 700 }}>{product.category}</strong>
                 </span>
               </div>
             </div>
 
             {/* Action buttons */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
               <button
                 id="btn-validate"
                 className="btn btn-primary"
                 onClick={() => setShowValidation(true)}
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 14, padding: '10px 20px', fontWeight: 800 }}
               >
-                <Sparkles size={14} /> Validate with AI
+                <Sparkles size={16} /> Validate with AI
               </button>
               <button
                 id="btn-push-pim"
                 className="btn btn-accent"
                 onClick={() => setShowPIMModal(true)}
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 14, padding: '10px 20px', fontWeight: 800 }}
               >
-                <ShoppingBag size={14} /> Export Structured Data
+                <ShoppingBag size={16} /> Export Structured Data
               </button>
               <button
                 id="btn-pdf"
                 className="btn btn-secondary"
                 onClick={handleDownloadDatasheet}
                 disabled={downloadingPDF}
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 14, padding: '10px 20px', fontWeight: 700 }}
               >
-                <FileText size={14} />
+                <FileText size={16} />
                 {downloadingPDF ? 'Generating...' : 'Download PDF + QR'}
               </button>
             </div>
