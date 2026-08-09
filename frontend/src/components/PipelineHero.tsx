@@ -64,8 +64,8 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: 24,
-          background: '#1E293B',
-          border: '1px solid #334155',
+          background: '#1B2433',
+          border: '1px solid rgba(56, 189, 248, 0.35)',
           borderRadius: 16,
         }}
       >
@@ -151,7 +151,7 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
       </div>
 
       {/* Multi-Agent Architecture Flow */}
-      <div id="pipeline-flow" className="card" style={{ padding: 28, background: '#1E293B' }}>
+      <div id="pipeline-flow" className="card" style={{ padding: 28, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <div>
             <div style={{ fontSize: 12, fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>

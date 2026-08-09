@@ -114,13 +114,13 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
           <div 
             className="card-interactive"
             onClick={() => setMode('file')}
-            style={{ border: mode === 'file' ? '2px solid var(--blue)' : undefined, padding: 28 }}
+            style={{ background: '#1B2433', border: mode === 'file' ? '2px solid #60A5FA' : '1px solid rgba(56, 189, 248, 0.35)', padding: 28 }}
           >
-            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'var(--blue-dim)', border: '1px solid var(--blue-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-              <Upload size={24} color="var(--blue)" />
+            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+              <Upload size={24} color="#60A5FA" />
             </div>
-            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>Upload PDF or Image Spec</h3>
-            <p style={{ fontSize: 14, color: 'var(--text-sub)', lineHeight: 1.6 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#60A5FA', marginBottom: 6 }}>Upload PDF or Image Spec</h3>
+            <p style={{ fontSize: 14, color: '#FFFFFF', lineHeight: 1.6 }}>
               Upload supplier PDF datasheets, CAD specs, or scanned documents. Uses Gemini VLM for OCR + attribute extraction.
             </p>
           </div>
@@ -129,13 +129,13 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
           <div 
             className="card-interactive"
             onClick={() => setMode('text')}
-            style={{ border: mode === 'text' ? '2px solid var(--violet)' : undefined, padding: 28 }}
+            style={{ background: '#1B2433', border: mode === 'text' ? '2px solid #60A5FA' : '1px solid rgba(56, 189, 248, 0.35)', padding: 28 }}
           >
-            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'var(--violet-dim)', border: '1px solid var(--violet-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-              <FileText size={24} color="var(--violet)" />
+            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+              <FileText size={24} color="#60A5FA" />
             </div>
-            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>Paste Raw Product Text</h3>
-            <p style={{ fontSize: 14, color: 'var(--text-sub)', lineHeight: 1.6 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#60A5FA', marginBottom: 6 }}>Paste Raw Product Text</h3>
+            <p style={{ fontSize: 14, color: '#FFFFFF', lineHeight: 1.6 }}>
               Paste unformatted product specifications or catalog descriptions to extract attributes immediately.
             </p>
           </div>

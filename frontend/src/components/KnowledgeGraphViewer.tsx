@@ -198,14 +198,14 @@ const KnowledgeGraphViewer: React.FC = () => {
 
         {/* Quick Stats Pills */}
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
             <Activity size={18} color="#38BDF8" />
             <div>
               <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Taxonomy Nodes</div>
               <div style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>14,250 Nodes</div>
             </div>
           </div>
-          <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
             <ShieldCheck size={18} color="#34D399" />
             <div>
               <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>ISO Standards</div>
@@ -240,7 +240,7 @@ const KnowledgeGraphViewer: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="card" style={{ padding: '14px 20px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 14, background: '#1E293B' }}>
+      <div className="card" style={{ padding: '14px 20px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 14, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           <Filter size={16} color="#94A3B8" />
           <span style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: 4 }}>Cluster Filter:</span>
