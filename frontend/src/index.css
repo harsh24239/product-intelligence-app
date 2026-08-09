@@ -1,48 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
 
 /* =======================================================
-   EXACT DEEP SLATE NAVY & ELECTRIC BLUE THEME (FROM USER IMAGE)
+   EXACT 4-COLOR PALETTE FROM USER IMAGE
+   Background: #0B0F17 Canvas, #1B2433 Cards
+   1. Indigo (#6366F1)
+   2. Cyan/Teal (#06B6D4)
+   3. Emerald Green (#10B981)
+   4. Amber/Gold (#F59E0B)
    ======================================================= */
 
 :root {
-  /* Canvas & Surfaces */
+  /* Canvas & Card Surfaces */
   --bg:             #0B0F17; /* Deep Midnight Canvas */
   --bg-surface:     #141C2E;
-  --bg-card:        #1B2433; /* Deep Slate Navy Card */
+  --bg-card:        #1B2433; /* Slate Navy Card (From User Image) */
   --bg-card-hover:  #222D40;
-  --border:         rgba(59, 130, 246, 0.35); /* Electric Blue Border */
-  --border-light:   rgba(59, 130, 246, 0.6);
+  --border:         rgba(56, 189, 248, 0.25);
+  --border-light:   rgba(56, 189, 248, 0.45);
 
   /* Typography */
-  --text:           #60A5FA; /* Electric Sky Blue Titles */
-  --text-sub:       #FFFFFF; /* Pure White Headings & Values */
-  --text-body:      #E2E8F0; /* Slate 200 Body Text */
+  --text:           #FFFFFF; /* Pure White Titles */
+  --text-sub:       #F1F5F9; /* Slate 100 Body */
+  --text-body:      #E2E8F0; /* Slate 200 Body */
   --text-muted:     #94A3B8; /* Slate 400 Metadata */
 
-  /* Accents */
-  --blue:           #3B82F6;
-  --blue-dim:       rgba(59, 130, 246, 0.15);
-  --blue-border:    rgba(59, 130, 246, 0.4);
+  /* The 4 Exact Colors From Image */
+  --color-indigo:   #6366F1; /* Color 1: Indigo */
+  --color-cyan:     #06B6D4; /* Color 2: Cyan/Teal */
+  --color-emerald:  #10B981; /* Color 3: Emerald Green */
+  --color-amber:    #F59E0B; /* Color 4: Amber/Gold */
 
-  --cyan:           #38BDF8;
-  --cyan-dim:       rgba(56, 189, 248, 0.15);
-  --cyan-border:    rgba(56, 189, 248, 0.4);
-
-  --green:          #34D399;
-  --green-dim:      rgba(16, 185, 129, 0.15);
-  --green-border:   rgba(16, 185, 129, 0.4);
-
-  --amber:          #FBBF24;
-  --amber-dim:      rgba(245, 158, 11, 0.15);
-  --amber-border:   rgba(245, 158, 11, 0.4);
-
-  --red:            #F87171;
-  --red-dim:        rgba(239, 68, 68, 0.15);
-  --red-border:     rgba(239, 68, 68, 0.4);
-
-  --purple:         #C084FC;
-  --purple-dim:     rgba(139, 92, 246, 0.15);
-  --purple-border:  rgba(139, 92, 246, 0.4);
+  /* Brand & Accents */
+  --blue:           #38BDF8;
+  --blue-dim:       rgba(56, 189, 248, 0.15);
+  --blue-border:    rgba(56, 189, 248, 0.4);
 }
 
 /* RESET */
@@ -91,7 +82,6 @@ code, pre, .mono {
 
 .card:hover, .glass-card:hover, .glass-card-dark:hover {
   border-color: var(--border-light);
-  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
 }
 
 .card-interactive {
@@ -107,7 +97,7 @@ code, pre, .mono {
   background: var(--bg-card-hover);
   border-color: var(--blue-border);
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.2);
 }
 
 /* BUTTONS */
@@ -134,7 +124,7 @@ code, pre, .mono {
 .btn-primary {
   background: #2563EB;
   color: #FFFFFF;
-  border: 1px solid #3B82F6;
+  border: 1px solid #38BDF8;
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
@@ -155,9 +145,9 @@ code, pre, .mono {
 }
 
 .btn-accent {
-  background: var(--green-dim);
-  color: var(--green);
-  border: 1px solid var(--green-border);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
 }
 
 .btn-accent:hover:not(:disabled) {
@@ -165,16 +155,16 @@ code, pre, .mono {
 }
 
 .btn-danger {
-  background: var(--red-dim);
-  color: var(--red);
-  border: 1px solid var(--red-border);
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
 }
 
 .btn-danger:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.25);
+  background: rgba(245, 158, 11, 0.25);
 }
 
-/* OUTLINED BADGES (MATCHING USER SCREENSHOT) */
+/* OUTLINED BADGES (USING 4 COLOR PALETTE) */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -186,10 +176,10 @@ code, pre, .mono {
 }
 
 .badge-raw { background: rgba(148, 163, 184, 0.15); color: #E2E8F0; border: 1px solid rgba(148, 163, 184, 0.3); }
-.badge-ai_enriched { background: var(--cyan-dim); color: var(--cyan); border: 1px solid var(--cyan-border); }
-.badge-validated { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple-border); }
-.badge-commerce_ready { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
-.badge-flagged { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+.badge-ai_enriched { background: rgba(99, 102, 241, 0.15); color: #818CF8; border: 1px solid rgba(99, 102, 241, 0.4); }
+.badge-validated { background: rgba(6, 182, 212, 0.15); color: #38BDF8; border: 1px solid rgba(6, 182, 212, 0.4); }
+.badge-commerce_ready { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.badge-flagged { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4); }
 
 /* FORM ELEMENTS */
 input, textarea, select {
@@ -207,7 +197,7 @@ input, textarea, select {
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
 }
 
 /* TABLE STYLING */
@@ -313,5 +303,5 @@ tr:hover td { background: rgba(255, 255, 255, 0.03); }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.5); }
+::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.5); }
