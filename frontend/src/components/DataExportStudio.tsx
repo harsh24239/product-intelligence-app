@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, FileJson, FileSpreadsheet, FileText, BarChart3, Check, Code2, Info, Copy, CheckSquare, Sparkles, SlidersHorizontal, ShieldCheck } from 'lucide-react';
+import { Download, FileJson, FileSpreadsheet, FileText, BarChart3, Check, Code2, Info, Copy, CheckSquare, Sparkles, SlidersHorizontal, ShieldCheck, Database } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const DataExportStudio: React.FC = () => {
@@ -38,7 +38,7 @@ const DataExportStudio: React.FC = () => {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText('curl -X GET "https://api.intelliproduct.ai/v1/catalog?sku=MX-1000-V2" -H "Authorization: Bearer unihack_2026_key"');
+    navigator.clipboard.writeText('https://api.intelliproduct.ai/v1/catalog/export?format=json');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -51,9 +51,9 @@ const DataExportStudio: React.FC = () => {
       icon: FileJson,
       format: 'JSON',
       size: '~4.2 MB',
-      color: '#3B82F6',
-      bg: 'rgba(59,130,246,0.18)',
-      border: 'rgba(59,130,246,0.4)',
+      color: '#38BDF8',
+      bg: 'rgba(56, 189, 248, 0.15)',
+      border: 'rgba(56, 189, 248, 0.4)',
       badge: 'Commerce-Ready',
       targetSystem: 'JSON Feed / Webhooks',
     },
@@ -64,9 +64,9 @@ const DataExportStudio: React.FC = () => {
       icon: FileSpreadsheet,
       format: 'CSV',
       size: '~1.8 MB',
-      color: '#10B981',
-      bg: 'rgba(16,185,129,0.18)',
-      border: 'rgba(16,185,129,0.4)',
+      color: '#34D399',
+      bg: 'rgba(16, 185, 129, 0.15)',
+      border: 'rgba(16, 185, 129, 0.4)',
       badge: 'ERP Ready',
       targetSystem: 'SAP / Oracle ERP',
     },
@@ -77,9 +77,9 @@ const DataExportStudio: React.FC = () => {
       icon: FileText,
       format: 'PDF',
       size: 'Per product',
-      color: '#F59E0B',
-      bg: 'rgba(245,158,11,0.18)',
-      border: 'rgba(245,158,11,0.4)',
+      color: '#FBBF24',
+      bg: 'rgba(245, 158, 11, 0.15)',
+      border: 'rgba(245, 158, 11, 0.4)',
       badge: 'With QR Code',
       targetSystem: 'Customer Portal',
     },
@@ -90,61 +90,13 @@ const DataExportStudio: React.FC = () => {
       icon: Code2,
       format: 'REST API',
       size: 'Live endpoint',
-      color: '#8B5CF6',
-      bg: 'rgba(139,92,246,0.18)',
-      border: 'rgba(139,92,246,0.4)',
+      color: '#818CF8',
+      bg: 'rgba(99, 102, 241, 0.15)',
+      border: 'rgba(99, 102, 241, 0.4)',
       badge: 'Live Stream',
       targetSystem: 'Microservices / PIM',
     },
   ];
-
-  // Dynamic payload generator based on toggle selections
-  const generateDynamicPayload = () => {
-    let payload: any = {
-      sku: "MX-1000-V2",
-      productName: "Industrial Servo Motor MX-1000",
-      manufacturer: "Parker Hannifin",
-      status: "COMMERCE_READY",
-    };
-
-    if (includeConfidence) {
-      payload.aiConfidence = 0.984;
-    }
-
-    if (includeProvenance) {
-      payload.provenance = {
-        sourceDocument: "Supplier_Catalog_Q3.pdf",
-        extractedPage: 14,
-        model: "Gemini-1.5-VLM",
-      };
-    }
-
-    payload.attributes = {
-      maxTorque: {
-        value: "15.0 Nm",
-        status: "HUMAN_APPROVED",
-        ...(includeIso ? { isoStandard: "ISO 8608" } : {}),
-      },
-      ipRating: {
-        value: "IP65",
-        status: "RAG_INFERRED",
-        ...(includeIso ? { isoStandard: "IEC 60529" } : {}),
-      },
-      voltage: {
-        value: "400V 3-Phase",
-        status: "EXTRACTED",
-        ...(includeIso ? { isoStandard: "UL 508A" } : {}),
-      },
-    };
-
-    if (includeAnomalies) {
-      payload.auditFlags = [
-        { field: "maxTorque", anomaly: "Unit conversion typo fixed (150 Nm -> 15.0 Nm)", resolvedBy: "AI Agent + QA" }
-      ];
-    }
-
-    return JSON.stringify(payload, null, 2);
-  };
 
   return (
     <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -153,14 +105,14 @@ const DataExportStudio: React.FC = () => {
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(59, 130, 246, 0.18)', border: '1px solid rgba(59, 130, 246, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Download size={24} color="#60A5FA" />
             </div>
             <div>
-              <h1 style={{ fontSize: 26, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.4px' }}>
+              <h1 style={{ fontSize: 28, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.4px' }}>
                 Export & Data Handoff Studio
               </h1>
-              <div style={{ fontSize: 14, color: '#CBD5E1' }}>
+              <div style={{ fontSize: 15, color: '#F1F5F9' }}>
                 Multi-format publishing pipeline, REST API distribution, and customizable ISO payload builder
               </div>
             </div>
@@ -168,11 +120,11 @@ const DataExportStudio: React.FC = () => {
         </div>
 
         {/* Quick KPI badge */}
-        <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
           <ShieldCheck size={20} color="#34D399" />
           <div>
             <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Catalog Readiness</div>
-            <div style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>12,450 Verified Records</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>12,450 Verified Records</div>
           </div>
         </div>
       </div>
@@ -180,8 +132,8 @@ const DataExportStudio: React.FC = () => {
       {/* Explainer Banner */}
       <div style={{
         padding: '18px 22px',
-        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%)',
-        border: '1px solid rgba(59, 130, 246, 0.35)',
+        background: '#1B2433',
+        border: '1px solid rgba(56, 189, 248, 0.35)',
         borderRadius: 14,
         display: 'flex',
         alignItems: 'flex-start',
@@ -192,8 +144,8 @@ const DataExportStudio: React.FC = () => {
           <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
             Enterprise Data Handoff Pipeline
           </div>
-          <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6 }}>
-            The multi-agent pipeline turns unstructured PDFs into fully traceable, commerce-ready product data. Use this studio to customize JSON metadata tags, export spreadsheet tables for SAP/Oracle ERP, or distribute live records via REST API.
+          <p style={{ fontSize: 15, color: '#FFFFFF', lineHeight: 1.6 }}>
+            The multi-agent pipeline turns unstructured PDFs into fully traceable, commerce-ready product data. Use this studio to customize metadata tags, export spreadsheet tables for SAP/Oracle ERP, or distribute live records via REST API.
           </p>
         </div>
       </div>
@@ -260,52 +212,52 @@ const DataExportStudio: React.FC = () => {
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
-                    <h3 style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>{opt.title}</h3>
-                    <span style={{ fontSize: 10, fontWeight: 800, background: opt.bg, color: opt.color, border: `1px solid ${opt.border}`, padding: '2px 8px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>{opt.title}</h3>
+                    <span style={{ fontSize: 11, fontWeight: 800, background: opt.bg, color: opt.color, border: `1px solid ${opt.border}`, padding: '3px 8px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                       {opt.badge}
                     </span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 11, color: '#94A3B8', background: '#0F172A', border: '1px solid #334155', padding: '2px 8px', borderRadius: 6 }}>
+                    <span style={{ fontSize: 12, color: '#38BDF8', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', padding: '2px 8px', borderRadius: 6, fontWeight: 700 }}>
                       {opt.format}
                     </span>
-                    <span style={{ fontSize: 11, color: '#64748B' }}>Target: <strong style={{ color: '#CBD5E1' }}>{opt.targetSystem}</strong></span>
+                    <span style={{ fontSize: 12, color: '#94A3B8' }}>Target: <strong style={{ color: '#FFFFFF' }}>{opt.targetSystem}</strong></span>
                   </div>
                 </div>
               </div>
 
-              <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6, marginBottom: 18, flex: 1 }}>{opt.desc}</p>
+              <p style={{ fontSize: 15, color: '#F1F5F9', lineHeight: 1.6, marginBottom: 18, flex: 1 }}>{opt.desc}</p>
 
               {/* Progress step feedback */}
               {isDownloading && exportStep && (
-                <div style={{ marginBottom: 12, padding: '8px 12px', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, fontSize: 12, color: '#60A5FA', fontFamily: 'Plus Jakarta Sans, sans-serif', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Sparkles size={14} className="animate-spin" /> {exportStep}
+                <div style={{ marginBottom: 12, padding: '10px 14px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 8, fontSize: 13, color: '#60A5FA', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Sparkles size={16} className="animate-spin" /> {exportStep}
                 </div>
               )}
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid #334155' }}>
-                <span style={{ fontSize: 12, color: '#94A3B8', fontWeight: 600 }}>{opt.size}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid rgba(56, 189, 248, 0.25)' }}>
+                <span style={{ fontSize: 13, color: '#94A3B8', fontWeight: 600 }}>{opt.size}</span>
                 {isAPI ? (
                   <button
                     className="btn btn-secondary"
                     onClick={handleCopy}
-                    style={{ fontSize: 13, padding: '8px 16px', fontWeight: 800 }}
+                    style={{ fontSize: 14, padding: '8px 18px', fontWeight: 800 }}
                   >
-                    {copied ? <><Check size={15} color="#34D399" /> Copied Curl</> : <><Copy size={15} color="#8B5CF6" /> Copy API Curl</>}
+                    {copied ? <><Check size={16} color="#34D399" /> Copied Endpoint</> : <><Copy size={16} color="#60A5FA" /> Copy API Endpoint</>}
                   </button>
                 ) : (
                   <button
                     className={`btn ${isDownloaded ? 'btn-accent' : 'btn-primary'}`}
                     onClick={() => handleExport(opt.id)}
                     disabled={isDownloading || isDownloaded}
-                    style={{ fontSize: 13, padding: '8px 18px', fontWeight: 800 }}
+                    style={{ fontSize: 14, padding: '8px 18px', fontWeight: 800 }}
                   >
                     {isDownloading ? (
                       <><span className="animate-spin" style={{ display: 'inline-block' }}>⟳</span> Exporting...</>
                     ) : isDownloaded ? (
-                      <><Check size={15} /> Downloaded</>
+                      <><Check size={16} /> Downloaded</>
                     ) : (
-                      <><Download size={15} /> Export {opt.format}</>
+                      <><Download size={16} /> Export {opt.format}</>
                     )}
                   </button>
                 )}
@@ -315,42 +267,66 @@ const DataExportStudio: React.FC = () => {
         })}
       </div>
 
-      {/* REST API Live Response Payload Inspector */}
-      <div className="card" style={{ padding: 24, background: '#1E293B' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      {/* Clean Structured Export Preview Panel (No Code Boxes) */}
+      <div className="card" style={{ padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Code2 size={22} color="#8B5CF6" />
+            <Database size={22} color="#60A5FA" />
             <div>
-              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>Live JSON Output Payload Inspector</h3>
-              <div style={{ fontSize: 13, color: '#94A3B8' }}>Updates in real-time as you toggle export payload options above</div>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>Enriched Attribute Payload Preview</h3>
+              <div style={{ fontSize: 13, color: '#94A3B8' }}>Sample extracted record formatted with active ISO customization options</div>
             </div>
           </div>
-          <span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 10px', borderRadius: 6, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-            ● Dynamic Preview
+          <span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 12px', borderRadius: 8 }}>
+            ● Verified Active Handoff
           </span>
         </div>
 
-        <pre style={{
-          background: '#070B18',
-          border: '1px solid #334155',
-          borderRadius: 12,
-          padding: 20,
-          color: '#34D399',
-          fontSize: 13,
-          lineHeight: 1.6,
-          overflowX: 'auto',
-          fontFamily: 'Plus Jakarta Sans, sans-serif',
-        }}>
-          {generateDynamicPayload()}
-        </pre>
+        {/* Clean Structured Table Preview */}
+        <div style={{ background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, overflow: 'hidden' }}>
+          <table>
+            <thead>
+              <tr>
+                <th>Attribute Field</th>
+                <th>Extracted Value</th>
+                <th>Validation Status</th>
+                {includeIso && <th>ISO / IEC Standard</th>}
+                {includeConfidence && <th>AI Confidence</th>}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>maxTorque</td>
+                <td style={{ fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>15.0 Nm</td>
+                <td><span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 8px', borderRadius: 6 }}>✓ Human Approved</span></td>
+                {includeIso && <td style={{ color: '#60A5FA', fontWeight: 700 }}>ISO 8608</td>}
+                {includeConfidence && <td style={{ color: '#FFFFFF', fontWeight: 800 }}>98.4%</td>}
+              </tr>
+              <tr>
+                <td style={{ fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>ipRating</td>
+                <td style={{ fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>IP65</td>
+                <td><span style={{ fontSize: 12, fontWeight: 800, color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '3px 8px', borderRadius: 6 }}>RAG Inferred</span></td>
+                {includeIso && <td style={{ color: '#60A5FA', fontWeight: 700 }}>IEC 60529</td>}
+                {includeConfidence && <td style={{ color: '#FFFFFF', fontWeight: 800 }}>96.2%</td>}
+              </tr>
+              <tr>
+                <td style={{ fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>voltage</td>
+                <td style={{ fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>400V 3-Phase</td>
+                <td><span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 8px', borderRadius: 6 }}>✓ Auto Verified</span></td>
+                {includeIso && <td style={{ color: '#60A5FA', fontWeight: 700 }}>UL 508A</td>}
+                {includeConfidence && <td style={{ color: '#FFFFFF', fontWeight: 800 }}>99.1%</td>}
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Summary KPI Footer */}
-      <div className="card" style={{ padding: 24, background: '#1E293B' }}>
+      <div className="card" style={{ padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-          <BarChart3 size={20} color="#8B5CF6" />
-          <span style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>Current Catalog Export Summary</span>
-          <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 10px', borderRadius: 6 }}>
+          <BarChart3 size={20} color="#60A5FA" />
+          <span style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>Current Catalog Export Summary</span>
+          <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 12px', borderRadius: 8 }}>
             ✓ Ready for Downstream PIM/ERP
           </span>
         </div>
@@ -358,14 +334,14 @@ const DataExportStudio: React.FC = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
           {[
             { label: 'Total Products', value: '12,450', color: '#60A5FA', desc: 'Across all categories' },
-            { label: 'Enriched Attributes', value: '142,890', color: '#C084FC', desc: 'AI-extracted fields' },
+            { label: 'Enriched Attributes', value: '142,890', color: '#38BDF8', desc: 'AI-extracted fields' },
             { label: 'Commerce-Ready', value: '94%', color: '#34D399', desc: 'Validated & complete' },
             { label: 'Unresolved Flags', value: '142', color: '#FBBF24', desc: 'Awaiting human review' },
           ].map((stat, i) => (
-            <div key={i} style={{ padding: '14px 16px', background: '#0F172A', border: '1px solid #334155', borderRadius: 10 }}>
-              <div style={{ fontSize: 24, fontWeight: 800, color: stat.color, letterSpacing: '-0.5px' }}>{stat.value}</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#FFFFFF', marginTop: 3 }}>{stat.label}</div>
-              <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{stat.desc}</div>
+            <div key={i} style={{ padding: '16px 18px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: 12 }}>
+              <div style={{ fontSize: 26, fontWeight: 800, color: stat.color, letterSpacing: '-0.5px' }}>{stat.value}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#FFFFFF', marginTop: 3 }}>{stat.label}</div>
+              <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{stat.desc}</div>
             </div>
           ))}
         </div>
