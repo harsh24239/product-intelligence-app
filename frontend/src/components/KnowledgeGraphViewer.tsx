@@ -16,6 +16,7 @@ interface NodeDetail {
   y: number; // % from top
   cluster: 'motors' | 'atex' | 'certs' | 'electrical';
   relLabel: string;
+  similarity: number;
 }
 
 const nodesList: NodeDetail[] = [
@@ -28,12 +29,13 @@ const nodesList: NodeDetail[] = [
     standards: ['IEC 60034-30-1', 'NEMA MG1', 'ISO 13849-1'],
     description: 'Central taxonomy node mapping electric motors, drive units, power envelopes, and safety compliance schemas across global industrial catalogs.',
     color: '#60A5FA',
-    bgColor: 'rgba(59, 130, 246, 0.25)',
+    bgColor: 'rgba(99, 102, 241, 0.25)',
     borderColor: '#3B82F6',
     x: 50,
     y: 50,
     cluster: 'motors',
     relLabel: 'ROOT_DOMAIN',
+    similarity: 99.8,
   },
   {
     id: 'ip-rating',
@@ -50,6 +52,7 @@ const nodesList: NodeDetail[] = [
     y: 24,
     cluster: 'certs',
     relLabel: 'GOVERNED_BY',
+    similarity: 98.4,
   },
   {
     id: 'atex',
@@ -58,94 +61,66 @@ const nodesList: NodeDetail[] = [
     type: 'Safety Directive',
     connectedNodes: 1240,
     standards: ['EN 60079-0', 'Directive 2014/34/EU'],
-    description: 'Mandatory European safety standard for electrical equipment operating in volatile, flammable, or explosive dust/gas atmospheres.',
-    color: '#F87171',
-    bgColor: 'rgba(239, 68, 68, 0.2)',
-    borderColor: '#EF4444',
-    x: 78,
-    y: 24,
-    cluster: 'atex',
-    relLabel: 'ENFORCES_SAFETY',
-  },
-  {
-    id: 'voltage',
-    name: 'Operating Voltage (400V 3-Phase)',
-    category: 'Electrical Specification',
-    type: 'Primary Attribute',
-    connectedNodes: 4100,
-    standards: ['IEEE 1584', 'UL 508A'],
-    description: 'Input voltage rating specifications defining 3-Phase AC power grid compatibility, frequency tolerances, and surge protection ratings.',
+    description: 'Mandatory European Union certification for equipment operating in potentially explosive dust or gas industrial atmospheres.',
     color: '#FBBF24',
     bgColor: 'rgba(245, 158, 11, 0.2)',
     borderColor: '#F59E0B',
-    x: 22,
-    y: 76,
-    cluster: 'electrical',
-    relLabel: 'INHERITS_SPEC',
-  },
-  {
-    id: 'efficiency',
-    name: 'Energy Efficiency (IE3 / IE4)',
-    category: 'Eco Efficiency Class',
-    type: 'Classification',
-    connectedNodes: 2900,
-    standards: ['IEC 60034-30-1'],
-    description: 'International energy efficiency class benchmarks defining premium operating power loss reductions for electric motors.',
-    color: '#C084FC',
-    bgColor: 'rgba(139, 92, 246, 0.2)',
-    borderColor: '#8B5CF6',
     x: 78,
-    y: 76,
-    cluster: 'certs',
-    relLabel: 'VERIFIES_CLASS',
+    y: 24,
+    cluster: 'atex',
+    relLabel: 'HAZARDOUS_RULE',
+    similarity: 96.1,
   },
   {
-    id: 'torque',
-    name: 'Peak Shaft Torque (15 Nm - 150 Nm)',
-    category: 'Mechanical Attribute',
-    type: 'Performance Spec',
-    connectedNodes: 1850,
-    standards: ['ISO 8608', 'DIN 743'],
-    description: 'Rotary shaft power torque transmission specs mapped to motor frame size and gearbox gear ratio relationships.',
+    id: 'ie3-class',
+    name: 'IE3 Premium Efficiency Standard',
+    category: 'Energy Performance',
+    type: 'Efficiency Class',
+    connectedNodes: 2800,
+    standards: ['IEC 60034-30-1'],
+    description: 'Mandatory energy efficiency baseline for 3-phase electric motors operating within the European Economic Area.',
     color: '#34D399',
     bgColor: 'rgba(16, 185, 129, 0.2)',
     borderColor: '#10B981',
+    x: 22,
+    y: 76,
+    cluster: 'electrical',
+    relLabel: 'COMPLIES_WITH',
+    similarity: 97.9,
+  },
+  {
+    id: 'voltage-class',
+    name: '400V 3-Phase Low Voltage Class',
+    category: 'Electrical Rating',
+    type: 'Grid Standard',
+    connectedNodes: 3900,
+    standards: ['IEC 60038'],
+    description: 'Standard AC power grid supply rating across EMEA manufacturing plants for heavy machinery and continuous duty drives.',
+    color: '#818CF8',
+    bgColor: 'rgba(99, 102, 241, 0.2)',
+    borderColor: '#6366F1',
+    x: 78,
+    y: 76,
+    cluster: 'electrical',
+    relLabel: 'OPERATES_AT',
+    similarity: 95.7,
+  },
+  {
+    id: 'din-mount',
+    name: 'DIN Flange B5 / B14 Mounting',
+    category: 'Mechanical Specs',
+    type: 'Physical Interface',
+    connectedNodes: 2100,
+    standards: ['DIN 42673', 'IEC 60072-1'],
+    description: 'Standardized mounting flange bolt patterns and shaft dimensions for direct gearhead coupling.',
+    color: '#38BDF8',
+    bgColor: 'rgba(6, 182, 212, 0.2)',
+    borderColor: '#06B6D4',
     x: 50,
     y: 16,
     cluster: 'motors',
-    relLabel: 'MAPPED_PERFORMANCE',
-  },
-  {
-    id: 'insulation',
-    name: 'Insulation Class H (180°C)',
-    category: 'Thermal Resistance',
-    type: 'Material Spec',
-    connectedNodes: 1120,
-    standards: ['IEC 60085'],
-    description: 'Thermal classification for motor winding insulation systems capable of continuous 180°C operating temperature without breakdown.',
-    color: '#F472B6',
-    bgColor: 'rgba(244, 114, 182, 0.2)',
-    borderColor: '#EC4899',
-    x: 14,
-    y: 50,
-    cluster: 'electrical',
-    relLabel: 'THERMAL_RATING',
-  },
-  {
-    id: 'mounting',
-    name: 'Flange Mount (B5 / B14)',
-    category: 'Mechanical Interface',
-    type: 'Dimension Spec',
-    connectedNodes: 2150,
-    standards: ['DIN 42677'],
-    description: 'Standardized mechanical motor mounting flange bolt circles and shaft extension dimensions for direct machine integration.',
-    color: '#A78BFA',
-    bgColor: 'rgba(167, 139, 250, 0.2)',
-    borderColor: '#8B5CF6',
-    x: 86,
-    y: 50,
-    cluster: 'motors',
-    relLabel: 'INTERFACE_STD',
+    relLabel: 'COUPLING_STD',
+    similarity: 94.2,
   },
 ];
 
@@ -171,8 +146,8 @@ const KnowledgeGraphViewer: React.FC = () => {
     setRagResult(null);
     setTimeout(() => {
       setRagRunning(false);
-      setRagResult('Traversal path: Motors → Ingress Protection (IP65) → IEC 60529. Inferred value: "IP65" (98.6% Cosine Similarity)');
-    }, 800);
+      setRagResult('Traversal Path: Industrial Motors → Ingress Protection (IP65) → IEC 60529. Inferred value: "IP65" (98.6% Cosine Similarity)');
+    }, 700);
   };
 
   return (
@@ -182,14 +157,14 @@ const KnowledgeGraphViewer: React.FC = () => {
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(139, 92, 246, 0.18)', border: '1px solid rgba(139, 92, 246, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Network size={24} color="#C084FC" />
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Network size={24} color="#60A5FA" />
             </div>
             <div>
-              <h1 style={{ fontSize: 26, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.4px' }}>
+              <h1 style={{ fontSize: 28, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.4px' }}>
                 AI Semantic Knowledge Graph
               </h1>
-              <div style={{ fontSize: 14, color: '#CBD5E1' }}>
+              <div style={{ fontSize: 14, color: '#F1F5F9' }}>
                 Multi-relational industrial taxonomy, ISO/IEC standards, and RAG attribute inference engine
               </div>
             </div>
@@ -215,26 +190,26 @@ const KnowledgeGraphViewer: React.FC = () => {
         </div>
       </div>
 
-      {/* RAG Annotation Banner */}
+      {/* RAG Banner */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(59, 130, 246, 0.12) 100%)',
-        border: '1px solid rgba(139, 92, 246, 0.4)',
+        background: '#1B2433',
+        border: '1px solid rgba(56, 189, 248, 0.35)',
         borderRadius: 14,
         padding: '18px 22px',
         display: 'flex',
         alignItems: 'flex-start',
         gap: 14,
       }}>
-        <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(139, 92, 246, 0.2)', border: '1px solid rgba(139, 92, 246, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Sparkles size={20} color="#C084FC" />
+        <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Sparkles size={20} color="#60A5FA" />
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, fontWeight: 800, color: '#C084FC', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
             How RAG Enrichment Works in the AI Pipeline
           </div>
-          <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 14, color: '#FFFFFF', lineHeight: 1.6 }}>
             When supplier PDFs contain missing or abbreviated technical specs (e.g. <code style={{ color: '#38BDF8', fontWeight: 700 }}>"65"</code> instead of <code style={{ color: '#38BDF8', fontWeight: 700 }}>"IP65"</code>), 
-            the AI Agent executes vector similarity search against this Knowledge Graph. By traversing relationships between <strong style={{ color: '#FFFFFF' }}>Product Domains → Operating Voltages → IEC Safety Standards</strong>, the pipeline automatically imputes missing specifications with 94%+ verified accuracy.
+            the AI Agent executes vector similarity search against this Knowledge Graph. By traversing relationships between <strong style={{ color: '#60A5FA' }}>Product Domains → Operating Voltages → IEC Safety Standards</strong>, the pipeline automatically imputes missing specifications with 94%+ verified accuracy.
           </p>
         </div>
       </div>
@@ -259,9 +234,9 @@ const KnowledgeGraphViewer: React.FC = () => {
                 borderRadius: 8,
                 fontSize: 13,
                 fontWeight: 700,
-                background: activeFilter === f.id ? '#3B82F6' : '#0F172A',
-                color: activeFilter === f.id ? '#FFFFFF' : '#CBD5E1',
-                border: `1px solid ${activeFilter === f.id ? '#3B82F6' : '#334155'}`,
+                background: activeFilter === f.id ? 'rgba(56, 189, 248, 0.25)' : '#0B0F17',
+                color: activeFilter === f.id ? '#FFFFFF' : '#94A3B8',
+                border: `1px solid ${activeFilter === f.id ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
               }}
@@ -287,47 +262,21 @@ const KnowledgeGraphViewer: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20 }}>
         
         {/* Visual Graph Canvas Container */}
-        <div className="card" style={{ padding: 0, position: 'relative', minHeight: 520, height: 520, overflow: 'hidden', background: '#070B18', border: '1px solid #334155' }}>
+        <div className="card" style={{ padding: 0, position: 'relative', minHeight: 520, height: 520, overflow: 'hidden', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
           
           {/* Radial Ambient Glow */}
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.18) 0%, rgba(7, 11, 24, 0.96) 80%)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.15) 0%, rgba(11, 15, 23, 0.96) 80%)' }} />
 
-          {/* SVG Connecting Lines with Animated Pulsing Data Rays */}
+          {/* SVG Connecting Lines with Vector Gradient Rays */}
           <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
-            <defs>
-              <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.3" />
-              </linearGradient>
-              <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#EF4444" stopOpacity="0.8" />
-              </linearGradient>
-              <linearGradient id="grad-amber" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.8" />
-              </linearGradient>
-              <linearGradient id="grad-violet" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.8" />
-              </linearGradient>
-              <linearGradient id="grad-pink" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#EC4899" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.3" />
-              </linearGradient>
-            </defs>
-
-            {/* Relationship Lines */}
-            <line x1="50%" y1="50%" x2="22%" y2="24%" stroke="url(#grad-cyan)" strokeWidth="2" strokeDasharray="6 4" />
-            <line x1="50%" y1="50%" x2="78%" y2="24%" stroke="url(#grad-red)" strokeWidth="2" strokeDasharray="6 4" />
-            <line x1="50%" y1="50%" x2="22%" y2="76%" stroke="url(#grad-amber)" strokeWidth="2" strokeDasharray="6 4" />
-            <line x1="50%" y1="50%" x2="78%" y2="76%" stroke="url(#grad-violet)" strokeWidth="2" strokeDasharray="6 4" />
-            <line x1="50%" y1="50%" x2="50%" y2="16%" stroke="rgba(16, 185, 129, 0.7)" strokeWidth="2" strokeDasharray="6 4" />
-            <line x1="50%" y1="50%" x2="14%" y2="50%" stroke="url(#grad-pink)" strokeWidth="2" strokeDasharray="6 4" />
-            <line x1="50%" y1="50%" x2="86%" y2="50%" stroke="url(#grad-violet)" strokeWidth="2" strokeDasharray="6 4" />
+            <line x1="50%" y1="50%" x2="22%" y2="24%" stroke="rgba(56, 189, 248, 0.5)" strokeWidth="2" strokeDasharray="6 4" />
+            <line x1="50%" y1="50%" x2="78%" y2="24%" stroke="rgba(245, 158, 11, 0.5)" strokeWidth="2" strokeDasharray="6 4" />
+            <line x1="50%" y1="50%" x2="22%" y2="76%" stroke="rgba(16, 185, 129, 0.5)" strokeWidth="2" strokeDasharray="6 4" />
+            <line x1="50%" y1="50%" x2="78%" y2="76%" stroke="rgba(99, 102, 241, 0.5)" strokeWidth="2" strokeDasharray="6 4" />
+            <line x1="50%" y1="50%" x2="50%" y2="16%" stroke="rgba(56, 189, 248, 0.5)" strokeWidth="2" strokeDasharray="6 4" />
           </svg>
 
-          {/* Interactive Graph Node Circles */}
+          {/* Interactive Graph Nodes */}
           {filteredNodes.map(node => {
             const isSelected = selectedNode?.id === node.id;
             const isRoot = node.id === 'motor-root';
@@ -344,11 +293,11 @@ const KnowledgeGraphViewer: React.FC = () => {
                   width: isRoot ? 146 : 112,
                   height: isRoot ? 146 : 112,
                   borderRadius: '50%',
-                  background: node.bgColor,
+                  background: '#1B2433',
                   border: `2px solid ${isSelected ? '#FFFFFF' : node.borderColor}`,
                   boxShadow: isSelected 
-                    ? `0 0 40px ${node.borderColor}, 0 0 15px #FFFFFF` 
-                    : `0 0 24px ${node.bgColor}`,
+                    ? `0 0 35px ${node.borderColor}, 0 0 15px #FFFFFF` 
+                    : `0 0 20px rgba(0,0,0,0.5)`,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -383,12 +332,12 @@ const KnowledgeGraphViewer: React.FC = () => {
           })}
         </div>
 
-        {/* Selected Node Side Inspector & RAG Simulator */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', padding: 22, background: '#1E293B' }}>
+        {/* Selected Node Side Inspector & Interactive RAG Simulator */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', padding: 22, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
           {selectedNode ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
-                <span style={{ fontSize: 11, fontWeight: 800, color: selectedNode.color, textTransform: 'uppercase', letterSpacing: '0.06em', background: selectedNode.bgColor, padding: '3px 10px', borderRadius: 6, border: `1px solid ${selectedNode.borderColor}` }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: selectedNode.color, background: selectedNode.bgColor, padding: '3px 10px', borderRadius: 6, border: `1px solid ${selectedNode.borderColor}` }}>
                   {selectedNode.category}
                 </span>
                 <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF', marginTop: 10, lineHeight: 1.35 }}>
@@ -396,17 +345,18 @@ const KnowledgeGraphViewer: React.FC = () => {
                 </h3>
               </div>
 
-              <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: '#FFFFFF', lineHeight: 1.6 }}>
                 {selectedNode.description}
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 14, borderTop: '1px solid #334155' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 14, borderTop: '1px solid rgba(56, 189, 248, 0.25)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-                  <span style={{ color: '#94A3B8' }}>Connected Nodes:</span>
-                  <strong style={{ color: '#FFFFFF', fontFamily: 'JetBrains Mono, monospace' }}>
-                    {selectedNode.connectedNodes.toLocaleString()}
+                  <span style={{ color: '#94A3B8' }}>Cosine Similarity:</span>
+                  <strong style={{ color: '#34D399', fontFamily: 'JetBrains Mono, monospace' }}>
+                    {selectedNode.similarity}% Match
                   </strong>
                 </div>
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
                   <span style={{ color: '#94A3B8' }}>Edge Relationship:</span>
                   <strong style={{ color: selectedNode.color, fontFamily: 'JetBrains Mono, monospace' }}>
@@ -429,15 +379,30 @@ const KnowledgeGraphViewer: React.FC = () => {
               </div>
 
               {/* Interactive RAG Vector Simulation Box */}
-              <div style={{ marginTop: 10, padding: 14, background: '#0F172A', border: '1px solid #334155', borderRadius: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 800, color: '#F59E0B', textTransform: 'uppercase' }}>
-                  <Zap size={15} color="#F59E0B" />
+              <div style={{ marginTop: 10, padding: 16, background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 800, color: '#FBBF24', textTransform: 'uppercase' }}>
+                  <Zap size={15} color="#FBBF24" />
                   RAG Vector Search Simulator
                 </div>
 
-                <div style={{ fontSize: 12, color: '#94A3B8' }}>Test Gemini vector inference against this node:</div>
+                {/* Preset Query Chips */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {[
+                    'Infer SAB-992 IP Rating',
+                    'Check IE3 Efficiency',
+                    'ATEX Zone 1 Audit'
+                  ].map((q, i) => (
+                    <button
+                      key={i}
+                      onClick={() => runSimulatedRag(q)}
+                      style={{ fontSize: 11, fontWeight: 700, padding: '4px 8px', borderRadius: 6, background: '#1B2433', color: '#60A5FA', border: '1px solid rgba(56, 189, 248, 0.35)', cursor: 'pointer' }}
+                    >
+                      ⚡ {q}
+                    </button>
+                  ))}
+                </div>
 
-                <div style={{ display: 'flex', gap: 6 }}>
+                <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
                   <input
                     type="text"
                     value={ragQuery}
@@ -447,7 +412,7 @@ const KnowledgeGraphViewer: React.FC = () => {
                   <button
                     className="btn btn-primary"
                     onClick={() => runSimulatedRag(ragQuery)}
-                    style={{ fontSize: 12, padding: '0 12px', height: 36 }}
+                    style={{ fontSize: 12, padding: '0 14px', height: 36 }}
                     disabled={ragRunning}
                   >
                     <Play size={13} /> Run
@@ -456,12 +421,12 @@ const KnowledgeGraphViewer: React.FC = () => {
 
                 {ragRunning && (
                   <div style={{ fontSize: 12, color: '#60A5FA', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Activity size={14} className="animate-spin" /> Executing Cosine Similarity Vector Search...
+                    <Activity size={14} className="animate-spin" /> Executing Vector Similarity Search...
                   </div>
                 )}
 
                 {ragResult && (
-                  <div style={{ padding: 10, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: 8, fontSize: 12, color: '#34D399', lineHeight: 1.5, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <div style={{ padding: 12, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: 8, fontSize: 12, color: '#34D399', lineHeight: 1.5, fontFamily: 'JetBrains Mono, monospace' }}>
                     <CheckCircle2 size={14} color="#34D399" style={{ marginBottom: 2 }} /> {ragResult}
                   </div>
                 )}
@@ -477,7 +442,7 @@ const KnowledgeGraphViewer: React.FC = () => {
       </div>
 
       {/* ISO / IEC Standards Matrix Table */}
-      <div className="card" style={{ padding: 24, background: '#1E293B' }}>
+      <div className="card" style={{ padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
         <div 
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
           onClick={() => setExpandedBase(!expandedBase)}
@@ -494,7 +459,7 @@ const KnowledgeGraphViewer: React.FC = () => {
         </div>
 
         {expandedBase && (
-          <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #334155' }}>
+          <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid rgba(56, 189, 248, 0.25)' }}>
             <table>
               <thead>
                 <tr>
@@ -507,26 +472,26 @@ const KnowledgeGraphViewer: React.FC = () => {
               <tbody>
                 <tr>
                   <td style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>IEC 60529</td>
-                  <td style={{ color: '#E2E8F0' }}>Enclosure Protection</td>
-                  <td style={{ color: '#CBD5E1' }}>Defines Ingress Protection (IP) ratings for dust tightness and water jet resistance.</td>
+                  <td style={{ color: '#FFFFFF' }}>Enclosure Protection</td>
+                  <td style={{ color: '#F1F5F9' }}>Defines Ingress Protection (IP) ratings for dust tightness and water jet resistance.</td>
                   <td><span className="badge badge-validated">Auto-Verified</span></td>
                 </tr>
                 <tr>
                   <td style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>IEC 60034-30-1</td>
-                  <td style={{ color: '#E2E8F0' }}>Energy Efficiency</td>
-                  <td style={{ color: '#CBD5E1' }}>Standardizes IE1, IE2, IE3, IE4 efficiency classes for industrial motors.</td>
+                  <td style={{ color: '#FFFFFF' }}>Energy Efficiency</td>
+                  <td style={{ color: '#F1F5F9' }}>Standardizes IE1, IE2, IE3, IE4 efficiency classes for industrial motors.</td>
                   <td><span className="badge badge-commerce_ready">Compliance Pass</span></td>
                 </tr>
                 <tr>
                   <td style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>Directive 2014/34/EU</td>
-                  <td style={{ color: '#E2E8F0' }}>ATEX Hazardous</td>
-                  <td style={{ color: '#CBD5E1' }}>Mandatory safety directive for equipment operating in explosive atmosphere zones.</td>
+                  <td style={{ color: '#FFFFFF' }}>ATEX Hazardous</td>
+                  <td style={{ color: '#F1F5F9' }}>Mandatory safety directive for equipment operating in explosive atmosphere zones.</td>
                   <td><span className="badge badge-flagged">Flagged for Review</span></td>
                 </tr>
                 <tr>
                   <td style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>ISO 13849-1</td>
-                  <td style={{ color: '#E2E8F0' }}>Safety Systems</td>
-                  <td style={{ color: '#CBD5E1' }}>Safety-related parts of control systems (Performance Level PL a-e).</td>
+                  <td style={{ color: '#FFFFFF' }}>Safety Systems</td>
+                  <td style={{ color: '#F1F5F9' }}>Safety-related parts of control systems (Performance Level PL a-e).</td>
                   <td><span className="badge badge-validated">Auto-Verified</span></td>
                 </tr>
               </tbody>
