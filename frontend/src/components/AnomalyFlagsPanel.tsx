@@ -44,10 +44,10 @@ const mockAnomalies = [
   },
 ];
 
-const severityConfig: Record<string, { bg: string; color: string; leftBorder: string; label: string }> = {
-  high:   { bg: '#EF4444', color: '#FFFFFF', leftBorder: '#EF4444', label: 'High Priority' },
-  medium: { bg: '#F59E0B', color: '#0F172A', leftBorder: '#F59E0B', label: 'Medium Priority' },
-  low:    { bg: '#3B82F6', color: '#FFFFFF', leftBorder: '#3B82F6', label: 'Low Priority' },
+const severityConfig: Record<string, { bg: string; color: string; border: string; label: string }> = {
+  high:   { bg: '#1E293B', color: '#F87171', border: 'rgba(239, 68, 68, 0.4)', label: 'High Priority' },
+  medium: { bg: '#1E293B', color: '#FBBF24', border: 'rgba(245, 158, 11, 0.4)', label: 'Medium Priority' },
+  low:    { bg: '#1E293B', color: '#60A5FA', border: 'rgba(59, 130, 246, 0.4)', label: 'Low Priority' },
 };
 
 const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }) => {
@@ -63,30 +63,30 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
   };
 
   return (
-    <div className="card" style={{ display: 'flex', flexDirection: 'column', padding: 24, background: '#1E293B', borderRadius: 16 }}>
+    <div className="card" style={{ display: 'flex', flexDirection: 'column', padding: 24, background: '#162032', borderRadius: 16 }}>
       
       {/* Panel Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(245, 158, 11, 0.18)', border: '1px solid rgba(245, 158, 11, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 38, height: 38, borderRadius: 10, background: '#0F172A', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ShieldAlert size={20} color="#FBBF24" />
           </div>
           <div>
             <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>AI Anomaly Queue</h3>
-            <div style={{ fontSize: 13, color: '#94A3B8', marginTop: 1 }}>Requires human validation before catalog publishing</div>
+            <div style={{ fontSize: 13, color: '#94A3B8', marginTop: 1 }}>Requires human validation before publishing</div>
           </div>
         </div>
 
         {/* Severity Filter Pills */}
-        <div style={{ display: 'flex', gap: 6, background: '#0F172A', padding: 4, borderRadius: 8, border: '1px solid #334155' }}>
+        <div style={{ display: 'flex', gap: 4, background: '#0F172A', padding: 4, borderRadius: 8, border: '1px solid #334155' }}>
           {(['all', 'high', 'medium', 'low'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               style={{
-                padding: '6px 14px',
+                padding: '5px 12px',
                 borderRadius: 6,
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: 700,
                 textTransform: 'capitalize',
                 background: filter === f ? '#334155' : 'transparent',
@@ -101,7 +101,7 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
       </div>
 
       {/* Cards List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {filtered.map((anomaly) => {
           const cfg = severityConfig[anomaly.severity];
           return (
@@ -111,35 +111,34 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
               style={{
                 background: '#0F172A',
                 border: '1px solid #334155',
-                borderLeft: `5px solid ${cfg.leftBorder}`,
-                borderRadius: 14,
+                borderRadius: 12,
                 padding: 20,
                 cursor: 'pointer',
-                transition: 'all 0.2s ease',
+                transition: 'all 0.15s ease',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 14,
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = cfg.leftBorder;
-                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
+                (e.currentTarget as HTMLDivElement).style.borderColor = '#475569';
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLDivElement).style.borderColor = '#334155';
                 (e.currentTarget as HTMLDivElement).style.transform = 'none';
               }}
             >
-              {/* Top Row: Severity Tag & SKU */}
+              {/* Top Row: Soft Muted Tag & SKU */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 11, fontWeight: 800, color: cfg.color, background: cfg.bg, padding: '3px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}`, padding: '3px 9px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     {cfg.label}
                   </span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#38BDF8', fontFamily: 'JetBrains Mono, monospace' }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace' }}>
                     {anomaly.sku}
                   </span>
                 </div>
-                <ChevronRight size={20} color="#94A3B8" />
+                <ChevronRight size={18} color="#94A3B8" />
               </div>
 
               {/* Product Name */}
@@ -147,53 +146,48 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
                 {anomaly.name}
               </div>
 
-              {/* 3 High-Impact Color Chips */}
+              {/* Clean Inset Spec Tags */}
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, fontSize: 14 }}>
-                
-                {/* 1. BLUE CHIP (Field) */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#162032', padding: '6px 14px', borderRadius: 8, border: '1px solid #38BDF8' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#162032', padding: '6px 12px', borderRadius: 8, border: '1px solid #334155' }}>
                   <span style={{ color: '#94A3B8', fontWeight: 600 }}>Field:</span>
-                  <span style={{ color: '#38BDF8', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <span style={{ color: '#38BDF8', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
                     {anomaly.field}
                   </span>
                 </div>
 
-                {/* 2. RED CHIP (AI Extracted) */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#2A1215', padding: '6px 14px', borderRadius: 8, border: '1px solid #EF4444' }}>
-                  <span style={{ color: '#F87171', fontWeight: 700 }}>AI Extracted:</span>
-                  <span style={{ color: '#F87171', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#162032', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(239, 68, 68, 0.3)' }}>
+                  <span style={{ color: '#F87171', fontWeight: 600 }}>AI Extracted:</span>
+                  <span style={{ color: '#F87171', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
                     {anomaly.extractedVal}
                   </span>
                 </div>
 
-                {/* 3. GREEN CHIP (Suggested) */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0D281E', padding: '6px 14px', borderRadius: 8, border: '1px solid #10B981' }}>
-                  <span style={{ color: '#34D399', fontWeight: 700 }}>Suggested:</span>
-                  <span style={{ color: '#34D399', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#162032', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                  <span style={{ color: '#34D399', fontWeight: 600 }}>Suggested:</span>
+                  <span style={{ color: '#34D399', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
                     {anomaly.expectedVal}
                   </span>
                 </div>
-
               </div>
 
               {/* Reasoning Description */}
-              <div style={{ padding: '14px 18px', background: '#162032', border: '1px solid #334155', borderRadius: 10, fontSize: 14, color: '#F1F5F9', lineHeight: 1.6, display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <Info size={18} color="#94A3B8" style={{ flexShrink: 0, marginTop: 2 }} />
+              <div style={{ padding: '12px 16px', background: '#162032', border: '1px solid #334155', borderRadius: 8, fontSize: 14, color: '#E2E8F0', lineHeight: 1.6, display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                <Info size={16} color="#94A3B8" style={{ flexShrink: 0, marginTop: 2 }} />
                 <span>{anomaly.issue}</span>
               </div>
 
               {/* Bottom Action Row */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 4 }}>
-                <div style={{ fontSize: 13, color: '#94A3B8', fontWeight: 600 }}>
-                  AI Confidence: <strong style={{ color: anomaly.confidence > 70 ? '#34D399' : '#FBBF24', fontSize: 14, fontWeight: 800 }}>{anomaly.confidence}%</strong>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 2 }}>
+                <div style={{ fontSize: 13, color: '#94A3B8' }}>
+                  AI Confidence: <strong style={{ color: '#FFFFFF' }}>{anomaly.confidence}%</strong>
                 </div>
 
                 <button
-                  className="btn btn-accent"
+                  className="btn btn-secondary"
                   onClick={(e) => handleResolve(e, anomaly.id)}
-                  style={{ fontSize: 13, padding: '9px 20px', fontWeight: 800, background: '#10B981', color: '#FFFFFF', border: '1px solid #10B981', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)' }}
+                  style={{ fontSize: 13, padding: '7px 16px', color: '#34D399', border: '1px solid #334155', background: '#162032' }}
                 >
-                  <CheckCircle2 size={16} /> Approve Correction
+                  <CheckCircle2 size={15} color="#34D399" /> Approve Correction
                 </button>
               </div>
 
@@ -202,9 +196,8 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
         })}
 
         {filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '36px 0', fontSize: 15, color: '#34D399', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, fontWeight: 700 }}>
-            <CheckCircle2 size={36} color="#34D399" />
-            <span>All anomalies resolved in this queue!</span>
+          <div style={{ textAlign: 'center', padding: '28px 0', fontSize: 14, color: '#34D399', fontWeight: 700 }}>
+            ✓ All anomalies resolved in this queue
           </div>
         )}
       </div>
