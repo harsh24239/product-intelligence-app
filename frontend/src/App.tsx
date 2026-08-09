@@ -35,8 +35,12 @@ function App() {
           api.getCatalog(),
           api.getMetrics(),
         ]);
-        setProducts(fetchedProducts);
-        setMetrics(fetchedMetrics);
+        if (Array.isArray(fetchedProducts) && fetchedProducts.length > 0) {
+          setProducts(fetchedProducts);
+          if (fetchedMetrics) setMetrics(fetchedMetrics);
+        } else {
+          generateMockData();
+        }
       } catch {
         generateMockData();
       }
