@@ -22,38 +22,38 @@ const statusConfig: Record<
 > = {
   raw: {
     label: 'Raw',
-    desc: 'Not yet processed by AI',
-    color: '#94A3B8',
-    bg: 'rgba(148,163,184,0.1)',
-    border: 'rgba(148,163,184,0.25)',
+    desc: 'Unprocessed data',
+    color: '#E2E8F0',
+    bg: 'rgba(148,163,184,0.15)',
+    border: 'rgba(148,163,184,0.3)',
   },
   ai_enriched: {
     label: 'AI Enriched',
-    desc: 'AI has extracted and structured attributes',
-    color: '#06B6D4',
-    bg: 'rgba(6,182,212,0.1)',
-    border: 'rgba(6,182,212,0.25)',
+    desc: 'Attributes extracted',
+    color: '#38BDF8',
+    bg: 'rgba(6,182,212,0.15)',
+    border: 'rgba(6,182,212,0.4)',
   },
   validated: {
     label: 'Human Validated',
-    desc: 'Reviewed and approved by a human expert',
-    color: '#8B5CF6',
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.25)',
+    desc: 'Approved record',
+    color: '#C084FC',
+    bg: 'rgba(139,92,246,0.15)',
+    border: 'rgba(139,92,246,0.4)',
   },
   commerce_ready: {
     label: 'Commerce Ready',
-    desc: 'Fully enriched, validated — ready to publish',
-    color: '#10B981',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.25)',
+    desc: 'Validated & ready',
+    color: '#34D399',
+    bg: 'rgba(16,185,129,0.15)',
+    border: 'rgba(16,185,129,0.4)',
   },
   flagged: {
     label: 'Flagged',
-    desc: 'AI detected anomalies requiring review',
-    color: '#EF4444',
-    bg: 'rgba(239,68,68,0.1)',
-    border: 'rgba(239,68,68,0.25)',
+    desc: 'Requires review',
+    color: '#F87171',
+    bg: 'rgba(239,68,68,0.15)',
+    border: 'rgba(239,68,68,0.4)',
   },
 };
 
@@ -69,19 +69,9 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
 
   if (loading) {
     return (
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 12,
-        }}
-      >
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div
-            key={i}
-            className="animate-shimmer"
-            style={{ height: 180, borderRadius: 10, border: '1px solid var(--border)' }}
-          />
+          <div key={i} className="animate-shimmer" style={{ height: 200, borderRadius: 12, border: '1px solid var(--border)' }} />
         ))}
       </div>
     );
@@ -107,194 +97,109 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: 4,
-          padding: '5px 10px',
+          gap: 6,
+          padding: '4px 10px',
           borderRadius: 6,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: 700,
           color: cfg.color,
           background: cfg.bg,
           border: `1px solid ${cfg.border}`,
           whiteSpace: 'nowrap',
-          cursor: 'default',
         }}
       >
-        {status === 'ai_enriched' && <Sparkles size={11} />}
-        {status === 'flagged' && <AlertCircle size={11} />}
-        {status === 'commerce_ready' && <span style={{ fontSize: 10 }}>✓</span>}
+        {status === 'ai_enriched' && <Sparkles size={12} />}
+        {status === 'flagged' && <AlertCircle size={12} />}
+        {status === 'commerce_ready' && <span style={{ fontSize: 11 }}>✓</span>}
         {cfg.label}
       </span>
     );
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Section description + Status Legend */}
-      <div
-        style={{
-          padding: '14px 16px',
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border)',
-          borderRadius: 10,
-        }}
-      >
-        <div style={{ fontSize: 13, color: 'var(--text-sub)', lineHeight: 1.5, marginBottom: 12 }}>
-          <strong style={{ color: 'var(--text)' }}>AI-Enriched Product Catalog</strong> — Every product below was processed by the multi-agent AI pipeline: extracted from source documents, attribute-normalized, validated against ISO standards, and anomaly-checked. Click any card to see the full extraction detail, confidence scores, and 3D model.
-        </div>
-        {/* Status legend */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: 4 }}>Status Legend:</span>
-          {Object.entries(statusConfig).map(([key, cfg]) => (
-            <span key={key} title={cfg.desc} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 5, fontSize: 10, fontWeight: 600, color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}`, cursor: 'default' }}>
-              {cfg.label} <span style={{ fontWeight: 400, color: 'var(--text-muted)', fontSize: 9 }}>— {cfg.desc}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-
-      {/* Filters toolbar */}
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 10,
-          alignItems: 'center',
-          background: 'var(--bg-card)',
-          padding: '10px 14px',
-          borderRadius: 10,
-          border: '1px solid var(--border)',
-        }}
-      >
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+      
+      {/* Header Bar & Filters */}
+      <div className="card" style={{ padding: '16px 20px', display: 'flex', flexWrap: 'wrap', gap: 14, alignItems: 'center' }}>
+        
         {/* Search */}
-        <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
-          <Search
-            size={14}
-            color="var(--text-muted)"
-            style={{
-              position: 'absolute',
-              left: 10,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              pointerEvents: 'none',
-            }}
-          />
+        <div style={{ position: 'relative', flex: 1, minWidth: 240 }}>
+          <Search size={16} color="#94A3B8" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
             placeholder="Search SKU, product name, or manufacturer..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{ paddingLeft: 32, height: 34, fontSize: 12 }}
+            style={{ paddingLeft: 38, height: 40, fontSize: 14 }}
           />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        {/* Category Filter */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            style={{ height: 34, padding: '0 10px', fontSize: 12, width: 'auto', cursor: 'pointer' }}
+            style={{ height: 40, padding: '0 14px', fontSize: 14, width: 'auto', cursor: 'pointer' }}
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat} style={{ background: 'var(--bg-card)' }}>
+              <option key={cat} value={cat}>
                 {cat === 'All' ? 'All Categories' : cat}
               </option>
             ))}
           </select>
 
+          {/* Status Filter */}
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            style={{ height: 34, padding: '0 10px', fontSize: 12, width: 'auto', cursor: 'pointer' }}
+            style={{ height: 40, padding: '0 14px', fontSize: 14, width: 'auto', cursor: 'pointer' }}
           >
-            {['All', 'commerce_ready', 'ai_enriched', 'validated', 'flagged', 'raw'].map(
-              (st) => (
-                <option key={st} value={st} style={{ background: 'var(--bg-card)' }}>
-                  {st === 'All'
-                    ? 'All Statuses'
-                    : statusConfig[st]?.label || st}
-                </option>
-              )
-            )}
+            {['All', 'commerce_ready', 'ai_enriched', 'validated', 'flagged', 'raw'].map((st) => (
+              <option key={st} value={st}>
+                {st === 'All' ? 'All Statuses' : statusConfig[st]?.label || st}
+              </option>
+            ))}
           </select>
 
-          <div
-            style={{
-              display: 'flex',
-              gap: 2,
-              background: 'var(--bg)',
-              padding: 3,
-              borderRadius: 7,
-              border: '1px solid var(--border)',
-            }}
-          >
+          {/* View Toggle */}
+          <div style={{ display: 'flex', gap: 4, background: '#0F172A', padding: 4, borderRadius: 8, border: '1px solid #334155' }}>
             {(['grid', 'list'] as const).map((mode) => (
               <button
                 key={mode}
-                title={mode === 'grid' ? 'Card view' : 'Table view'}
                 onClick={() => setViewMode(mode)}
                 style={{
-                  width: 28,
-                  height: 28,
+                  width: 32,
+                  height: 32,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: 5,
-                  background:
-                    viewMode === mode ? 'rgba(255,255,255,0.08)' : 'transparent',
-                  color: viewMode === mode ? 'var(--text)' : 'var(--text-muted)',
+                  borderRadius: 6,
+                  background: viewMode === mode ? '#334155' : 'transparent',
+                  color: viewMode === mode ? '#FFFFFF' : '#94A3B8',
                   cursor: 'pointer',
-                  transition: 'all 0.15s',
                 }}
               >
-                {mode === 'grid' ? <Grid size={14} /> : <List size={14} />}
+                {mode === 'grid' ? <Grid size={16} /> : <List size={16} />}
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Count */}
-      <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: -4 }}>
-        Showing <strong style={{ color: 'var(--text)' }}>{filteredProducts.length}</strong> of{' '}
-        {products.length} products
-      </p>
+      {/* Counter */}
+      <div style={{ fontSize: 14, color: '#94A3B8', fontWeight: 600 }}>
+        Showing <strong style={{ color: '#FFFFFF' }}>{filteredProducts.length}</strong> of {products.length} products
+      </div>
 
-      {/* Empty state */}
+      {/* Grid View */}
       {filteredProducts.length === 0 ? (
-        <div
-          className="card"
-          style={{ textAlign: 'center', padding: '48px 24px' }}
-        >
-          <Search
-            size={36}
-            color="var(--text-muted)"
-            style={{ margin: '0 auto 12px' }}
-          />
-          <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 6 }}>
-            No products match your search
-          </h3>
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16 }}>
-            Try clearing filters or search for a different SKU.
-          </p>
-          <button
-            className="btn btn-secondary"
-            onClick={() => {
-              setSearch('');
-              setSelectedCategory('All');
-              setSelectedStatus('All');
-            }}
-          >
-            Clear Filters
-          </button>
+        <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: '#FFFFFF', marginBottom: 8 }}>No products match your filters</h3>
+          <p style={{ fontSize: 14, color: '#94A3B8', marginBottom: 16 }}>Try searching for a different product or clearing filters.</p>
+          <button className="btn btn-secondary" onClick={() => { setSearch(''); setSelectedCategory('All'); setSelectedStatus('All'); }}>Clear Filters</button>
         </div>
       ) : viewMode === 'grid' ? (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))',
-            gap: 12,
-          }}
-        >
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: 16 }}>
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
@@ -305,147 +210,32 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
           ))}
         </div>
       ) : (
-        <div
-          style={{
-            borderRadius: 10,
-            overflow: 'hidden',
-            border: '1px solid var(--border)',
-          }}
-        >
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ minWidth: 600 }}>
-              <thead>
-                <tr>
-                  {[
-                    'Product Name',
-                    'SKU',
-                    'Manufacturer',
-                    'Status',
-                    'Data Completeness',
-                    '',
-                  ].map((h, i) => (
-                    <th key={i}>{h}</th>
-                  ))}
+        /* List View */
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <table>
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>SKU</th>
+                <th>Manufacturer & Category</th>
+                <th>Status</th>
+                <th>Completeness</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProducts.map((product) => (
+                <tr key={product.id} onClick={() => onSelectProduct(product)} style={{ cursor: 'pointer' }}>
+                  <td style={{ fontWeight: 700, color: '#FFFFFF', fontSize: 15 }}>{product.name}</td>
+                  <td style={{ fontFamily: 'JetBrains Mono, monospace', color: '#60A5FA', fontWeight: 600 }}>{product.sku}</td>
+                  <td>{product.manufacturer} · {product.category}</td>
+                  <td><StatusBadge status={product.status} /></td>
+                  <td style={{ fontWeight: 700, color: '#FFFFFF' }}>{product.completeness}%</td>
+                  <td style={{ textAlign: 'right' }}><ChevronRight size={18} color="#94A3B8" /></td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredProducts.map((product, rowIdx) => (
-                  <tr
-                    key={product.id}
-                    onClick={() => onSelectProduct(product)}
-                    style={{
-                      cursor: 'pointer',
-                      background:
-                        rowIdx % 2 === 1 ? 'rgba(255,255,255,0.01)' : 'transparent',
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLTableRowElement).style.background =
-                        'rgba(59,130,246,0.04)';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLTableRowElement).style.background =
-                        rowIdx % 2 === 1 ? 'rgba(255,255,255,0.01)' : 'transparent';
-                    }}
-                  >
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div
-                          style={{
-                            width: 30,
-                            height: 30,
-                            borderRadius: 6,
-                            background: 'var(--blue-dim)',
-                            border: '1px solid var(--blue-border)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: 'var(--blue)',
-                            flexShrink: 0,
-                          }}
-                        >
-                          {product.name.slice(0, 2).toUpperCase()}
-                        </div>
-                        <div style={{ minWidth: 0 }}>
-                          <div
-                            style={{
-                              fontSize: 13,
-                              fontWeight: 600,
-                              color: 'var(--text)',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              maxWidth: 200,
-                            }}
-                          >
-                            {product.name}
-                          </div>
-                          <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                            {product.anomalies.length > 0
-                              ? `${product.anomalies.length} anomaly flag${product.anomalies.length > 1 ? 's' : ''}`
-                              : 'No issues'}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span
-                        style={{
-                          fontFamily: 'JetBrains Mono, monospace',
-                          fontSize: 11,
-                          color: 'var(--blue)',
-                          fontWeight: 600,
-                        }}
-                      >
-                        {product.sku}
-                      </span>
-                    </td>
-                    <td style={{ color: 'var(--text-sub)' }}>{product.manufacturer}</td>
-                    <td>
-                      <StatusBadge status={product.status} />
-                    </td>
-                    <td style={{ minWidth: 140 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div
-                          style={{
-                            flex: 1,
-                            height: 4,
-                            background: 'var(--bg)',
-                            borderRadius: 2,
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <div
-                            style={{
-                              height: '100%',
-                              width: `${product.completeness}%`,
-                              background:
-                                product.completeness >= 80 ? '#10B981' : 'var(--blue)',
-                              borderRadius: 2,
-                            }}
-                          />
-                        </div>
-                        <span
-                          style={{
-                            fontSize: 12,
-                            fontWeight: 700,
-                            color: 'var(--text)',
-                            minWidth: 32,
-                          }}
-                        >
-                          {product.completeness}%
-                        </span>
-                      </div>
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <ChevronRight size={15} color="var(--text-muted)" />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
@@ -469,146 +259,61 @@ function ProductCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: 'var(--bg-card)',
-        border: `1px solid ${hovered ? 'var(--blue-border)' : 'var(--border)'}`,
-        borderRadius: 10,
-        padding: '16px 18px',
+        background: '#1E293B',
+        border: `1px solid ${hovered ? '#3B82F6' : '#334155'}`,
+        borderRadius: 14,
+        padding: 20,
         cursor: 'pointer',
         transition: 'all 0.2s ease',
         transform: hovered ? 'translateY(-2px)' : 'none',
-        boxShadow: hovered ? '0 8px 24px rgba(0,0,0,0.3)' : 'none',
+        boxShadow: hovered ? '0 10px 25px rgba(0,0,0,0.4)' : 'none',
         display: 'flex',
-        flexDirection: 'column' as const,
-        gap: 12,
+        flexDirection: 'column',
+        gap: 14,
       }}
     >
-      {/* Status + issues */}
+      {/* Badge & Anomaly Row */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <StatusBadge status={product.status} />
         {product.anomalies.length > 0 && (
-          <span
-            title={`${product.anomalies.length} AI-flagged data issue(s) need review`}
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              color: 'var(--amber)',
-              background: 'var(--amber-dim)',
-              border: '1px solid var(--amber-border)',
-              padding: '3px 9px',
-              borderRadius: 6,
-              cursor: 'default',
-            }}
-          >
-            {product.anomalies.length} Issue{product.anomalies.length > 1 ? 's' : ''}
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#F59E0B', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.4)', padding: '3px 8px', borderRadius: 6 }}>
+            {product.anomalies.length} Flag{product.anomalies.length > 1 ? 's' : ''}
           </span>
         )}
       </div>
 
-      {/* Icon + name */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-        <div
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 8,
-            background: 'var(--blue-dim)',
-            border: '1px solid var(--blue-border)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}
-        >
-          <Package size={16} color="var(--blue)" />
+      {/* Icon + Product Name */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+        <div style={{ width: 42, height: 42, borderRadius: 10, background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Package size={20} color="#60A5FA" />
         </div>
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <h3
-            style={{
-              fontSize: 15,
-              fontWeight: 800,
-              color: hovered ? 'var(--blue)' : 'var(--text)',
-              lineHeight: 1.35,
-              transition: 'color 0.15s',
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical' as const,
-            }}
-          >
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 800, color: hovered ? '#60A5FA' : '#FFFFFF', lineHeight: 1.35, transition: 'color 0.15s' }}>
             {product.name}
           </h3>
-          <p
-            style={{
-              fontSize: 12,
-              color: 'var(--blue)',
-              fontFamily: 'JetBrains Mono, monospace',
-              fontWeight: 600,
-              marginTop: 3,
-            }}
-          >
+          <div style={{ fontSize: 13, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, marginTop: 4 }}>
             {product.sku}
-          </p>
+          </div>
         </div>
       </div>
 
-      {/* Manufacturer + category */}
-      <div style={{ fontSize: 12, color: 'var(--text-sub)', display: 'flex', gap: 6, flexWrap: 'wrap', fontWeight: 600 }}>
+      {/* Manufacturer & Category */}
+      <div style={{ fontSize: 13, color: '#E2E8F0', fontWeight: 600, display: 'flex', gap: 6, alignItems: 'center' }}>
         <span>{product.manufacturer}</span>
-        <span style={{ color: 'var(--border-light)' }}>·</span>
-        <span style={{ color: 'var(--cyan)' }}>{product.category}</span>
+        <span style={{ color: '#475569' }}>·</span>
+        <span style={{ color: '#94A3B8' }}>{product.category}</span>
       </div>
 
-      {/* Completeness bar */}
-      <div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontSize: 12,
-            fontWeight: 700,
-            marginBottom: 6,
-          }}
-        >
-          <span style={{ color: 'var(--text-sub)' }}>
-            Data Completeness
-            <span
-              style={{
-                marginLeft: 5,
-                fontSize: 11,
-                color: 'var(--text-muted)',
-                fontWeight: 500,
-              }}
-            >
-              (% extracted)
-            </span>
-          </span>
-          <span
-            style={{
-              color: product.completeness >= 80 ? 'var(--green)' : 'var(--text)',
-              fontWeight: 800,
-              fontSize: 13,
-            }}
-          >
+      {/* Completeness Bar */}
+      <div style={{ paddingTop: 10, borderTop: '1px solid #334155' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+          <span style={{ color: '#94A3B8' }}>Data Completeness</span>
+          <span style={{ color: product.completeness >= 80 ? '#34D399' : '#FFFFFF', fontWeight: 800 }}>
             {product.completeness}%
           </span>
         </div>
-        <div
-          style={{
-            height: 4,
-            background: 'var(--bg)',
-            borderRadius: 2,
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              height: '100%',
-              width: `${product.completeness}%`,
-              background: product.completeness >= 80 ? '#10B981' : 'var(--blue)',
-              borderRadius: 2,
-              transition: 'width 0.6s ease',
-            }}
-          />
+        <div style={{ height: 6, background: '#0F172A', borderRadius: 3, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${product.completeness}%`, background: product.completeness >= 80 ? '#10B981' : '#3B82F6', borderRadius: 3 }} />
         </div>
       </div>
     </div>

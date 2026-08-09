@@ -23,42 +23,36 @@ interface NavbarProps {
 const navItems = [
   {
     id: 'dashboard',
-    label: 'Dashboard',
+    label: 'Dashboard Overview',
     icon: LayoutDashboard,
-    desc: 'Overview & live pipeline status',
   },
   {
     id: 'ingest',
     label: 'AI Ingestion',
     icon: Upload,
-    desc: 'Upload docs & extract product data',
     step: '1',
   },
   {
     id: 'catalog',
     label: 'Product Catalog',
     icon: Database,
-    desc: 'Browse all enriched products',
     step: '2',
   },
   {
     id: 'validate',
-    label: 'Human Validation',
+    label: 'Human Review',
     icon: ShieldCheck,
-    desc: 'Review AI flags & approve records',
     step: '3',
   },
   {
     id: 'knowledge',
     label: 'Knowledge Graph',
     icon: Network,
-    desc: 'Visual product relationships',
   },
   {
     id: 'export',
-    label: 'Export & Integrate',
+    label: 'Data Export',
     icon: Download,
-    desc: 'Push to Shopify, SAP, PDF export',
   },
 ];
 
@@ -87,12 +81,12 @@ const Navbar: React.FC<NavbarProps> = ({
 
       <nav
         style={{
-          width: 260,
+          width: 250,
           height: '100vh',
           position: 'fixed',
           left: 0, top: 0,
-          background: 'var(--bg-surface)',
-          borderRight: '1px solid var(--border)',
+          background: '#1E293B',
+          borderRight: '1px solid #334155',
           display: 'flex',
           flexDirection: 'column',
           zIndex: 40,
@@ -107,66 +101,48 @@ const Navbar: React.FC<NavbarProps> = ({
         {/* Brand */}
         <div
           style={{
-            padding: '18px 16px',
-            borderBottom: '1px solid var(--border)',
+            padding: '20px 18px',
+            borderBottom: '1px solid #334155',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div
               style={{
-                width: 34, height: 34,
-                borderRadius: 8,
-                background: 'var(--blue)',
+                width: 38, height: 38,
+                borderRadius: 10,
+                background: '#3B82F6',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <Zap size={18} color="white" />
+              <Zap size={20} color="white" />
             </div>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.3px' }}>
+              <div style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.3px' }}>
                 IntelliProduct
               </div>
-              <div style={{ fontSize: 11, color: 'var(--blue)', fontWeight: 700, marginTop: 1 }}>
-                UniHack 2026 · AI Challenge
+              <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600, marginTop: 1 }}>
+                AI Data Platform
               </div>
             </div>
           </div>
           <button
             onClick={onToggleCollapse || onCloseMobile}
             style={{
-              width: 28, height: 28,
+              width: 30, height: 30,
               borderRadius: 6,
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid var(--border)',
-              color: 'var(--text-muted)',
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid #334155',
+              color: '#94A3B8',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer',
             }}
           >
-            <X size={14} />
+            <X size={16} />
           </button>
-        </div>
-
-        {/* Demo flow hint */}
-        <div
-          style={{
-            margin: '12px 12px 0',
-            padding: '8px 12px',
-            background: 'rgba(59, 130, 246, 0.06)',
-            border: '1px solid var(--blue-border)',
-            borderRadius: 8,
-          }}
-        >
-          <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>
-            👆 Judge Quick-Start
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--text-sub)', lineHeight: 1.5, fontWeight: 500 }}>
-            Follow Steps 1→2→3 to see the full AI pipeline in action
-          </div>
         </div>
 
         {/* Nav Items */}
@@ -174,12 +150,16 @@ const Navbar: React.FC<NavbarProps> = ({
           style={{
             flex: 1,
             overflowY: 'auto',
-            padding: '12px 8px',
+            padding: '16px 12px',
             display: 'flex',
             flexDirection: 'column',
-            gap: 2,
+            gap: 6,
           }}
         >
+          <div style={{ fontSize: 11, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', padding: '0 8px 6px' }}>
+            Navigation
+          </div>
+
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentView === item.id;
@@ -195,19 +175,19 @@ const Navbar: React.FC<NavbarProps> = ({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 10,
-                  padding: '9px 10px',
-                  borderRadius: 8,
+                  gap: 12,
+                  padding: '11px 12px',
+                  borderRadius: 10,
                   width: '100%',
                   cursor: 'pointer',
-                  background: isActive ? 'rgba(59,130,246,0.1)' : 'transparent',
-                  border: `1px solid ${isActive ? 'var(--blue-border)' : 'transparent'}`,
+                  background: isActive ? 'rgba(59, 130, 246, 0.15)' : 'transparent',
+                  border: `1px solid ${isActive ? 'rgba(59, 130, 246, 0.4)' : 'transparent'}`,
                   textAlign: 'left',
                   transition: 'all 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.03)';
+                    (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -218,85 +198,55 @@ const Navbar: React.FC<NavbarProps> = ({
               >
                 <div
                   style={{
-                    width: 30, height: 30,
-                    borderRadius: 6,
-                    background: isActive ? 'var(--blue-dim)' : 'rgba(255,255,255,0.04)',
+                    width: 32, height: 32,
+                    borderRadius: 8,
+                    background: isActive ? '#3B82F6' : 'rgba(255,255,255,0.05)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0,
-                    border: isActive ? '1px solid var(--blue-border)' : '1px solid transparent',
                   }}
                 >
-                  <Icon size={15} color={isActive ? 'var(--blue)' : 'var(--text-muted)'} />
+                  <Icon size={16} color={isActive ? '#FFFFFF' : '#94A3B8'} />
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span
-                      style={{
-                        fontSize: 14,
-                        fontWeight: isActive ? 700 : 600,
-                        color: isActive ? 'var(--text)' : 'var(--text-sub)',
-                        transition: 'color 0.15s',
-                      }}
-                    >
-                      {item.label}
-                    </span>
-                    {item.step && (
-                      <span
-                        style={{
-                          fontSize: 10, fontWeight: 800,
-                          background: 'var(--blue-dim)',
-                          color: 'var(--blue)',
-                          border: '1px solid var(--blue-border)',
-                          padding: '2px 6px',
-                          borderRadius: 4,
-                        }}
-                      >
-                        STEP {item.step}
-                      </span>
-                    )}
-                  </div>
-                  <div
+
+                <span
+                  style={{
+                    flex: 1,
+                    fontSize: 14,
+                    fontWeight: isActive ? 700 : 600,
+                    color: isActive ? '#FFFFFF' : '#E2E8F0',
+                  }}
+                >
+                  {item.label}
+                </span>
+
+                {item.step && (
+                  <span
                     style={{
-                      fontSize: 12,
-                      color: 'var(--text-muted)',
-                      marginTop: 2,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
+                      fontSize: 10, fontWeight: 800,
+                      background: 'rgba(59, 130, 246, 0.2)',
+                      color: '#60A5FA',
+                      border: '1px solid rgba(59, 130, 246, 0.4)',
+                      padding: '2px 6px',
+                      borderRadius: 6,
                     }}
                   >
-                    {item.desc}
-                  </div>
-                </div>
+                    S{item.step}
+                  </span>
+                )}
+
                 {isActive && (
-                  <ChevronRight size={14} color="var(--blue)" style={{ flexShrink: 0 }} />
+                  <ChevronRight size={16} color="#60A5FA" style={{ flexShrink: 0 }} />
                 )}
               </button>
             );
           })}
         </div>
 
-        {/* Footer — Challenge info */}
-        <div
-          style={{
-            padding: '12px',
-            borderTop: '1px solid var(--border)',
-          }}
-        >
-          <div
-            style={{
-              padding: '10px 12px',
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid var(--border)',
-              borderRadius: 8,
-            }}
-          >
-            <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-sub)', marginBottom: 2 }}>
-              UniHack Challenge
-            </div>
-            <div style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-              AI-Powered Product Intelligence for Industrial Commerce
-            </div>
+        {/* Footer */}
+        <div style={{ padding: '16px', borderTop: '1px solid #334155' }}>
+          <div style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', border: '1px solid #334155', borderRadius: 8 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#60A5FA', textTransform: 'uppercase' }}>UniHack 2026</div>
+            <div style={{ fontSize: 12, color: '#E2E8F0', marginTop: 2, fontWeight: 500 }}>Product Intelligence Challenge</div>
           </div>
         </div>
       </nav>

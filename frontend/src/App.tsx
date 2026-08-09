@@ -14,7 +14,7 @@ import { Menu, Search, Bell, PanelLeftOpen } from 'lucide-react';
 
 type View = 'dashboard' | 'catalog' | 'ingest' | 'validate' | 'export' | 'knowledge';
 
-const SIDEBAR_WIDTH = 260;
+const SIDEBAR_WIDTH = 250;
 const HEADER_HEIGHT = 60;
 
 function App() {
@@ -192,11 +192,11 @@ function App() {
               >
                 <span
                   style={{
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: 'var(--text)',
+                    color: '#FFFFFF',
                   }}
                 >
                   Live Catalog Metrics
@@ -226,11 +226,11 @@ function App() {
               <div>
                 <div
                   style={{
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: 'var(--text)',
+                    color: '#FFFFFF',
                     marginBottom: 12,
                   }}
                 >
@@ -248,11 +248,11 @@ function App() {
               <div>
                 <div
                   style={{
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: 'var(--text)',
+                    color: '#FFFFFF',
                     marginBottom: 12,
                   }}
                 >
@@ -303,17 +303,18 @@ function App() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
                         <span
                           style={{
-                            fontSize: 10,
-                            color: 'var(--text-muted)',
+                            fontSize: 12,
+                            color: '#94A3B8',
                             fontFamily: 'JetBrains Mono, monospace',
-                            minWidth: 52,
+                            fontWeight: 600,
+                            minWidth: 56,
                           }}
                         >
                           {['just now', '17s ago', '41s ago', '66s ago'][i]}
                         </span>
                         <div
                           style={{
-                            width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
+                            width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
                             background:
                               log.type === 'success'
                                 ? 'var(--green)'
@@ -324,10 +325,10 @@ function App() {
                         />
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 12, color: 'var(--text)', fontWeight: 500 }}>
+                        <p style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 600 }}>
                           {log.msg}
                         </p>
-                        <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
+                        <p style={{ fontSize: 12, color: '#E2E8F0', marginTop: 2 }}>
                           {log.sub}
                         </p>
                       </div>
