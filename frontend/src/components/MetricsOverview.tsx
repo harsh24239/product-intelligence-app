@@ -125,24 +125,53 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
             <div
               key={idx}
               className="card"
-              style={{ padding: 22, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+              style={{
+                padding: 22,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                overflow: 'hidden',
+                background: '#1E293B',
+                border: '1px solid #334155',
+                borderRadius: 16,
+              }}
               title={card.tooltip}
             >
+              {/* Top Accent Bar */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: card.barColor, borderRadius: '16px 16px 0 0' }} />
+
               <div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
                       {card.title}
                     </div>
                     <div style={{ fontSize: 28, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px', lineHeight: 1.1 }}>
                       {card.value}
                     </div>
                   </div>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: card.iconBg, border: `1px solid ${card.iconBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 12,
+                      background: card.iconBg,
+                      border: `1px solid ${card.iconBorder}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
                     <Icon size={22} color={card.iconColor} />
                   </div>
                 </div>
 
+                <div style={{ fontSize: 13, color: '#CBD5E1', marginBottom: 14, fontWeight: 600 }}>
+                  {card.sub}
+                </div>
+                
                 {card.barValue !== undefined && (
                   <div style={{ height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 3, overflow: 'hidden', marginBottom: 14 }}>
                     <div style={{ height: '100%', width: `${card.barValue}%`, background: card.barColor, borderRadius: 3, transition: 'width 0.8s ease' }} />
