@@ -134,7 +134,7 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
                   <span style={{ fontSize: 12, fontWeight: 800, color: cfg.badgeColor, background: cfg.badgeBg, border: `1px solid ${cfg.badgeBorder}`, padding: '4px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     {cfg.label}
                   </span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#60A5FA', fontFamily: 'JetBrains Mono, monospace' }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#60A5FA', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {anomaly.sku}
                   </span>
                 </div>
@@ -151,24 +151,24 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }
                 
                 {/* 1. Field Name Chip */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(56, 189, 248, 0.25)' }}>
-                  <span style={{ color: '#94A3B8', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>field:</span>
-                  <span style={{ color: '#FFFFFF', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <span style={{ color: '#94A3B8', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>field:</span>
+                  <span style={{ color: '#FFFFFF', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {anomaly.field}
                   </span>
                 </div>
 
                 {/* 2. AI Extracted Value Chip */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(245, 158, 11, 0.35)' }}>
-                  <span style={{ color: '#FBBF24', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>extracted:</span>
-                  <span style={{ color: '#FBBF24', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <span style={{ color: '#FBBF24', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>extracted:</span>
+                  <span style={{ color: '#FBBF24', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {anomaly.extractedVal}
                   </span>
                 </div>
 
                 {/* 3. Suggested Value Chip */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0B0F17', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(16, 185, 129, 0.35)' }}>
-                  <span style={{ color: '#34D399', fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>suggested:</span>
-                  <span style={{ color: '#34D399', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <span style={{ color: '#34D399', fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>suggested:</span>
+                  <span style={{ color: '#34D399', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {anomaly.expectedVal}
                   </span>
                 </div>

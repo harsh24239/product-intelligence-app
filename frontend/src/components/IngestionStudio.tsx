@@ -214,7 +214,7 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
             rows={7}
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, lineHeight: 1.6 }}
+            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 13, lineHeight: 1.6 }}
           />
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>

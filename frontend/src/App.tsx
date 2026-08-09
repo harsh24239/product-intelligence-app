@@ -316,7 +316,7 @@ function App() {
                         <span style={{ fontSize: 11, fontWeight: 700, color: log.color, background: log.bg, border: `1px solid ${log.border}`, padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                           {log.tag}
                         </span>
-                        <span style={{ fontSize: 12, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>
+                        <span style={{ fontSize: 12, color: '#94A3B8', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600 }}>
                           {log.time}
                         </span>
                       </div>

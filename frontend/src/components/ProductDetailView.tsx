@@ -171,7 +171,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                   <strong
                     style={{
                       color: 'var(--blue)',
-                      fontFamily: 'JetBrains Mono, monospace',
+                      fontFamily: 'Plus Jakarta Sans, sans-serif',
                     }}
                   >
                     {product.sku}
@@ -277,7 +277,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
               <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
                 AI Engine Used
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--blue)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--blue)', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600 }}>
                 <Clock size={13} />
                 {product.extractionMethod || 'Gemini 1.5 Multi-Agent'}
               </div>
@@ -386,7 +386,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                         fontSize: 13,
                         fontWeight: 800,
                         color: value ? '#FFFFFF' : 'var(--text-muted)',
-                        fontFamily: 'JetBrains Mono, monospace',
+                        fontFamily: 'Plus Jakarta Sans, sans-serif',
                         background: 'var(--bg-surface)',
                         border: '1px solid var(--border)',
                         padding: '4px 10px',
@@ -428,7 +428,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                           <td>
                             <span
                               style={{
-                                fontFamily: 'JetBrains Mono, monospace',
+                                fontFamily: 'Plus Jakarta Sans, sans-serif',
                                 fontSize: 11,
                                 color: 'var(--blue)',
                                 fontWeight: 600,
@@ -550,7 +550,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                           <span
                             style={{
-                              fontFamily: 'JetBrains Mono, monospace',
+                              fontFamily: 'Plus Jakarta Sans, sans-serif',
                               fontSize: 11,
                               fontWeight: 700,
                               color: 'var(--amber)',
@@ -618,7 +618,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                           style={{
                             fontSize: 10,
                             color: 'var(--blue)',
-                            fontFamily: 'JetBrains Mono, monospace',
+                            fontFamily: 'Plus Jakarta Sans, sans-serif',
                             marginTop: 4,
                             display: 'block',
                           }}
@@ -731,7 +731,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                       style={{
                         fontSize: 10,
                         color: 'var(--blue)',
-                        fontFamily: 'JetBrains Mono, monospace',
+                        fontFamily: 'Plus Jakarta Sans, sans-serif',
                         marginBottom: 4,
                       }}
                     >

@@ -324,7 +324,7 @@ const KnowledgeGraphViewer: React.FC = () => {
                 <div style={{ fontSize: isRoot ? 13 : 11, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.25 }}>
                   {node.name.split(' (')[0]}
                 </div>
-                <div style={{ fontSize: 10, fontWeight: 800, color: node.color, fontFamily: 'JetBrains Mono, monospace', marginTop: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 800, color: node.color, fontFamily: 'Plus Jakarta Sans, sans-serif', marginTop: 4 }}>
                   {node.connectedNodes.toLocaleString()} nodes
                 </div>
               </div>
@@ -352,14 +352,14 @@ const KnowledgeGraphViewer: React.FC = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 14, borderTop: '1px solid rgba(56, 189, 248, 0.25)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
                   <span style={{ color: '#94A3B8' }}>Cosine Similarity:</span>
-                  <strong style={{ color: '#34D399', fontFamily: 'JetBrains Mono, monospace' }}>
+                  <strong style={{ color: '#34D399', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {selectedNode.similarity}% Match
                   </strong>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
                   <span style={{ color: '#94A3B8' }}>Edge Relationship:</span>
-                  <strong style={{ color: selectedNode.color, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <strong style={{ color: selectedNode.color, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {selectedNode.relLabel}
                   </strong>
                 </div>
@@ -370,7 +370,7 @@ const KnowledgeGraphViewer: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                     {selectedNode.standards.map((st, i) => (
-                      <span key={i} style={{ fontSize: 12, fontWeight: 700, color: '#38BDF8', background: 'rgba(6, 182, 212, 0.15)', border: '1px solid rgba(6, 182, 212, 0.4)', padding: '4px 10px', borderRadius: 6, fontFamily: 'JetBrains Mono, monospace' }}>
+                      <span key={i} style={{ fontSize: 12, fontWeight: 700, color: '#38BDF8', background: 'rgba(6, 182, 212, 0.15)', border: '1px solid rgba(6, 182, 212, 0.4)', padding: '4px 10px', borderRadius: 6, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                         {st}
                       </span>
                     ))}
@@ -426,7 +426,7 @@ const KnowledgeGraphViewer: React.FC = () => {
                 )}
 
                 {ragResult && (
-                  <div style={{ padding: 12, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: 8, fontSize: 12, color: '#34D399', lineHeight: 1.5, fontFamily: 'JetBrains Mono, monospace' }}>
+                  <div style={{ padding: 12, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: 8, fontSize: 12, color: '#34D399', lineHeight: 1.5, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     <CheckCircle2 size={14} color="#34D399" style={{ marginBottom: 2 }} /> {ragResult}
                   </div>
                 )}
@@ -471,25 +471,25 @@ const KnowledgeGraphViewer: React.FC = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>IEC 60529</td>
+                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>IEC 60529</td>
                   <td style={{ color: '#FFFFFF' }}>Enclosure Protection</td>
                   <td style={{ color: '#F1F5F9' }}>Defines Ingress Protection (IP) ratings for dust tightness and water jet resistance.</td>
                   <td><span className="badge badge-validated">Auto-Verified</span></td>
                 </tr>
                 <tr>
-                  <td style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>IEC 60034-30-1</td>
+                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>IEC 60034-30-1</td>
                   <td style={{ color: '#FFFFFF' }}>Energy Efficiency</td>
                   <td style={{ color: '#F1F5F9' }}>Standardizes IE1, IE2, IE3, IE4 efficiency classes for industrial motors.</td>
                   <td><span className="badge badge-commerce_ready">Compliance Pass</span></td>
                 </tr>
                 <tr>
-                  <td style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>Directive 2014/34/EU</td>
+                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>Directive 2014/34/EU</td>
                   <td style={{ color: '#FFFFFF' }}>ATEX Hazardous</td>
                   <td style={{ color: '#F1F5F9' }}>Mandatory safety directive for equipment operating in explosive atmosphere zones.</td>
                   <td><span className="badge badge-flagged">Flagged for Review</span></td>
                 </tr>
                 <tr>
-                  <td style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>ISO 13849-1</td>
+                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>ISO 13849-1</td>
                   <td style={{ color: '#FFFFFF' }}>Safety Systems</td>
                   <td style={{ color: '#F1F5F9' }}>Safety-related parts of control systems (Performance Level PL a-e).</td>
                   <td><span className="badge badge-validated">Auto-Verified</span></td>

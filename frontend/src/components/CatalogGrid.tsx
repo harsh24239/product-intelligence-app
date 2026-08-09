@@ -227,7 +227,7 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
               {filteredProducts.map((product) => (
                 <tr key={product.id} onClick={() => onSelectProduct(product)} style={{ cursor: 'pointer' }}>
                   <td style={{ fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>{product.name}</td>
-                  <td style={{ fontFamily: 'JetBrains Mono, monospace', color: '#60A5FA', fontWeight: 700 }}>{product.sku}</td>
+                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#60A5FA', fontWeight: 700 }}>{product.sku}</td>
                   <td style={{ color: '#E2E8F0' }}>{product.manufacturer} · {product.category}</td>
                   <td><StatusBadge status={product.status} /></td>
                   <td style={{ fontWeight: 800, color: '#FFFFFF' }}>{product.completeness}%</td>
@@ -296,7 +296,7 @@ function ProductCard({
           <h3 style={{ fontSize: 17, fontWeight: 800, color: hovered ? '#60A5FA' : '#FFFFFF', lineHeight: 1.35, transition: 'color 0.15s' }}>
             {product.name}
           </h3>
-          <div style={{ fontSize: 13, color: '#60A5FA', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, marginTop: 4 }}>
+          <div style={{ fontSize: 13, color: '#60A5FA', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, marginTop: 4 }}>
             {product.sku}
           </div>
         </div>
@@ -323,7 +323,7 @@ function ProductCard({
                 border: '1px solid #334155',
                 padding: '3px 8px',
                 borderRadius: 6,
-                fontFamily: 'JetBrains Mono, monospace',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
               }}
             >
               {key}: <strong style={{ color: '#FFFFFF' }}>{val}</strong>

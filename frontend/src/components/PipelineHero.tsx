@@ -186,7 +186,7 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
                   <div style={{ width: 40, height: 40, borderRadius: 10, background: step.bgColor, border: `1px solid ${step.borderColor}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={20} color={step.color} />
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 800, fontFamily: 'JetBrains Mono, monospace', color: step.color }}>
+                  <span style={{ fontSize: 13, fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif', color: step.color }}>
                     {step.step}
                   </span>
                 </div>
@@ -204,7 +204,7 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
                   {step.desc}
                 </p>
 
-                <div style={{ marginTop: 'auto', paddingTop: 10, borderTop: '1px solid #334155', display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: step.color, fontFamily: 'JetBrains Mono, monospace' }}>
+                <div style={{ marginTop: 'auto', paddingTop: 10, borderTop: '1px solid #334155', display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: step.color, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                   <CheckCircle2 size={13} /> {step.model}
                 </div>
               </div>

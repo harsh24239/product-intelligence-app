@@ -266,7 +266,7 @@ const DataExportStudio: React.FC = () => {
                     </span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#94A3B8', background: '#0F172A', border: '1px solid #334155', padding: '2px 8px', borderRadius: 6 }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 11, color: '#94A3B8', background: '#0F172A', border: '1px solid #334155', padding: '2px 8px', borderRadius: 6 }}>
                       {opt.format}
                     </span>
                     <span style={{ fontSize: 11, color: '#64748B' }}>Target: <strong style={{ color: '#CBD5E1' }}>{opt.targetSystem}</strong></span>
@@ -278,7 +278,7 @@ const DataExportStudio: React.FC = () => {
 
               {/* Progress step feedback */}
               {isDownloading && exportStep && (
-                <div style={{ marginBottom: 12, padding: '8px 12px', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, fontSize: 12, color: '#60A5FA', fontFamily: 'JetBrains Mono, monospace', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ marginBottom: 12, padding: '8px 12px', background: '#0F172A', border: '1px solid #334155', borderRadius: 8, fontSize: 12, color: '#60A5FA', fontFamily: 'Plus Jakarta Sans, sans-serif', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Sparkles size={14} className="animate-spin" /> {exportStep}
                 </div>
               )}
@@ -325,7 +325,7 @@ const DataExportStudio: React.FC = () => {
               <div style={{ fontSize: 13, color: '#94A3B8' }}>Updates in real-time as you toggle export payload options above</div>
             </div>
           </div>
-          <span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 10px', borderRadius: 6, fontFamily: 'JetBrains Mono, monospace' }}>
+          <span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 10px', borderRadius: 6, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
             ● Dynamic Preview
           </span>
         </div>
@@ -339,7 +339,7 @@ const DataExportStudio: React.FC = () => {
           fontSize: 13,
           lineHeight: 1.6,
           overflowX: 'auto',
-          fontFamily: 'JetBrains Mono, monospace',
+          fontFamily: 'Plus Jakarta Sans, sans-serif',
         }}>
           {generateDynamicPayload()}
         </pre>

@@ -193,7 +193,7 @@ GET /api/metrics`;
               borderRadius: 8,
               padding: '14px 16px',
               fontSize: 11,
-              fontFamily: 'JetBrains Mono, monospace',
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
               color: 'var(--text-sub)',
               overflowX: 'auto',
               maxHeight: 280,
