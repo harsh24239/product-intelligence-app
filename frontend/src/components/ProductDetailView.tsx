@@ -186,10 +186,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                     <select
                       value={product.category}
                       onChange={(e) => {
-                        // Optimistically update the product object for UI responsiveness
                         product.category = e.target.value;
-                        // Trigger a re-render to update the display
-                        setActiveTab(activeTab); // hack to force re-render
+                        setActiveTab(activeTab);
                       }}
                       style={{
                         appearance: 'none',
@@ -204,11 +202,14 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                         outline: 'none',
                       }}
                     >
-                      <option value="Motors & Drives" style={{ background: '#1B2433', color: '#FFFFFF' }}>Motors & Drives</option>
-                      <option value="Hydraulics" style={{ background: '#1B2433', color: '#FFFFFF' }}>Hydraulics</option>
-                      <option value="Pneumatics" style={{ background: '#1B2433', color: '#FFFFFF' }}>Pneumatics</option>
-                      <option value="Electrical" style={{ background: '#1B2433', color: '#FFFFFF' }}>Electrical</option>
-                      <option value="Automation" style={{ background: '#1B2433', color: '#FFFFFF' }}>Automation</option>
+                      {[
+                        'Sanding Belt', 'Sanding Disc', 'Cut-Off Disc', 'Grinding Wheel',
+                        'Dishwasher', 'Dryer', 'Washer', 'Refrigerator', 'Range',
+                        'Decking', 'Fascia', 'Railing', 'Threshold', 'Skylight',
+                        'Sponge', 'Tape', 'Kneeling Pad', 'Item',
+                      ].map(cat => (
+                        <option key={cat} value={cat} style={{ background: '#1B2433', color: '#FFFFFF' }}>{cat}</option>
+                      ))}
                     </select>
                     <ChevronDown size={14} color="#38BDF8" style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
                   </div>
@@ -251,64 +252,52 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
           <div
             style={{
               paddingTop: 16,
-              borderTop: '1px solid var(--border)',
+              borderTop: '1px solid rgba(56, 189, 248, 0.25)',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
               gap: 16,
             }}
           >
             <div>
-              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
                 Data Completeness
-                <span style={{ marginLeft: 4, fontSize: 9, fontWeight: 400 }}>(% fields filled)</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div
-                  style={{
-                    flex: 1, height: 5,
-                    background: 'var(--bg)',
-                    borderRadius: 3, overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      height: '100%',
-                      width: `${product.completeness}%`,
-                      background: product.completeness >= 80 ? '#10B981' : 'var(--blue)',
-                      borderRadius: 3,
-                    }}
-                  />
+                <div style={{ flex: 1, height: 7, background: '#0B0F17', borderRadius: 4, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${product.completeness}%`, background: product.completeness >= 80 ? '#10B981' : '#3B82F6', borderRadius: 4 }} />
                 </div>
-                <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)' }}>
-                  {product.completeness}%
-                </span>
+                <span style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF' }}>{product.completeness}%</span>
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
                 Anomaly Flags
-                <span style={{ marginLeft: 4, fontSize: 9, fontWeight: 400 }}>(AI-detected issues)</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <AlertTriangle
-                  size={15}
-                  color={product.anomalies.length > 0 ? '#F59E0B' : '#10B981'}
-                />
-                <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>
-                  {product.anomalies.length} flag{product.anomalies.length !== 1 ? 's' : ''}
+                <span style={{ fontSize: 20, fontWeight: 800, color: product.anomalies.length > 0 ? '#FBBF24' : '#34D399' }}>
+                  {product.anomalies.length}
+                </span>
+                <span style={{ fontSize: 14, color: '#94A3B8' }}>
+                  {product.anomalies.length === 0 ? 'All clear' : `flag${product.anomalies.length !== 1 ? 's' : ''} detected`}
                 </span>
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-                AI Engine Used
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
+                Enrichment Method
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--blue)', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600 }}>
-                <Clock size={13} />
-                {product.extractionMethod || 'Gemini 1.5 Multi-Agent'}
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#38BDF8' }}>
+                {product.extractionMethod === 'unilog_rules_engine_v2' ? 'Unilog Rules Engine v2' : product.extractionMethod || 'Rules Engine'}
               </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
+                Attributes Extracted
+              </div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: '#FFFFFF' }}>{product.attributes?.length || 0}</div>
             </div>
           </div>
         </div>
@@ -376,234 +365,135 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
           {/* Specs tab */}
           {activeTab === 'specs' && (
             <div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.5 }}>
-                <Info size={12} style={{ display: 'inline', marginRight: 4 }} />
-                Raw technical specifications extracted from the source document. Fields marked N/A were not found in the original text.
+              <div style={{ fontSize: 14, color: '#94A3B8', marginBottom: 16, lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Info size={14} />
+                Raw technical specifications extracted from the source. Fields showing N/A were not found in the original data.
               </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                  gap: 10,
-                }}
-              >
-                {Object.entries(product.specs).map(([key, value]) => (
-                  <div
-                    key={key}
-                    className="card"
-                    style={{
-                      padding: '14px 16px',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      gap: 10,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 13,
-                        color: 'var(--text-sub)',
-                        textTransform: 'capitalize',
-                        fontWeight: 700,
-                      }}
+              {Object.entries(product.specs || {}).filter(([_, v]) => v).length === 0 ? (
+                <div className="card" style={{ textAlign: 'center', padding: '32px 24px', color: '#94A3B8' }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: '#FFFFFF', marginBottom: 6 }}>No raw specs available</div>
+                  <div style={{ fontSize: 14 }}>Switch to the <strong style={{ color: '#60A5FA' }}>AI Extracted Attributes</strong> tab to see all enriched data.</div>
+                </div>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10 }}>
+                  {Object.entries(product.specs || {}).map(([key, value]) => (
+                    <div
+                      key={key}
+                      className="card"
+                      style={{ padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.25)' }}
                     >
-                      {key.replace(/([A-Z])/g, ' $1').trim()}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 800,
-                        color: value ? '#FFFFFF' : 'var(--text-muted)',
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
-                        background: 'var(--bg-surface)',
-                        border: '1px solid var(--border)',
-                        padding: '4px 10px',
-                        borderRadius: 6,
-                        flexShrink: 0,
-                        fontStyle: value ? 'normal' : 'italic',
-                      }}
-                    >
-                      {value || 'N/A'}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                      <span style={{ fontSize: 14, color: '#94A3B8', textTransform: 'capitalize', fontWeight: 700 }}>
+                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                      </span>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: value ? '#FFFFFF' : '#475569', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '5px 12px', borderRadius: 6, flexShrink: 0 }}>
+                        {value || 'N/A'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
           {/* Attributes tab */}
           {activeTab === 'attributes' && (
             <div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.5 }}>
-                <Info size={12} style={{ display: 'inline', marginRight: 4 }} />
-                Each attribute shows the AI's extracted value, confidence score (how certain the model is), and the exact quote from the source document that justified the extraction.
+              <div style={{ fontSize: 14, color: '#94A3B8', marginBottom: 16, lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Info size={14} />
+                Each attribute shows the enriched value, AI confidence score, and the extraction method that produced it.
               </div>
-              <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                <div style={{ overflowX: 'auto' }}>
-                  <table style={{ minWidth: 560 }}>
-                    <thead>
-                      <tr>
-                        <th>Attribute</th>
-                        <th>Extracted Value</th>
-                        <th>AI Confidence</th>
-                        <th>Source Method</th>
-                        <th>Evidence Quote</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {product.attributes.map((attr, idx) => (
-                        <tr key={idx}>
-                          <td>
-                            <span
-                              style={{
-                                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                                fontSize: 11,
-                                color: 'var(--blue)',
-                                fontWeight: 600,
-                              }}
-                            >
-                              {attr.key}
-                            </span>
-                          </td>
-                          <td>
-                            <span
-                              style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}
-                            >
-                              {attr.value}
-                            </span>
-                          </td>
-                          <td style={{ minWidth: 120 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                              <div
-                                style={{
-                                  flex: 1,
-                                  height: 4,
-                                  background: 'var(--bg)',
-                                  borderRadius: 2,
-                                  overflow: 'hidden',
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    height: '100%',
-                                    width: `${attr.confidence * 100}%`,
-                                    background:
-                                      attr.confidence > 0.8
-                                        ? '#10B981'
-                                        : attr.confidence > 0.5
-                                        ? 'var(--blue)'
-                                        : '#F59E0B',
-                                    borderRadius: 2,
-                                  }}
-                                />
-                              </div>
-                              <span
-                                style={{
-                                  fontSize: 11,
-                                  fontWeight: 700,
-                                  color:
-                                    attr.confidence > 0.8
-                                      ? 'var(--green)'
-                                      : attr.confidence > 0.5
-                                      ? 'var(--blue)'
-                                      : 'var(--amber)',
-                                }}
-                              >
-                                {Math.round(attr.confidence * 100)}%
-                              </span>
-                            </div>
-                          </td>
-                          <td>
-                            <span className="source-tag">{attr.enrichedBy}</span>
-                          </td>
-                          <td
-                            style={{
-                              fontSize: 11,
-                              color: 'var(--text-muted)',
-                              fontStyle: 'italic',
-                              maxWidth: 180,
-                            }}
-                          >
-                            "{attr.sourceQuote}"
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              {product.attributes?.length === 0 ? (
+                <div className="card" style={{ textAlign: 'center', padding: '32px', color: '#94A3B8' }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: '#FFFFFF', marginBottom: 6 }}>No attributes extracted</div>
+                  <div style={{ fontSize: 14 }}>Run the enrichment pipeline again to extract attributes from this product's description.</div>
                 </div>
-              </div>
+              ) : (
+                <div className="card" style={{ padding: 0, overflow: 'hidden', background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)' }}>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ minWidth: 560 }}>
+                      <thead>
+                        <tr style={{ background: '#0B0F17' }}>
+                          <th style={{ fontSize: 13, padding: '14px 18px' }}>Attribute Label</th>
+                          <th style={{ fontSize: 13, padding: '14px 18px' }}>Extracted Value</th>
+                          <th style={{ fontSize: 13, padding: '14px 18px' }}>AI Confidence</th>
+                          <th style={{ fontSize: 13, padding: '14px 18px' }}>Source Method</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(product.attributes || []).map((attr, idx) => (
+                          <tr key={idx}>
+                            <td style={{ padding: '14px 18px' }}>
+                              <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 14, color: '#38BDF8', fontWeight: 700 }}>
+                                {attr.key}
+                              </span>
+                            </td>
+                            <td style={{ padding: '14px 18px' }}>
+                              <span style={{ fontSize: 15, fontWeight: 800, color: '#FFFFFF' }}>{attr.value}</span>
+                            </td>
+                            <td style={{ padding: '14px 18px', minWidth: 130 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <div style={{ flex: 1, height: 6, background: '#0B0F17', borderRadius: 3, overflow: 'hidden' }}>
+                                  <div style={{
+                                    height: '100%',
+                                    width: `${attr.confidence > 1 ? attr.confidence : attr.confidence * 100}%`,
+                                    background: attr.confidence > 0.8 || attr.confidence > 80 ? '#10B981' : '#38BDF8',
+                                    borderRadius: 3,
+                                  }} />
+                                </div>
+                                <span style={{ fontSize: 14, fontWeight: 800, color: '#FFFFFF' }}>
+                                  {attr.confidence > 1 ? Math.round(attr.confidence) : Math.round(attr.confidence * 100)}%
+                                </span>
+                              </div>
+                            </td>
+                            <td style={{ padding: '14px 18px' }}>
+                              <span className="source-tag">{attr.enrichedBy || 'rules_engine'}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
           {/* Anomalies tab */}
           {activeTab === 'anomalies' && (
             <div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.5 }}>
-                <Info size={12} style={{ display: 'inline', marginRight: 4 }} />
-                Anomalies are data quality issues detected by the AI's Compliance Guard Agent — values that conflict with each other, fall outside engineering norms, or are inconsistent with ISO standards.
+              <div style={{ fontSize: 14, color: '#94A3B8', marginBottom: 16, lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Info size={14} />
+                Anomalies are data quality issues detected during enrichment — missing units, unresolvable placeholders, or conflicting values.
               </div>
               {product.anomalies.length === 0 ? (
-                <div
-                  className="card"
-                  style={{ textAlign: 'center', padding: '40px 24px' }}
-                >
-                  <Check size={32} color="var(--green)" style={{ margin: '0 auto 10px' }} />
-                  <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
-                    No Anomalies Detected
-                  </h3>
-                  <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-                    All extracted values passed ISO engineering baseline validation.
-                  </p>
+                <div className="card" style={{ textAlign: 'center', padding: '40px 24px', background: '#1B2433', border: '1px solid rgba(16, 185, 129, 0.35)' }}>
+                  <Check size={36} color="#34D399" style={{ margin: '0 auto 12px' }} />
+                  <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>No Anomalies Detected</h3>
+                  <p style={{ fontSize: 15, color: '#94A3B8' }}>All extracted values passed enrichment quality validation.</p>
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {product.anomalies.map((anom, idx) => (
                     <div
                       key={idx}
                       className="card"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: 14,
-                        padding: '16px 18px',
-                        borderLeft: '3px solid var(--amber)',
-                      }}
+                      style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '18px 20px', borderLeft: '4px solid #FBBF24', background: '#1B2433' }}
                     >
-                      <ShieldAlert
-                        size={18}
-                        color="var(--amber)"
-                        style={{ flexShrink: 0, marginTop: 1 }}
-                      />
+                      <ShieldAlert size={20} color="#FBBF24" style={{ flexShrink: 0, marginTop: 2 }} />
                       <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                          <span
-                            style={{
-                              fontFamily: 'Plus Jakarta Sans, sans-serif',
-                              fontSize: 11,
-                              fontWeight: 700,
-                              color: 'var(--amber)',
-                            }}
-                          >
-                            {anom.field}
-                          </span>
-                          <span
-                            className={`badge badge-severity-${anom.severity}`}
-                            style={{ fontSize: 9 }}
-                          >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                          <span style={{ fontSize: 14, fontWeight: 800, color: '#FBBF24', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.4)', padding: '3px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                             {anom.severity} severity
                           </span>
+                          <span style={{ fontSize: 14, fontWeight: 700, color: '#38BDF8', fontFamily: 'monospace' }}>{anom.field}</span>
                         </div>
-                        <p style={{ fontSize: 13, color: 'var(--text)', lineHeight: 1.5 }}>
-                          {anom.issue}
-                        </p>
+                        <p style={{ fontSize: 15, color: '#E2E8F0', lineHeight: 1.6 }}>{anom.issue}</p>
                       </div>
                       <button
-                        className="btn btn-secondary"
-                        style={{ fontSize: 11, flexShrink: 0 }}
+                        className="btn btn-accent"
+                        style={{ fontSize: 13, flexShrink: 0, padding: '8px 16px' }}
                         onClick={() => {
-                          // Optimistically remove anomaly
                           product.anomalies = product.anomalies.filter((_, i) => i !== idx);
-                          // Force UI refresh
                           setActiveTab(activeTab);
                         }}
                       >
@@ -619,47 +509,22 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
           {/* Audit trail tab */}
           {activeTab === 'audit' && (
             <div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.5 }}>
-                <Info size={12} style={{ display: 'inline', marginRight: 4 }} />
-                Complete audit trail of every AI and human action taken on this product record — for traceability and compliance.
+              <div style={{ fontSize: 14, color: '#94A3B8', marginBottom: 16, lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Info size={14} />
+                Complete audit trail of every enrichment action taken on this product record.
               </div>
-              <div className="card" style={{ padding: '20px 22px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                  {product.auditLog.map((log, idx) => (
-                    <div
-                      key={idx}
-                      style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}
-                    >
-                      <div
-                        style={{
-                          width: 8, height: 8,
-                          borderRadius: '50%',
-                          background: 'var(--blue)',
-                          marginTop: 5,
-                          flexShrink: 0,
-                        }}
-                      />
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-                          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
-                            {log.action}
-                          </span>
-                          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                            by {log.actor}
-                          </span>
+              <div className="card" style={{ padding: '22px 24px', background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                  {(product.auditLog || []).map((log, idx) => (
+                    <div key={idx} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#38BDF8', marginTop: 4, flexShrink: 0, boxShadow: '0 0 6px rgba(56, 189, 248, 0.6)' }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                          <span style={{ fontSize: 15, fontWeight: 800, color: '#FFFFFF' }}>{log.action}</span>
+                          <span style={{ fontSize: 13, color: '#94A3B8', fontWeight: 600 }}>by {log.actor}</span>
                         </div>
-                        <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                          {log.details}
-                        </p>
-                        <span
-                          style={{
-                            fontSize: 10,
-                            color: 'var(--blue)',
-                            fontFamily: 'Plus Jakarta Sans, sans-serif',
-                            marginTop: 4,
-                            display: 'block',
-                          }}
-                        >
+                        <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.6 }}>{log.details}</p>
+                        <span style={{ fontSize: 13, color: '#38BDF8', marginTop: 4, display: 'block', fontWeight: 600 }}>
                           {new Date(log.timestamp).toLocaleString()}
                         </span>
                       </div>
@@ -674,30 +539,36 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
         {/* Right sidebar */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
+          {/* Right sidebar panels */}
+
+          {/* Enriched Descriptions Panel */}
+          <div className="card" style={{ background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 14, padding: '20px 22px' }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>Generated Descriptions</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[
+                { label: 'INVOICE_DESC', val: product.hackathonEnriched?.INVOICE_DESC || '—' },
+                { label: 'MOBILE_DESC', val: product.hackathonEnriched?.MOBILE_DESC || '—' },
+                { label: 'SHORT_DESC', val: product.hackathonEnriched?.SHORT_DESC || product.name || '—' },
+              ].map((d, i) => (
+                <div key={i} style={{ background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: 10, padding: '12px 14px' }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 5 }}>{d.label}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#FFFFFF', lineHeight: 1.5 }}>{d.val}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* 3D CAD Preview collapsible */}
-          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div className="card" style={{ padding: 0, overflow: 'hidden', background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)' }}>
             <button
               onClick={() => setShowCAD(!showCAD)}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                width: '100%', padding: '14px 16px',
-                cursor: 'pointer',
-                borderBottom: showCAD ? '1px solid var(--border)' : 'none',
-              }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '14px 18px', cursor: 'pointer', borderBottom: showCAD ? '1px solid rgba(56, 189, 248, 0.25)' : 'none' }}
             >
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>
-                  3D CAD Preview
-                </div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                  Interactive WebGL model from extracted specs
-                </div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: '#FFFFFF', marginBottom: 2 }}>3D CAD Preview</div>
+                <div style={{ fontSize: 13, color: '#94A3B8' }}>Interactive WebGL model from extracted specs</div>
               </div>
-              <ChevronDown
-                size={16}
-                color="var(--text-muted)"
-                style={{ transform: showCAD ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
-              />
+              <ChevronDown size={18} color="#94A3B8" style={{ transform: showCAD ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
             </button>
             {showCAD && (
               <div style={{ padding: 12 }}>
@@ -706,108 +577,27 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
             )}
           </div>
 
-          {/* Vector Substitute Finder */}
-          <div className="card">
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <RefreshCw size={14} color="var(--text-muted)" />
-                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
-                  Drop-in Substitutes
-                </span>
-                <span
-                  style={{
-                    fontSize: 9, fontWeight: 700,
-                    background: 'var(--blue-dim)',
-                    color: 'var(--blue)',
-                    border: '1px solid var(--blue-border)',
-                    padding: '1px 5px', borderRadius: 4,
-                  }}
-                >
-                  AI
-                </span>
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                Interchangeable parts found using vector cosine similarity across the catalog
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {loadingSubstitutes ? (
-                <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>
-                  Computing attribute embeddings…
-                </div>
-              ) : (
-                substitutes.map((sub, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      padding: '12px 14px',
-                      background: 'var(--bg)',
-                      border: '1px solid var(--border)',
-                      borderRadius: 8,
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>
-                        {sub.name}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: 11, fontWeight: 700,
-                          color: 'var(--green)',
-                          background: 'var(--green-dim)',
-                          border: '1px solid var(--green-border)',
-                          padding: '2px 6px', borderRadius: 4,
-                          flexShrink: 0,
-                        }}
-                      >
-                        {sub.matchPercentage}
-                      </span>
-                    </div>
-                    <p
-                      style={{
-                        fontSize: 10,
-                        color: 'var(--blue)',
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
-                        marginBottom: 4,
-                      }}
-                    >
-                      {sub.sku} · {sub.manufacturer}
-                    </p>
-                    <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                      {sub.recommendation}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
           {/* Quick export panel */}
-          <div className="card">
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
-              Export & Integrate
-            </div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 14 }}>
-              Push this product to external commerce & ERP systems
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="card" style={{ background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 14, padding: '20px 22px' }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: '#FFFFFF', marginBottom: 4 }}>Export This Record</div>
+            <div style={{ fontSize: 13, color: '#94A3B8', marginBottom: 16 }}>Download or push this enriched product record</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <button
-                className="btn btn-accent"
+                className="btn btn-primary"
                 onClick={() => setShowPIMModal(true)}
-                style={{ fontSize: 12, width: '100%', justifyContent: 'flex-start' }}
+                style={{ fontSize: 14, width: '100%', justifyContent: 'flex-start', padding: '12px 16px' }}
               >
-                <ShoppingBag size={13} />
-                Push to Shopify / SAP IDoc / Akeneo
+                <ShoppingBag size={16} />
+                Export Structured Data
               </button>
               <button
                 className="btn btn-secondary"
                 onClick={handleDownloadDatasheet}
                 disabled={downloadingPDF}
-                style={{ fontSize: 12, width: '100%', justifyContent: 'flex-start' }}
+                style={{ fontSize: 14, width: '100%', justifyContent: 'flex-start', padding: '12px 16px' }}
               >
-                <FileText size={13} />
-                {downloadingPDF ? 'Generating PDF…' : 'Download PDF Datasheet + QR Code'}
+                <FileText size={16} />
+                {downloadingPDF ? 'Generating PDF…' : 'Download PDF Datasheet'}
               </button>
             </div>
           </div>
