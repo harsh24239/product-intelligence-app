@@ -188,7 +188,7 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({
       {/* Item Counter */}
       <div style={{ fontSize: 14, color: '#94A3B8', fontWeight: 600, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span>Showing <strong style={{ color: '#FFFFFF' }}>{filteredProducts.length}</strong> of {products.length} products</span>
-        <span style={{ fontSize: 12, color: '#60A5FA', fontWeight: 700 }}>Click any product to inspect extracted specs & 3D model</span>
+        <span style={{ fontSize: 12, color: '#60A5FA', fontWeight: 700 }}>Click any product to view enriched attributes &amp; audit trail</span>
       </div>
 
       {/* Grid View */}
@@ -253,10 +253,12 @@ function ProductCard({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Extract top 2 key specs to showcase AI intelligence on card preview
-  const specPreview = Object.entries(product.specs)
-    .filter(([_, v]) => v && v !== 'N/A')
-    .slice(0, 2);
+  // Extract top 2 key attributes to showcase enrichment on card preview
+  const specPreview = (
+    product.attributes && product.attributes.length > 0
+      ? product.attributes.slice(0, 2).map(a => [a.key, a.value])
+      : Object.entries(product.specs || {}).filter(([_, v]) => v && v !== 'N/A').slice(0, 2)
+  );
 
   return (
     <div

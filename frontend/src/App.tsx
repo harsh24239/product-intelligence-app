@@ -329,7 +329,6 @@ function App() {
               </div>
             </div>
 
-            {/* Quick action cards */}
             <div>
               <div
                 style={{
@@ -341,29 +340,37 @@ function App() {
                   marginBottom: 14,
                 }}
               >
-                Start Here — Try the AI Pipeline
+                Try the Pipeline — Follow These Steps
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
                 {[
                   {
                     view: 'ingest' as View,
-                    label: 'Step 1: Upload & Extract',
-                    desc: 'Upload a product PDF or spec sheet',
+                    step: '01',
+                    label: 'Ingest & Enrich Data',
+                    desc: 'Click "Run Full Enrichment Pipeline" to process 1,000 products',
+                    color: '#38BDF8',
                   },
                   {
                     view: 'catalog' as View,
-                    label: 'Step 2: Browse Catalog',
-                    desc: 'View AI-enriched product records',
+                    step: '02',
+                    label: 'Browse Enriched Catalog',
+                    desc: 'View all extracted attributes, brands, and descriptions',
+                    color: '#34D399',
                   },
                   {
                     view: 'validate' as View,
-                    label: 'Step 3: Human Validation',
-                    desc: 'Review anomalies and approve records',
+                    step: '03',
+                    label: 'Review Anomaly Flags',
+                    desc: 'Human review queue — approve or reject flagged records',
+                    color: '#FBBF24',
                   },
                   {
-                    view: 'knowledge' as View,
-                    label: 'Knowledge Graph',
-                    desc: 'Visual product & standard relationships',
+                    view: 'export' as View,
+                    step: '04',
+                    label: 'Export Delivery CSV',
+                    desc: 'Download the submission-ready 252-column output file',
+                    color: '#818CF8',
                   },
                 ].map((action) => (
                   <button
@@ -379,7 +386,7 @@ function App() {
                       transition: 'all 0.2s ease',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: 6,
+                      gap: 8,
                     }}
                     onMouseEnter={(e) => {
                       (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(56, 189, 248, 0.7)';
@@ -390,10 +397,11 @@ function App() {
                       (e.currentTarget as HTMLButtonElement).style.transform = 'none';
                     }}
                   >
-                    <div style={{ fontSize: 16, fontWeight: 800, color: '#60A5FA' }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: action.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Step {action.step}</div>
+                    <div style={{ fontSize: 15, fontWeight: 800, color: '#FFFFFF' }}>
                       {action.label}
                     </div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#F1F5F9', lineHeight: 1.4 }}>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#94A3B8', lineHeight: 1.5 }}>
                       {action.desc}
                     </div>
                   </button>

@@ -228,7 +228,7 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
           <ShieldCheck size={20} color="#34D399" />
           <div>
             <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Catalog Readiness</div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>12,450 Verified Records</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>{products.length > 0 ? `${products.length.toLocaleString()} Enriched Records` : 'Run Ingest First'}</div>
           </div>
         </div>
       </div>
@@ -246,10 +246,10 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
         <Info size={20} color="#60A5FA" style={{ flexShrink: 0, marginTop: 2 }} />
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
-            Enterprise Data Handoff Pipeline
+            Unilog Delivery Format Export
           </div>
           <p style={{ fontSize: 15, color: '#FFFFFF', lineHeight: 1.6 }}>
-            The multi-agent pipeline turns unstructured PDFs into fully traceable, commerce-ready product data. Use this studio to customize metadata tags, export spreadsheet tables for SAP/Oracle ERP, or distribute live records via REST API.
+            The enrichment pipeline transforms raw 6-column input rows into fully populated 252-column delivery records. Use the <strong>CSV Export</strong> to download the submission-ready output matching the exact Unilog expected output schema — no headers modified.
           </p>
         </div>
       </div>
@@ -386,40 +386,33 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
           </span>
         </div>
 
-        {/* Clean Structured Table Preview */}
+        {/* Preview Table — Unilog-relevant attributes */}
         <div style={{ background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, overflowX: 'auto', width: '100%' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: '#0F172A', borderBottom: '1px solid rgba(56, 189, 248, 0.35)' }}>
-                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Attribute Field</th>
-                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Extracted Value</th>
-                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Validation Status</th>
-                {includeIso && <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>ISO / IEC Standard</th>}
-                {includeConfidence && <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>AI Confidence</th>}
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Delivery Column</th>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Enriched Value</th>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Source</th>
+                {includeConfidence && <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Confidence</th>}
               </tr>
             </thead>
             <tbody>
-              <tr style={{ borderBottom: '1px solid rgba(56, 189, 248, 0.15)' }}>
-                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>maxTorque</td>
-                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>15.0 Nm</td>
-                <td style={{ padding: '14px 18px' }}><span style={{ fontSize: 13, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 10px', borderRadius: 6, display: 'inline-block' }}>✓ Human Approved</span></td>
-                {includeIso && <td style={{ padding: '14px 18px', color: '#60A5FA', fontWeight: 800, fontSize: 14 }}>ISO 8608</td>}
-                {includeConfidence && <td style={{ padding: '14px 18px', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>98.4%</td>}
-              </tr>
-              <tr style={{ borderBottom: '1px solid rgba(56, 189, 248, 0.15)' }}>
-                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>ipRating</td>
-                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>IP65</td>
-                <td style={{ padding: '14px 18px' }}><span style={{ fontSize: 13, fontWeight: 800, color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '4px 10px', borderRadius: 6, display: 'inline-block' }}>RAG Inferred</span></td>
-                {includeIso && <td style={{ padding: '14px 18px', color: '#60A5FA', fontWeight: 800, fontSize: 14 }}>IEC 60529</td>}
-                {includeConfidence && <td style={{ padding: '14px 18px', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>96.2%</td>}
-              </tr>
-              <tr>
-                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#38BDF8', fontSize: 15 }}>voltage</td>
-                <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF', fontSize: 15 }}>400V 3-Phase</td>
-                <td style={{ padding: '14px 18px' }}><span style={{ fontSize: 13, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 10px', borderRadius: 6, display: 'inline-block' }}>✓ Auto Verified</span></td>
-                {includeIso && <td style={{ padding: '14px 18px', color: '#60A5FA', fontWeight: 800, fontSize: 14 }}>UL 508A</td>}
-                {includeConfidence && <td style={{ padding: '14px 18px', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>99.1%</td>}
-              </tr>
+              {[
+                { col: 'INVOICE_DESC', val: 'DISHWASHER LEG 5 SST 120V 15A', src: 'Rules Engine (≤40 chars, ALL CAPS)', conf: '100%', status: 'Formula Applied' },
+                { col: 'MOBILE_DESC', val: 'Rheem Manufacturing FRIGIDAIRE, Dishwasher, PDSH4816AF', src: 'Brand + Item Type + MPN formula', conf: '100%', status: 'Formula Applied' },
+                { col: 'SHORT_DESC', val: 'FRIGIDAIRE® Dishwasher PDSH4816AF, Stainless Steel, 120 V, 15 A', src: 'Attribute Extraction Engine', conf: '94%', status: 'Auto Generated' },
+                { col: 'ATTRIBUTE_LABEL 1', val: 'Color', src: 'Pattern: SS → Stainless Steel', conf: '98%', status: 'Extracted' },
+                { col: 'ATTRIBUTE_VALUE 1', val: 'Stainless Steel', src: 'Part_Desc abbreviation lookup', conf: '98%', status: 'Extracted' },
+                { col: 'BRAND_NAME', val: 'FRIGIDAIRE®', src: 'Placeholder removed; extracted from desc', conf: '91%', status: 'Cleansed' },
+              ].map((row, i) => (
+                <tr key={i} style={{ borderBottom: i < 5 ? '1px solid rgba(56, 189, 248, 0.15)' : 'none' }}>
+                  <td style={{ padding: '14px 18px', fontWeight: 800, color: '#38BDF8', fontSize: 14, fontFamily: 'Plus Jakarta Sans, monospace' }}>{row.col}</td>
+                  <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF', fontSize: 14 }}>{row.val}</td>
+                  <td style={{ padding: '14px 18px' }}><span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 10px', borderRadius: 6, display: 'inline-block', whiteSpace: 'nowrap' }}>{row.status}</span></td>
+                  {includeConfidence && <td style={{ padding: '14px 18px', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>{row.conf}</td>}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -437,10 +430,10 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
           {[
-            { label: 'Total Products', value: '12,450', color: '#60A5FA', desc: 'Across all categories' },
-            { label: 'Enriched Attributes', value: '142,890', color: '#38BDF8', desc: 'AI-extracted fields' },
-            { label: 'Commerce-Ready', value: '94%', color: '#34D399', desc: 'Validated & complete' },
-            { label: 'Unresolved Flags', value: '142', color: '#FBBF24', desc: 'Awaiting human review' },
+            { label: 'Total Products', value: products.length > 0 ? products.length.toLocaleString() : '—', color: '#60A5FA', desc: 'Ingested from sample dataset' },
+            { label: 'Enriched Attributes', value: products.length > 0 ? `${(products.reduce((s, p) => s + (p.attributes?.length || 0), 0)).toLocaleString()}` : '—', color: '#38BDF8', desc: 'Extracted across all products' },
+            { label: 'Commerce-Ready', value: products.length > 0 ? `${Math.round(products.filter(p => p.status === 'commerce_ready').length / products.length * 100)}%` : '—', color: '#34D399', desc: 'Fully enriched records' },
+            { label: 'Pending Review', value: products.length > 0 ? `${products.filter(p => p.anomalies?.length > 0).length}` : '—', color: '#FBBF24', desc: 'Items with anomaly flags' },
           ].map((stat, i) => (
             <div key={i} style={{ padding: '16px 18px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: 12 }}>
               <div style={{ fontSize: 26, fontWeight: 800, color: stat.color, letterSpacing: '-0.5px' }}>{stat.value}</div>

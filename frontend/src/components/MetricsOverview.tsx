@@ -27,10 +27,10 @@ const analyticsData = [
 ];
 
 const categoryChartData = [
-  { name: 'Motors & Drives', count: 4500, color: '#6366F1' },
-  { name: 'Sensors & Controls', count: 3200, color: '#06B6D4' },
-  { name: 'Hydraulics', count: 2500, color: '#10B981' },
-  { name: 'Pneumatics', count: 2250, color: '#F59E0B' },
+  { name: 'Abrasives & Cutting', count: 280, color: '#6366F1' },
+  { name: 'Appliances', count: 210, color: '#06B6D4' },
+  { name: 'Building & Decking', count: 340, color: '#10B981' },
+  { name: 'Doors & Windows', count: 170, color: '#F59E0B' },
 ];
 
 const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) => {
@@ -100,11 +100,11 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
       barColor: '#F59E0B',
     },
     {
-      title: 'Multi-Agent AI Pipeline',
-      tooltip: 'Real-time status of Gemini VLM & RAG reasoning engine',
-      value: metrics.pipelineStatus === 'running' ? 'Active' : 'Pipeline Ready',
-      sub: 'Gemini 1.5 · RAG · Validator',
-      trend: 'VLM Active',
+      title: 'Enrichment Pipeline',
+      tooltip: 'Status of the 5-stage Unilog data enrichment pipeline',
+      value: metrics.pipelineStatus === 'running' ? 'Active' : 'Ready',
+      sub: 'Cleanse → Extract → Generate',
+      trend: 'Pipeline Ready',
       trendUp: true,
       icon: Cpu,
       iconColor: '#38BDF8',
@@ -201,9 +201,9 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
             <div>
               <h3 style={{ fontSize: 19, fontWeight: 800, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: 10 }}>
-                AI Catalog Processing Velocity
+                Catalog Enrichment Progress
                 <span style={{ fontSize: 12, fontWeight: 800, color: '#38BDF8', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '3px 10px', borderRadius: 6 }}>
-                  Live Recharts Visualizer
+                  7-Day Trend
                 </span>
               </h3>
               <p style={{ fontSize: 15, color: '#CBD5E1', marginTop: 4 }}>
@@ -240,8 +240,8 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
         {/* Category Distribution Chart */}
         <div className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column' }}>
           <div style={{ marginBottom: 16 }}>
-            <h3 style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>Catalog Domain Breakdown</h3>
-            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>Enriched products by category</p>
+            <h3 style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>Product Category Breakdown</h3>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>Enriched products by item type</p>
           </div>
 
           <div style={{ width: '100%', height: 210 }}>
