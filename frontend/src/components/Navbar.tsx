@@ -23,26 +23,23 @@ interface NavbarProps {
 const navItems = [
   {
     id: 'dashboard',
-    label: 'Dashboard Overview',
+    label: 'Dashboard',
     icon: LayoutDashboard,
   },
   {
     id: 'ingest',
-    label: 'AI Ingestion',
+    label: 'Ingest & Enrich',
     icon: Upload,
-    step: '1',
   },
   {
     id: 'catalog',
     label: 'Product Catalog',
     icon: Database,
-    step: '2',
   },
   {
     id: 'validate',
-    label: 'Human Review',
+    label: 'Review & Validate',
     icon: ShieldCheck,
-    step: '3',
   },
   {
     id: 'knowledge',
@@ -51,7 +48,7 @@ const navItems = [
   },
   {
     id: 'export',
-    label: 'Data Export',
+    label: 'Export Output CSV',
     icon: Download,
   },
 ];
@@ -219,21 +216,6 @@ const Navbar: React.FC<NavbarProps> = ({
                   {item.label}
                 </span>
 
-                {item.step && (
-                  <span
-                    style={{
-                      fontSize: 12, fontWeight: 800,
-                      background: 'rgba(56, 189, 248, 0.2)',
-                      color: '#38BDF8',
-                      border: '1px solid rgba(56, 189, 248, 0.4)',
-                      padding: '3px 8px',
-                      borderRadius: 6,
-                    }}
-                  >
-                    S{item.step}
-                  </span>
-                )}
-
                 {isActive && (
                   <ChevronRight size={16} color="#60A5FA" style={{ flexShrink: 0 }} />
                 )}
@@ -245,8 +227,9 @@ const Navbar: React.FC<NavbarProps> = ({
         {/* Footer */}
         <div style={{ padding: '16px', borderTop: '1px solid rgba(56, 189, 248, 0.35)' }}>
           <div style={{ padding: '12px 14px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 10 }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase' }}>UniHack 2026</div>
-            <div style={{ fontSize: 14, color: '#FFFFFF', marginTop: 3, fontWeight: 600 }}>Product Intelligence Platform</div>
+            <div style={{ fontSize: 11, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Powered by AI</div>
+            <div style={{ fontSize: 14, color: '#FFFFFF', marginTop: 3, fontWeight: 700 }}>Unilog Product Intelligence</div>
+            <div style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>Data Enrichment Engine v2.0</div>
           </div>
         </div>
       </nav>

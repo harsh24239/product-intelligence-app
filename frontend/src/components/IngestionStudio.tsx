@@ -140,13 +140,14 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
             </p>
           </div>
 
-          {/* Hackathon Ingest Option */}
+          {/* Hackathon Ingest Option — Full enrichment pipeline */}
           <div 
             className="card-interactive"
             onClick={async () => {
               setMode('processing');
               try {
-                await fetch('http://localhost:3001/api/hackathon/seed', { method: 'POST' });
+                const res = await fetch('http://localhost:3001/api/hackathon/seed', { method: 'POST' });
+                const data = await res.json();
                 simulateProgress(() => {
                   onExtractSuccess();
                 });
@@ -155,15 +156,42 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
                 setMode('select');
               }
             }}
-            style={{ background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', padding: 28, gridColumn: '1 / -1' }}
+            style={{
+              background: 'linear-gradient(135deg, #0f2027, #1B2433)',
+              border: '2px solid rgba(16, 185, 129, 0.5)',
+              padding: 28,
+              gridColumn: '1 / -1',
+              borderRadius: 16,
+              cursor: 'pointer',
+            }}
           >
-            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-              <FileCheck size={24} color="#34D399" />
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20 }}>
+              <div style={{ width: 56, height: 56, borderRadius: 14, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <FileCheck size={28} color="#34D399" />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                  <h3 style={{ fontSize: 20, fontWeight: 800, color: '#34D399' }}>Run Full Enrichment Pipeline on Sample Dataset</h3>
+                  <span style={{ fontSize: 11, fontWeight: 800, background: 'rgba(16, 185, 129, 0.15)', color: '#34D399', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 10px', borderRadius: 6, textTransform: 'uppercase' }}>Recommended</span>
+                </div>
+                <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.7, marginBottom: 16 }}>
+                  Ingests all <strong style={{ color: '#FFFFFF' }}>1,000 products</strong> from the Unilog sample dataset and runs the full 5-stage enrichment pipeline: Placeholder Cleansing → Unit Normalization → Attribute Extraction → Description Generation → Delivery Format Preparation.
+                </p>
+                <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+                  {[
+                    { label: 'Input Rows', val: '1,000' },
+                    { label: 'Placeholders Removed', val: '~887' },
+                    { label: 'Attributes Extracted', val: '~4,200+' },
+                    { label: 'Output Columns', val: '252' },
+                  ].map((s, i) => (
+                    <div key={i} style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: 20, fontWeight: 800, color: '#FFFFFF' }}>{s.val}</div>
+                      <div style={{ fontSize: 11, color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#34D399', marginBottom: 6 }}>1-Click Hackathon Ingest</h3>
-            <p style={{ fontSize: 14, color: '#FFFFFF', lineHeight: 1.6 }}>
-              Automatically ingest the Unihack dataset and simulate the extraction pipeline.
-            </p>
           </div>
 
         </div>

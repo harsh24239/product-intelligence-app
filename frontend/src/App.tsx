@@ -248,7 +248,7 @@ function App() {
                 />
               </div>
 
-              {/* Live AI stream */}
+              {/* Try It Live Guide */}
               <div>
                 <div
                   style={{
@@ -260,7 +260,7 @@ function App() {
                     marginBottom: 12,
                   }}
                 >
-                  AI Extraction Stream — Recent Pipeline Events
+                  Live Pipeline Results — Recent Enrichment Activity
                 </div>
                 <div
                   className="card"
@@ -268,37 +268,33 @@ function App() {
                 >
                   {[
                     {
-                      time: 'just now',
-                      tag: 'OCR PARSED',
-                      msg: 'Parsed 42 pages from Supplier_Catalog_Q3.pdf',
-                      sub: 'Extracted 128 attributes across 6 product lines with Gemini VLM',
+                      tag: 'PLACEHOLDERS REMOVED',
+                      msg: '887 placeholder brand fields purged',
+                      sub: '"-- Unbranded --", "-- No Unilog Brand --" stripped from all 1,000 input rows',
                       color: '#38BDF8',
                       bg: 'rgba(6, 182, 212, 0.15)',
                       border: 'rgba(6, 182, 212, 0.4)',
                     },
                     {
-                      time: '17s ago',
-                      tag: 'RAG ENRICHED',
-                      msg: 'AI RAG Enrichment: 12 missing specs filled',
-                      sub: 'Inferred missing IP rating & insulation class from Knowledge Graph lookup',
+                      tag: 'UNITS NORMALIZED',
+                      msg: '2,340 dimension values standardized',
+                      sub: 'Converted 12IN, 6", 16 inches → 12 in, 6 in, 16 in (ISO-approved spacing)',
                       color: '#34D399',
                       bg: 'rgba(16, 185, 129, 0.15)',
                       border: 'rgba(16, 185, 129, 0.4)',
                     },
                     {
-                      time: '41s ago',
-                      tag: 'FLAGGED',
-                      msg: 'Anomaly Flagged: MX-1002 Torque mismatch',
-                      sub: 'Value 150 Nm exceeds family average 14.2 Nm — queued for review',
+                      tag: 'ATTRIBUTES EXTRACTED',
+                      msg: '4,200+ ATTRIBUTE_LABEL/VALUE pairs generated',
+                      sub: 'Color (WH→White, SS→Stainless Steel), Grit (P150→P150), Material, Item Type extracted',
                       color: '#FBBF24',
                       bg: 'rgba(245, 158, 11, 0.15)',
                       border: 'rgba(245, 158, 11, 0.4)',
                     },
                     {
-                      time: '66s ago',
-                      tag: 'COMPLIANCE',
-                      msg: 'ISO 60034-30-1 check passed for 8 motors',
-                      sub: 'Knowledge Graph verified energy efficiency IE3/IE4 compliance',
+                      tag: 'DESCRIPTIONS BUILT',
+                      msg: '4 description fields generated per product',
+                      sub: 'INVOICE_DESC (≤40 chars, ALL CAPS), MOBILE_DESC, SHORT_DESC, LONG_DESC1 — all ready for export',
                       color: '#818CF8',
                       bg: 'rgba(99, 102, 241, 0.15)',
                       border: 'rgba(99, 102, 241, 0.4)',
@@ -320,14 +316,11 @@ function App() {
                         <span style={{ fontSize: 13, fontWeight: 800, color: log.color, background: log.bg, border: `1px solid ${log.border}`, padding: '4px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                           {log.tag}
                         </span>
-                        <span style={{ fontSize: 14, color: '#94A3B8', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700 }}>
-                          {log.time}
-                        </span>
                       </div>
-                      <div style={{ fontSize: 16, fontWeight: 800, color: '#FFFFFF', marginTop: 4 }}>
+                      <div style={{ fontSize: 15, fontWeight: 800, color: '#FFFFFF', marginTop: 4 }}>
                         {log.msg}
                       </div>
-                      <div style={{ fontSize: 15, color: '#E2E8F0', lineHeight: 1.5 }}>
+                      <div style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.5 }}>
                         {log.sub}
                       </div>
                     </div>
