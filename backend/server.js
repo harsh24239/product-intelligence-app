@@ -4,6 +4,7 @@ import multer from 'multer';
 import catalogRoutes from './routes/catalogRoutes.js';
 import extractionRoutes from './routes/extractionRoutes.js';
 import exportRoutes from './routes/exportRoutes.js';
+import hackathonRoutes from './routes/hackathonRoutes.js';
 
 const app = express();
 const port = 3001;
@@ -38,6 +39,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/catalog', catalogRoutes);
 app.use('/api/extract', extractionRoutes);
 app.use('/api/export', exportRoutes);
+app.use('/api/hackathon', hackathonRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

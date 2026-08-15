@@ -26,126 +26,111 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
     const catalogCount = products.length > 0 ? products.length : 16;
     setExportStep(`Packaging ${catalogCount} catalog product records...`);
     
+    // Build dataset from actual catalog products
+    const targetProducts = products.length > 0 ? products : [
+      {
+        id: 'prod-1',
+        name: 'Industrial Servo Motor MX-1000',
+        sku: 'MX-1000-V2',
+        manufacturer: 'Parker Hannifin',
+        status: 'commerce_ready' as const,
+        category: 'Motors & Drives',
+        completeness: 98,
+        lastUpdated: new Date().toISOString(),
+        specs: { material: 'Cast Iron', dimensions: '250x200x300mm', weight: '18.5kg', color: null, voltage: '400V AC', ipRating: 'IP65', certification: 'IEC 60034-30-1' },
+        attributes: [
+          { key: 'maxTorque', value: '15.0 Nm', confidence: 98.4, source: 'Datasheet.pdf', sourceQuote: '15.0 Nm rating', enrichedBy: 'rag_enrichment' as const, flagged: false },
+          { key: 'ipRating', value: 'IP65', confidence: 96.2, source: 'IEC 60529', sourceQuote: 'IP65 washdown', enrichedBy: 'rag_enrichment' as const, flagged: false }
+        ],
+        anomalies: [],
+        auditLog: []
+      },
+      {
+        id: 'prod-2',
+        name: 'Hydraulic Relief Valve V-2200',
+        sku: 'SKU-1001',
+        manufacturer: 'Bosch Rexroth',
+        status: 'validated' as const,
+        category: 'Hydraulics',
+        completeness: 88,
+        lastUpdated: new Date().toISOString(),
+        specs: { material: 'Steel', dimensions: '150x120x90mm', weight: '4.2kg', color: null, voltage: '24V DC', ipRating: 'IP67', certification: 'ISO 4401' },
+        attributes: [
+          { key: 'maxPressure', value: '350 Bar', confidence: 94.1, source: 'Valve_Spec.pdf', sourceQuote: '350 Bar pressure rating', enrichedBy: 'llm_extraction' as const, flagged: false }
+        ],
+        anomalies: [],
+        auditLog: []
+      }
+    ];
+
+    if (id === 'json') {
+      const jsonPayload = {
+        exportMetadata: {
+          source: "IntelliProduct AI Intelligence Platform",
+          exportedAt: new Date().toISOString(),
+          totalProductsExported: targetProducts.length,
+          schemaVersion: "2.4.0",
+          isoComplianceVerified: includeIso,
+          provenanceCitationsIncluded: includeProvenance,
+          anomalyAuditIncluded: includeAnomalies,
+        },
+        catalogProducts: targetProducts.map(p => ({
+          id: p.id,
+          sku: p.sku,
+          name: p.name,
+          manufacturer: p.manufacturer,
+          category: p.category,
+          status: p.status.toUpperCase(),
+          completenessScore: `${p.completeness}%`,
+          specifications: p.specs,
+          extractedAttributes: p.attributes.map(a => ({
+            key: a.key,
+            value: a.value,
+            confidence: includeConfidence ? `${a.confidence}%` : undefined,
+            sourceDocument: includeProvenance ? a.source : undefined,
+            sourceQuote: includeProvenance ? a.sourceQuote : undefined,
+            isoStandard: includeIso ? (a.key === 'ipRating' ? 'IEC 60529' : a.key === 'voltage' ? 'UL 508A' : 'ISO 8608') : undefined
+          })),
+          anomalies: includeAnomalies ? p.anomalies : undefined,
+          auditTrailCount: p.auditLog?.length || 0
+        }))
+      };
+
+      const blob = new Blob([JSON.stringify(jsonPayload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `product_intelligence_full_catalog_${targetProducts.length}_items.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } else if (id === 'csv') {
+      try {
+        const response = await fetch('http://localhost:3001/api/hackathon/export');
+        if (!response.ok) throw new Error('Export failed');
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Unihack_Expected_Output.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error('Error downloading hackathon CSV:', err);
+      }
+    } else if (id === 'pdf') {
+      const firstProd = targetProducts[0];
+      await generateProductDatasheet(firstProd);
+    }
+
     setTimeout(() => {
-      setExportStep('Injecting ISO/IEC compliance metadata...');
+      setExportStep('Injecting metadata...');
     }, 600);
 
     setTimeout(() => {
-      setExportStep('Generating SHA-256 integrity checksum...');
-    }, 1200);
-
-    setTimeout(async () => {
-      // Build dataset from actual catalog products
-      const targetProducts = products.length > 0 ? products : [
-        {
-          id: 'prod-1',
-          name: 'Industrial Servo Motor MX-1000',
-          sku: 'MX-1000-V2',
-          manufacturer: 'Parker Hannifin',
-          status: 'commerce_ready' as const,
-          category: 'Motors & Drives',
-          completeness: 98,
-          lastUpdated: new Date().toISOString(),
-          specs: { material: 'Cast Iron', dimensions: '250x200x300mm', weight: '18.5kg', color: null, voltage: '400V AC', ipRating: 'IP65', certification: 'IEC 60034-30-1' },
-          attributes: [
-            { key: 'maxTorque', value: '15.0 Nm', confidence: 98.4, source: 'Datasheet.pdf', sourceQuote: '15.0 Nm rating', enrichedBy: 'rag_enrichment' as const, flagged: false },
-            { key: 'ipRating', value: 'IP65', confidence: 96.2, source: 'IEC 60529', sourceQuote: 'IP65 washdown', enrichedBy: 'rag_enrichment' as const, flagged: false }
-          ],
-          anomalies: [],
-          auditLog: []
-        },
-        {
-          id: 'prod-2',
-          name: 'Hydraulic Relief Valve V-2200',
-          sku: 'SKU-1001',
-          manufacturer: 'Bosch Rexroth',
-          status: 'validated' as const,
-          category: 'Hydraulics',
-          completeness: 88,
-          lastUpdated: new Date().toISOString(),
-          specs: { material: 'Steel', dimensions: '150x120x90mm', weight: '4.2kg', color: null, voltage: '24V DC', ipRating: 'IP67', certification: 'ISO 4401' },
-          attributes: [
-            { key: 'maxPressure', value: '350 Bar', confidence: 94.1, source: 'Valve_Spec.pdf', sourceQuote: '350 Bar pressure rating', enrichedBy: 'llm_extraction' as const, flagged: false }
-          ],
-          anomalies: [],
-          auditLog: []
-        }
-      ];
-
-      if (id === 'json') {
-        const jsonPayload = {
-          exportMetadata: {
-            source: "IntelliProduct AI Intelligence Platform",
-            exportedAt: new Date().toISOString(),
-            totalProductsExported: targetProducts.length,
-            schemaVersion: "2.4.0",
-            isoComplianceVerified: includeIso,
-            provenanceCitationsIncluded: includeProvenance,
-            anomalyAuditIncluded: includeAnomalies,
-          },
-          catalogProducts: targetProducts.map(p => ({
-            id: p.id,
-            sku: p.sku,
-            name: p.name,
-            manufacturer: p.manufacturer,
-            category: p.category,
-            status: p.status.toUpperCase(),
-            completenessScore: `${p.completeness}%`,
-            specifications: p.specs,
-            extractedAttributes: p.attributes.map(a => ({
-              key: a.key,
-              value: a.value,
-              confidence: includeConfidence ? `${a.confidence}%` : undefined,
-              sourceDocument: includeProvenance ? a.source : undefined,
-              sourceQuote: includeProvenance ? a.sourceQuote : undefined,
-              isoStandard: includeIso ? (a.key === 'ipRating' ? 'IEC 60529' : a.key === 'voltage' ? 'UL 508A' : 'ISO 8608') : undefined
-            })),
-            anomalies: includeAnomalies ? p.anomalies : undefined,
-            auditTrailCount: p.auditLog?.length || 0
-          }))
-        };
-
-        const blob = new Blob([JSON.stringify(jsonPayload, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `product_intelligence_full_catalog_${targetProducts.length}_items.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-      } else if (id === 'csv') {
-        let csvContent = 'SKU,Product Name,Manufacturer,Category,Status,Completeness,Attribute Key,Attribute Value';
-        if (includeIso) csvContent += ',ISO Standard';
-        if (includeConfidence) csvContent += ',Confidence Score';
-        if (includeProvenance) csvContent += ',Source Citation';
-        csvContent += '\n';
-
-        targetProducts.forEach(p => {
-          if (p.attributes && p.attributes.length > 0) {
-            p.attributes.forEach(a => {
-              csvContent += `"${p.sku}","${p.name.replace(/"/g, '""')}","${p.manufacturer}","${p.category}","${p.status}",${p.completeness}%,"${a.key}","${a.value.replace(/"/g, '""')}"`;
-              if (includeIso) csvContent += `,"${a.key === 'ipRating' ? 'IEC 60529' : a.key === 'voltage' ? 'UL 508A' : 'ISO 8608'}"`;
-              if (includeConfidence) csvContent += `,${a.confidence}%`;
-              if (includeProvenance) csvContent += `,"${a.source || 'Datasheet.pdf'}"`;
-              csvContent += '\n';
-            });
-          } else {
-            csvContent += `"${p.sku}","${p.name.replace(/"/g, '""')}","${p.manufacturer}","${p.category}","${p.status}",${p.completeness}%,"N/A","N/A"\n`;
-          }
-        });
-        
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `product_intelligence_full_catalog_${targetProducts.length}_items.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-      } else if (id === 'pdf') {
-        // Export PDF Datasheet for first catalog product or selected product
-        const firstProd = targetProducts[0];
-        await generateProductDatasheet(firstProd);
-      }
-
       setDownloading(null);
       setExportStep(null);
       setDownloaded(id);
@@ -153,7 +138,7 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
         confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
       } catch {}
       setTimeout(() => setDownloaded(null), 3500);
-    }, 1800);
+    }, 1200);
   };
 
   const handleCopy = () => {

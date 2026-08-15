@@ -180,9 +180,38 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                   Manufacturer:{' '}
                   <strong style={{ color: '#FFFFFF', fontWeight: 700 }}>{product.manufacturer}</strong>
                 </span>
-                <span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   Category:{' '}
-                  <strong style={{ color: '#38BDF8', fontWeight: 700 }}>{product.category}</strong>
+                  <div style={{ position: 'relative', display: 'inline-block' }}>
+                    <select
+                      value={product.category}
+                      onChange={(e) => {
+                        // Optimistically update the product object for UI responsiveness
+                        product.category = e.target.value;
+                        // Trigger a re-render to update the display
+                        setActiveTab(activeTab); // hack to force re-render
+                      }}
+                      style={{
+                        appearance: 'none',
+                        background: 'transparent',
+                        border: '1px solid rgba(56, 189, 248, 0.35)',
+                        color: '#38BDF8',
+                        fontWeight: 700,
+                        fontSize: 15,
+                        padding: '2px 24px 2px 8px',
+                        borderRadius: 6,
+                        cursor: 'pointer',
+                        outline: 'none',
+                      }}
+                    >
+                      <option value="Motors & Drives" style={{ background: '#1B2433', color: '#FFFFFF' }}>Motors & Drives</option>
+                      <option value="Hydraulics" style={{ background: '#1B2433', color: '#FFFFFF' }}>Hydraulics</option>
+                      <option value="Pneumatics" style={{ background: '#1B2433', color: '#FFFFFF' }}>Pneumatics</option>
+                      <option value="Electrical" style={{ background: '#1B2433', color: '#FFFFFF' }}>Electrical</option>
+                      <option value="Automation" style={{ background: '#1B2433', color: '#FFFFFF' }}>Automation</option>
+                    </select>
+                    <ChevronDown size={14} color="#38BDF8" style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                  </div>
                 </span>
               </div>
             </div>
@@ -568,7 +597,16 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                           {anom.issue}
                         </p>
                       </div>
-                      <button className="btn btn-secondary" style={{ fontSize: 11, flexShrink: 0 }}>
+                      <button
+                        className="btn btn-secondary"
+                        style={{ fontSize: 11, flexShrink: 0 }}
+                        onClick={() => {
+                          // Optimistically remove anomaly
+                          product.anomalies = product.anomalies.filter((_, i) => i !== idx);
+                          // Force UI refresh
+                          setActiveTab(activeTab);
+                        }}
+                      >
                         Mark Resolved
                       </button>
                     </div>

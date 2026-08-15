@@ -140,6 +140,32 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
             </p>
           </div>
 
+          {/* Hackathon Ingest Option */}
+          <div 
+            className="card-interactive"
+            onClick={async () => {
+              setMode('processing');
+              try {
+                await fetch('http://localhost:3001/api/hackathon/seed', { method: 'POST' });
+                simulateProgress(() => {
+                  onExtractSuccess();
+                });
+              } catch (e) {
+                console.error(e);
+                setMode('select');
+              }
+            }}
+            style={{ background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', padding: 28, gridColumn: '1 / -1' }}
+          >
+            <div style={{ width: 50, height: 50, borderRadius: 14, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+              <FileCheck size={24} color="#34D399" />
+            </div>
+            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#34D399', marginBottom: 6 }}>1-Click Hackathon Ingest</h3>
+            <p style={{ fontSize: 14, color: '#FFFFFF', lineHeight: 1.6 }}>
+              Automatically ingest the Unihack dataset and simulate the extraction pipeline.
+            </p>
+          </div>
+
         </div>
       )}
 

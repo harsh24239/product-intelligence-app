@@ -57,11 +57,26 @@ const PIMConnectorsModal: React.FC<PIMConnectorsModalProps> = ({ product, onClos
     }
 
     if (format === 'csv') {
-      const header = 'key,value,confidence,source,enriched_by,flagged\n';
-      const rows = product.attributes
-        .map((a) => `"${a.key}","${a.value}",${a.confidence},"${a.source}","${a.enrichedBy}",${a.flagged}`)
-        .join('\n');
-      return header + rows;
+      const headers = ['id', 'sku', 'name', 'category', 'manufacturer', 'status', 'completeness', 'power', 'voltage', 'current', 'speed', 'torque', 'ipRating', 'certifications', 'price'];
+      const headerRow = headers.join(',') + '\n';
+      const row = [
+        `"${product.id || ''}"`,
+        `"${product.sku || ''}"`,
+        `"${product.name?.replace(/"/g, '""') || ''}"`,
+        `"${product.category || ''}"`,
+        `"${product.manufacturer || ''}"`,
+        `"${product.status || ''}"`,
+        `${product.completeness || 0}`,
+        `"${product.specs?.power || ''}"`,
+        `"${product.specs?.voltage || ''}"`,
+        `"${product.specs?.current || ''}"`,
+        `"${product.specs?.speed || ''}"`,
+        `"${product.specs?.torque || ''}"`,
+        `"${product.specs?.ipRating || ''}"`,
+        `"${(product.certifications || []).join('; ')}"`,
+        `${product.price || ''}`
+      ];
+      return headerRow + row.join(',');
     }
 
     if (format === 'api') {
@@ -101,6 +116,18 @@ GET /api/metrics`;
   const handleExport = () => {
     setExporting(true);
     setTimeout(() => {
+      if (format === 'json' || format === 'csv') {
+        const dataStr = getPayload();
+        const blob = new Blob([dataStr], { type: format === 'json' ? 'application/json' : 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${product.sku}_export.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
       setExporting(false);
       setExportedSuccess(true);
       setTimeout(() => setExportedSuccess(false), 3000);

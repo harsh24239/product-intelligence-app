@@ -22,6 +22,7 @@ const router = express.Router();
 
 export const getCatalog = () => catalog;
 export const addProduct = (p) => catalog.push(p);
+export const clearCatalog = () => { catalog.length = 0; };
 
 router.get('/', (req, res) => {
   let results = [...catalog];
