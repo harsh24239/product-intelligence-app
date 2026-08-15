@@ -96,13 +96,12 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
         <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--blue-dim)', border: '1px solid var(--blue-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, color: 'var(--blue)' }}>
           01
         </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 11, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Unilog Pipeline</div>
+        <div>
           <h1 style={{ fontSize: 28, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.4px' }}>
-            Product Data Ingestion &amp; Enrichment
+            AI Document Ingestion & Extraction Studio
           </h1>
-          <p style={{ fontSize: 16, color: '#F1F5F9', marginTop: 6 }}>
-            Load the Unilog sample dataset and run the full 5-stage enrichment pipeline: Cleansing → Normalization → Attribute Extraction → Description Generation → Export
+          <p style={{ fontSize: 16, color: '#F1F5F9' }}>
+            Upload raw PDF datasheets, technical drawings, or text to extract structured product intelligence
           </p>
         </div>
       </div>

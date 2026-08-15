@@ -185,18 +185,17 @@ function App() {
             <PipelineHero onStartDemo={() => navigateTo('ingest')} />
 
             {/* KPI Metrics */}
-            <div>
+            <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: 8,
-                  marginBottom: 14,
                 }}
               >
                 <span
                   style={{
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
@@ -227,15 +226,14 @@ function App() {
               }}
             >
               {/* Anomaly panel */}
-              <div>
+              <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div
                   style={{
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
                     color: '#FFFFFF',
-                    marginBottom: 12,
                   }}
                 >
                   Active Anomalies — Items Needing Human Review
@@ -249,22 +247,20 @@ function App() {
               </div>
 
               {/* Try It Live Guide */}
-              <div>
+              <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div
                   style={{
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
                     color: '#FFFFFF',
-                    marginBottom: 12,
                   }}
                 >
                   Live Pipeline Results — Recent Enrichment Activity
                 </div>
                 <div
-                  className="card"
-                  style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, background: '#1E293B', borderRadius: 16 }}
+                  style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, background: '#141C2E', border: '1px solid var(--border)', borderRadius: 16 }}
                 >
                   {[
                     {
@@ -329,15 +325,14 @@ function App() {
               </div>
             </div>
 
-            <div>
+            <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div
                 style={{
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: 800,
                   textTransform: 'uppercase',
                   letterSpacing: '0.06em',
                   color: '#FFFFFF',
-                  marginBottom: 14,
                 }}
               >
                 Try the Pipeline — Follow These Steps
@@ -377,7 +372,7 @@ function App() {
                     key={action.view}
                     onClick={() => navigateTo(action.view)}
                     style={{
-                      background: '#1B2433',
+                      background: '#141C2E',
                       border: '1px solid rgba(56, 189, 248, 0.35)',
                       borderRadius: 14,
                       padding: '18px 20px',
