@@ -140,13 +140,12 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
             </p>
           </div>
 
-          {/* Hackathon Ingest Option — Full enrichment pipeline */}
           <div 
             className="card-interactive"
             onClick={async () => {
               setMode('processing');
               try {
-                const res = await fetch('http://localhost:3001/api/hackathon/seed', { method: 'POST' });
+                const res = await fetch('/api/hackathon/seed', { method: 'POST' });
                 const data = await res.json();
                 simulateProgress(() => {
                   onExtractSuccess();
