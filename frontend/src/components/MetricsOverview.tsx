@@ -126,15 +126,29 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
               key={idx}
               className="card"
               style={{
-                padding: 22,
+                padding: 24,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 position: 'relative',
                 overflow: 'hidden',
-                background: '#1E293B',
-                border: '1px solid #334155',
-                borderRadius: 16,
+                background: 'linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(56, 189, 248, 0.2)',
+                boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)',
+                borderRadius: 18,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                cursor: 'default',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)';
+                (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(56, 189, 248, 0.5)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.25)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+                (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(56, 189, 248, 0.2)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.15)';
               }}
               title={card.tooltip}
             >
@@ -238,7 +252,7 @@ const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics, loading }) =
         </div>
 
         {/* Category Distribution Chart */}
-        <div className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column' }}>
+        <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
           <div style={{ marginBottom: 16 }}>
             <h3 style={{ fontSize: 17, fontWeight: 800, color: '#FFFFFF' }}>Product Category Breakdown</h3>
             <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>Enriched products by item type</p>

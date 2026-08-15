@@ -24,20 +24,26 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
 
       {/* Hero Header */}
       <div
-        className="card"
+        className="card pipeline-hero-card"
         style={{
-          padding: '32px 36px',
+          padding: '36px 40px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: 24,
-          background: '#1B2433',
-          border: '1px solid rgba(56, 189, 248, 0.35)',
-          borderRadius: 16,
+          background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)',
+          border: '1px solid rgba(56, 189, 248, 0.4)',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+          borderRadius: 20,
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        <div style={{ flex: 1, minWidth: 300 }}>
+        {/* Glow effect in background */}
+        <div style={{ position: 'absolute', top: '-50%', left: '-20%', width: '100%', height: '200%', background: 'radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        
+        <div style={{ flex: 1, minWidth: 300, position: 'relative', zIndex: 1 }}>
           <div
             style={{
               display: 'inline-flex',
@@ -61,12 +67,14 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
 
           <h1
             style={{
-              fontSize: 32,
-              fontWeight: 800,
-              color: '#FFFFFF',
-              letterSpacing: '-0.8px',
-              lineHeight: 1.25,
-              marginBottom: 14,
+              fontSize: 38,
+              fontWeight: 900,
+              letterSpacing: '-1px',
+              lineHeight: 1.15,
+              marginBottom: 16,
+              background: 'linear-gradient(90deg, #FFFFFF 0%, #93C5FD 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
             }}
           >
             Automated Product Content Enrichment
