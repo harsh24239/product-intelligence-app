@@ -26,12 +26,12 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
       <div
         className="card pipeline-hero-card"
         style={{
-          padding: '36px 40px',
+          padding: '24px 28px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          gap: 24,
+          gap: 20,
           background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)',
           border: '1px solid rgba(56, 189, 248, 0.4)',
           boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
@@ -52,11 +52,11 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
               background: 'rgba(59, 130, 246, 0.15)',
               border: '1px solid rgba(59, 130, 246, 0.4)',
               borderRadius: 8,
-              padding: '6px 14px',
-              fontSize: 13,
+              padding: '4px 10px',
+              fontSize: 11,
               fontWeight: 800,
               color: '#60A5FA',
-              marginBottom: 16,
+              marginBottom: 12,
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
             }}
@@ -67,11 +67,11 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
 
           <h1
             style={{
-              fontSize: 38,
+              fontSize: 28,
               fontWeight: 900,
-              letterSpacing: '-1px',
+              letterSpacing: '-0.5px',
               lineHeight: 1.15,
-              marginBottom: 16,
+              marginBottom: 12,
               background: 'linear-gradient(90deg, #FFFFFF 0%, #93C5FD 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -80,7 +80,7 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
             Automated Product Content Enrichment
           </h1>
 
-          <p style={{ fontSize: 15, color: '#E2E8F0', maxWidth: 640, lineHeight: 1.7, marginBottom: 24, fontWeight: 500 }}>
+          <p style={{ fontSize: 13, color: '#E2E8F0', maxWidth: 640, lineHeight: 1.6, marginBottom: 18, fontWeight: 500 }}>
             Transforms raw distributor input rows (6 columns) into fully enriched, commerce-ready product records (252 columns). Cleanses placeholders, normalizes units, extracts attributes, generates descriptions, and produces submission-ready CSV output.
           </p>
 
@@ -89,27 +89,27 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
               id="btn-start-demo"
               onClick={onStartDemo}
               className="btn btn-primary"
-              style={{ fontSize: 15, padding: '12px 24px', fontWeight: 800 }}
+              style={{ fontSize: 13, padding: '8px 16px', fontWeight: 800 }}
             >
-              <Upload size={18} />
+              <Upload size={16} />
               Run Enrichment on Sample Dataset
-              <ArrowRight size={18} />
+              <ArrowRight size={16} />
             </button>
           </div>
         </div>
 
         {/* Quick KPI stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, minWidth: 260 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, minWidth: 260 }}>
           {[
             { label: 'Input Columns', val: '6', sub: 'Raw distributor data' },
             { label: 'Output Columns', val: '252', sub: 'Delivery format fields' },
             { label: 'Placeholder Removal', val: '100%', sub: '-- Unbranded -- cleared' },
             { label: 'Unit Standardization', val: 'ISO Approved', sub: 'UOM compliance enforced' },
           ].map((item, idx) => (
-            <div key={idx} style={{ padding: '16px 18px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12 }}>
-              <div style={{ fontSize: 24, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px' }}>{item.val}</div>
-              <div style={{ fontSize: 14, fontWeight: 800, color: '#38BDF8', marginTop: 3 }}>{item.label}</div>
-              <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{item.sub}</div>
+            <div key={idx} style={{ padding: '12px 14px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 10 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.5px' }}>{item.val}</div>
+              <div style={{ fontSize: 12, fontWeight: 800, color: '#38BDF8', marginTop: 2 }}>{item.label}</div>
+              <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{item.sub}</div>
             </div>
           ))}
         </div>
