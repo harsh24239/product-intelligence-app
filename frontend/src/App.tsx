@@ -239,6 +239,7 @@ function App() {
                   Active Anomalies — Items Needing Human Review
                 </div>
                 <AnomalyFlagsPanel
+                  products={products}
                   onSelectProduct={(id) => {
                     const p = products.find((prod) => prod.id === id);
                     if (p) handleSelectProduct(p);

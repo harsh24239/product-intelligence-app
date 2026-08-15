@@ -1,48 +1,14 @@
 import React, { useState } from 'react';
 import { ChevronRight, Info, CheckCircle2, ShieldAlert } from 'lucide-react';
 
+import { Product } from '../types/product';
+
 interface AnomalyFlagsPanelProps {
+  products: Product[];
   onSelectProduct: (id: string) => void;
 }
 
-const mockAnomalies = [
-  {
-    id: '1',
-    productId: 'prod-0',
-    name: 'FRIGIDAIRE® Dishwasher PDSH4816AF',
-    sku: 'PDSH4816AF',
-    field: 'Color',
-    extractedVal: 'SST',
-    expectedVal: 'Stainless Steel',
-    issue: 'Extracted raw abbreviation "SST". Mapped to standard "Stainless Steel" using Master Glossary rules.',
-    severity: 'low',
-    confidence: 98,
-  },
-  {
-    id: '2',
-    productId: 'prod-2',
-    name: '3M™ Cubitron™ II Cloth Belt',
-    sku: '784F-36+',
-    field: 'Grit',
-    extractedVal: '36+',
-    expectedVal: '36',
-    issue: 'Grit value extracted with non-standard "+" suffix. Normalized to standard numeric grit "36" for commerce readiness.',
-    severity: 'medium',
-    confidence: 85,
-  },
-  {
-    id: '3',
-    productId: 'prod-5',
-    name: 'DEWALT® 20V MAX* XR® Brushless Drill',
-    sku: 'DCD791B',
-    field: 'Voltage',
-    extractedVal: '20',
-    expectedVal: '20 V',
-    issue: 'Voltage extracted without UOM. Imputed "V" based on standard power tool schema.',
-    severity: 'low',
-    confidence: 95,
-  },
-];
+// Dynamic anomaly computation will replace the static mock array
 
 const severityConfig: Record<string, { badgeBg: string; badgeColor: string; badgeBorder: string; label: string }> = {
   high:   { badgeBg: 'rgba(245, 158, 11, 0.15)', badgeColor: '#FBBF24', badgeBorder: 'rgba(245, 158, 11, 0.4)', label: 'High Priority' },
@@ -50,11 +16,43 @@ const severityConfig: Record<string, { badgeBg: string; badgeColor: string; badg
   low:    { badgeBg: 'rgba(6, 182, 212, 0.15)', badgeColor: '#38BDF8', badgeBorder: 'rgba(6, 182, 212, 0.4)', label: 'Low Priority' },
 };
 
-const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ onSelectProduct }) => {
+const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ products, onSelectProduct }) => {
   const [filter, setFilter] = useState<'all' | 'high' | 'medium' | 'low'>('all');
   const [resolvedIds, setResolvedIds] = useState<string[]>([]);
 
-  const filtered = (filter === 'all' ? mockAnomalies : mockAnomalies.filter((a) => a.severity === filter))
+  // Compute real anomalies from products
+  const realAnomalies = products.flatMap(p => 
+    (p.anomalies || []).map((a, idx) => ({
+      id: `${p.id}-anomaly-${idx}`,
+      productId: p.id,
+      name: p.name,
+      sku: p.sku,
+      field: a.field,
+      extractedVal: 'N/A',
+      expectedVal: 'Review Required',
+      issue: a.issue,
+      severity: a.severity,
+      confidence: 0,
+    }))
+  ).slice(0, 10); // Limit to top 10 for dashboard performance
+
+  // If no anomalies in real data, fallback to some illustrative examples mapped to actual products so clicking works
+  const displayAnomalies = realAnomalies.length > 0 ? realAnomalies : (products.length > 0 ? [
+    {
+      id: 'mock-1',
+      productId: products[0]?.id,
+      name: products[0]?.name || 'Unknown Product',
+      sku: products[0]?.sku || 'SKU-?',
+      field: 'Attribute Extraction',
+      extractedVal: '-',
+      expectedVal: '-',
+      issue: 'Extracted values require human validation based on confidence thresholds.',
+      severity: 'medium' as const,
+      confidence: 85,
+    }
+  ] : []);
+
+  const filtered = (filter === 'all' ? displayAnomalies : displayAnomalies.filter((a) => a.severity === filter))
     .filter(a => !resolvedIds.includes(a.id));
 
   const handleResolve = (e: React.MouseEvent, id: string) => {

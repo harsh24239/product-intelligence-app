@@ -107,7 +107,7 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
       URL.revokeObjectURL(url);
     } else if (id === 'csv') {
       try {
-        const response = await fetch('http://localhost:3001/api/hackathon/export');
+        const response = await fetch('/api/hackathon/export');
         if (!response.ok) throw new Error('Export failed');
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
