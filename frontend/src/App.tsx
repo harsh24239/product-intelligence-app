@@ -164,7 +164,17 @@ function App() {
   };
 
   const handleSelectProduct = (product: Product) => setSelectedProduct(product);
-  const handleBackToCatalog = () => setSelectedProduct(null);
+  const handleBackToCatalog = async () => {
+    setSelectedProduct(null);
+    // Refetch to sync state in case user resolved anomalies or validated items in detail view
+    try {
+      const [fp, fm] = await Promise.all([api.getCatalog(), api.getMetrics()]);
+      if (Array.isArray(fp) && fp.length > 0) {
+        setProducts(fp);
+        if (fm) setMetrics(fm);
+      }
+    } catch {}
+  };
 
   const navigateTo = (view: View) => {
     setCurrentView(view);

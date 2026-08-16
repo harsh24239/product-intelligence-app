@@ -599,15 +599,20 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
                       </div>
                       <button
                         className="btn btn-secondary"
-                        style={{ fontSize: 11, flexShrink: 0 }}
-                        onClick={() => {
-                          // Optimistically remove anomaly
-                          product.anomalies = product.anomalies.filter((_, i) => i !== idx);
-                          // Force UI refresh
-                          setActiveTab(activeTab);
+                        style={{ fontSize: 11, flexShrink: 0, opacity: anom.resolved ? 0.5 : 1 }}
+                        disabled={anom.resolved}
+                        onClick={async () => {
+                          try {
+                            const updated = await api.resolveAnomaly(product.id, idx);
+                            // Optimistically update the local product state with the returned updated product
+                            Object.assign(product, updated);
+                            setActiveTab(activeTab); // trigger re-render
+                          } catch (e) {
+                            console.error('Failed to resolve anomaly:', e);
+                          }
                         }}
                       >
-                        Mark Resolved
+                        {anom.resolved ? 'Resolved' : 'Mark Resolved'}
                       </button>
                     </div>
                   ))}
@@ -816,7 +821,15 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
 
       {/* Modals */}
       {showValidation && (
-        <HITLValidationModal product={product} onClose={() => setShowValidation(false)} />
+        <HITLValidationModal
+          product={product}
+          onClose={(validated) => {
+            if (validated) {
+              product.status = 'validated';
+            }
+            setShowValidation(false);
+          }}
+        />
       )}
       {showPIMModal && (
         <PIMConnectorsModal product={product} onClose={() => setShowPIMModal(false)} isDark={true} />

@@ -146,7 +146,7 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
               setMode('processing');
               try {
                 const res = await fetch('/api/hackathon/seed', { method: 'POST' });
-                const data = await res.json();
+                await res.json();
                 simulateProgress(() => {
                   onExtractSuccess();
                 });

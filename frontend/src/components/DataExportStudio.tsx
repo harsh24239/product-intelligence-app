@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, FileJson, FileSpreadsheet, FileText, BarChart3, Check, Code2, Info, Copy, CheckSquare, Sparkles, SlidersHorizontal, ShieldCheck, Database } from 'lucide-react';
+import { Download, FileSpreadsheet, FileText, BarChart3, Check, Info, Copy, Sparkles, ShieldCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { generateProductDatasheet } from '../services/pdfGenerator';
 
@@ -15,11 +15,7 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
   const [copied, setCopied] = useState(false);
   const [exportStep, setExportStep] = useState<string | null>(null);
 
-  // Export Customization Toggles
-  const [includeConfidence, setIncludeConfidence] = useState(true);
-  const [includeIso, setIncludeIso] = useState(true);
-  const [includeProvenance, setIncludeProvenance] = useState(true);
-  const [includeAnomalies, setIncludeAnomalies] = useState(true);
+  // Strict Hackathon CSV delivery requires no payload customization
 
   const handleExport = async (id: string) => {
     setDownloading(id);
@@ -63,49 +59,7 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
       }
     ];
 
-    if (id === 'json') {
-      const jsonPayload = {
-        exportMetadata: {
-          source: "IntelliProduct AI Intelligence Platform",
-          exportedAt: new Date().toISOString(),
-          totalProductsExported: targetProducts.length,
-          schemaVersion: "2.4.0",
-          isoComplianceVerified: includeIso,
-          provenanceCitationsIncluded: includeProvenance,
-          anomalyAuditIncluded: includeAnomalies,
-        },
-        catalogProducts: targetProducts.map(p => ({
-          id: p.id,
-          sku: p.sku,
-          name: p.name,
-          manufacturer: p.manufacturer,
-          category: p.category,
-          status: p.status.toUpperCase(),
-          completenessScore: `${p.completeness}%`,
-          specifications: p.specs,
-          extractedAttributes: p.attributes.map(a => ({
-            key: a.key,
-            value: a.value,
-            confidence: includeConfidence ? `${a.confidence}%` : undefined,
-            sourceDocument: includeProvenance ? a.source : undefined,
-            sourceQuote: includeProvenance ? a.sourceQuote : undefined,
-            isoStandard: includeIso ? (a.key === 'ipRating' ? 'IEC 60529' : a.key === 'voltage' ? 'UL 508A' : 'ISO 8608') : undefined
-          })),
-          anomalies: includeAnomalies ? p.anomalies : undefined,
-          auditTrailCount: p.auditLog?.length || 0
-        }))
-      };
-
-      const blob = new Blob([JSON.stringify(jsonPayload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `product_intelligence_full_catalog_${targetProducts.length}_items.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } else if (id === 'csv') {
+    if (id === 'csv') {
       try {
         const response = await fetch('/api/hackathon/export');
         if (!response.ok) throw new Error('Export failed');
@@ -149,19 +103,6 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
 
   const exportOptions = [
     {
-      id: 'json',
-      title: 'Structured Product JSON',
-      desc: 'Full AI-extracted product intelligence exported as structured JSON — includes all attributes, confidence scores, source citations, and anomaly flags.',
-      icon: FileJson,
-      format: 'JSON',
-      size: '~4.2 MB',
-      color: '#38BDF8',
-      bg: 'rgba(56, 189, 248, 0.15)',
-      border: 'rgba(56, 189, 248, 0.4)',
-      badge: 'Commerce-Ready',
-      targetSystem: 'JSON Feed / Webhooks',
-    },
-    {
       id: 'csv',
       title: 'CSV Attribute Export',
       desc: 'Spreadsheet-ready tabular format with all extracted product fields — suitable for ERP ingestion, manual QA review, or pipeline handoff.',
@@ -186,19 +127,6 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
       border: 'rgba(245, 158, 11, 0.4)',
       badge: 'With QR Code',
       targetSystem: 'Customer Portal',
-    },
-    {
-      id: 'api',
-      title: 'REST API Endpoint',
-      desc: 'Query product intelligence data programmatically. Returns enriched product records in real-time via a RESTful JSON API for system integration.',
-      icon: Code2,
-      format: 'REST API',
-      size: 'Live endpoint',
-      color: '#818CF8',
-      bg: 'rgba(99, 102, 241, 0.15)',
-      border: 'rgba(99, 102, 241, 0.4)',
-      badge: 'Live Stream',
-      targetSystem: 'Microservices / PIM',
     },
   ];
 
@@ -254,44 +182,6 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
         </div>
       </div>
 
-      {/* Payload Customization Controls */}
-      <div className="card" style={{ padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <SlidersHorizontal size={20} color="#60A5FA" />
-          <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>Export Payload Customization Options</h3>
-        </div>
-
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-          {[
-            { label: 'AI Confidence Scores', state: includeConfidence, set: setIncludeConfidence, color: '#60A5FA' },
-            { label: 'ISO/IEC Mapped Standards', state: includeIso, set: setIncludeIso, color: '#38BDF8' },
-            { label: 'Document Provenance (PDF Citations)', state: includeProvenance, set: setIncludeProvenance, color: '#60A5FA' },
-            { label: 'Audit Anomaly Notes', state: includeAnomalies, set: setIncludeAnomalies, color: '#FBBF24' },
-          ].map((toggle, idx) => (
-            <button
-              key={idx}
-              onClick={() => toggle.set(!toggle.state)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '10px 16px',
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 700,
-                background: toggle.state ? 'rgba(56, 189, 248, 0.2)' : '#0B0F17',
-                color: toggle.state ? '#FFFFFF' : '#94A3B8',
-                border: `1px solid ${toggle.state ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              <CheckSquare size={16} color={toggle.state ? toggle.color : '#64748B'} />
-              {toggle.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* Symmetric 2x2 Grid of Export Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 18 }}>
@@ -371,52 +261,6 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
         })}
       </div>
 
-      {/* Clean Structured Export Preview Panel (No Code Boxes) */}
-      <div className="card" style={{ padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Database size={22} color="#60A5FA" />
-            <div>
-              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>Enriched Attribute Payload Preview</h3>
-              <div style={{ fontSize: 13, color: '#94A3B8' }}>Sample extracted record formatted with active ISO customization options</div>
-            </div>
-          </div>
-          <span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 12px', borderRadius: 8 }}>
-            ● Verified Active Handoff
-          </span>
-        </div>
-
-        {/* Preview Table — Unilog-relevant attributes */}
-        <div style={{ background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, overflowX: 'auto', width: '100%' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ background: '#0F172A', borderBottom: '1px solid rgba(56, 189, 248, 0.35)' }}>
-                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Delivery Column</th>
-                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Enriched Value</th>
-                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Source</th>
-                {includeConfidence && <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: 13, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Confidence</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { col: 'INVOICE_DESC', val: 'DISHWASHER LEG 5 SST 120V 15A', src: 'Rules Engine (≤40 chars, ALL CAPS)', conf: '100%', status: 'Formula Applied' },
-                { col: 'MOBILE_DESC', val: 'Rheem Manufacturing FRIGIDAIRE, Dishwasher, PDSH4816AF', src: 'Brand + Item Type + MPN formula', conf: '100%', status: 'Formula Applied' },
-                { col: 'SHORT_DESC', val: 'FRIGIDAIRE® Dishwasher PDSH4816AF, Stainless Steel, 120 V, 15 A', src: 'Attribute Extraction Engine', conf: '94%', status: 'Auto Generated' },
-                { col: 'ATTRIBUTE_LABEL 1', val: 'Color', src: 'Pattern: SS → Stainless Steel', conf: '98%', status: 'Extracted' },
-                { col: 'ATTRIBUTE_VALUE 1', val: 'Stainless Steel', src: 'Part_Desc abbreviation lookup', conf: '98%', status: 'Extracted' },
-                { col: 'BRAND_NAME', val: 'FRIGIDAIRE®', src: 'Placeholder removed; extracted from desc', conf: '91%', status: 'Cleansed' },
-              ].map((row, i) => (
-                <tr key={i} style={{ borderBottom: i < 5 ? '1px solid rgba(56, 189, 248, 0.15)' : 'none' }}>
-                  <td style={{ padding: '14px 18px', fontWeight: 800, color: '#38BDF8', fontSize: 14, fontFamily: 'Plus Jakarta Sans, monospace' }}>{row.col}</td>
-                  <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF', fontSize: 14 }}>{row.val}</td>
-                  <td style={{ padding: '14px 18px' }}><span style={{ fontSize: 12, fontWeight: 800, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '4px 10px', borderRadius: 6, display: 'inline-block', whiteSpace: 'nowrap' }}>{row.status}</span></td>
-                  {includeConfidence && <td style={{ padding: '14px 18px', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>{row.conf}</td>}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
       {/* Summary KPI Footer */}
       <div className="card" style={{ padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>

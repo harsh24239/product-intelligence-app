@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Product } from '../types/product';
 import { X, Check, FileQuestion, Save } from 'lucide-react';
+import { api } from '../services/api';
 
 interface HITLValidationModalProps {
   product: Product;
-  onClose: () => void;
+  onClose: (validated?: boolean) => void;
 }
 
 const HITLValidationModal: React.FC<HITLValidationModalProps> = ({ product, onClose }) => {
@@ -23,7 +24,7 @@ const HITLValidationModal: React.FC<HITLValidationModalProps> = ({ product, onCl
             <h2 className="text-xl font-bold text-white">Human-in-the-Loop Validation</h2>
             <p className="text-sm text-gray mt-1">{itemsToReview.length} attributes require review for <span className="text-white font-medium">{product.name}</span></p>
           </div>
-          <button onClick={onClose} className="text-gray hover:text-white transition-colors">
+          <button onClick={() => onClose()} className="text-gray hover:text-white transition-colors">
             <X size={24} />
           </button>
         </div>
@@ -82,8 +83,19 @@ const HITLValidationModal: React.FC<HITLValidationModalProps> = ({ product, onCl
         </div>
 
         <div className="p-6 border-t border-[rgba(255,255,255,0.08)] bg-[rgba(0,0,0,0.2)] flex justify-end gap-3">
-          <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={onClose}>
+          <button className="btn btn-secondary" onClick={() => onClose()}>Cancel</button>
+          <button 
+            className="btn btn-primary" 
+            onClick={async () => {
+              try {
+                await api.updateStatus(product.id, 'validated');
+                onClose(true);
+              } catch (e) {
+                console.error(e);
+                onClose(true);
+              }
+            }}
+          >
             <Save size={16} /> Save & Mark Validated
           </button>
         </div>

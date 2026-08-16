@@ -54,7 +54,7 @@ export const api = {
   },
   updateProduct: async (id: string, updates: Partial<Product>): Promise<Product> => {
     const res = await fetch(`/api/catalog/${id}`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates),
     });
@@ -69,7 +69,11 @@ export const api = {
     if (!res.ok) throw new Error('Failed to delete product');
   },
   resolveAnomaly: async (id: string, index: number): Promise<Product> => {
-    const res = await fetch(`/api/catalog/${id}/anomalies/${index}/resolve`, { method: 'POST' });
+    const res = await fetch(`/api/catalog/${id}/resolve-anomaly`, { 
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ anomalyIndex: index })
+    });
     if (!res.ok) throw new Error('Failed to resolve anomaly');
     return res.json();
   },
@@ -95,12 +99,12 @@ export const api = {
     return res.json();
   },
   enrichProduct: async (id: string): Promise<Product> => {
-    const res = await fetch(`/api/catalog/${id}/enrich`, { method: 'POST' });
+    const res = await fetch(`/api/extract/enrich/${id}`, { method: 'POST' });
     if (!res.ok) throw new Error('Failed to enrich product');
     return res.json();
   },
   validateProduct: async (id: string): Promise<Product> => {
-    const res = await fetch(`/api/catalog/${id}/validate`, { method: 'POST' });
+    const res = await fetch(`/api/extract/validate/${id}`, { method: 'POST' });
     if (!res.ok) throw new Error('Failed to validate product');
     return res.json();
   },
@@ -122,12 +126,12 @@ export const api = {
     window.open('/api/export/csv', '_blank');
   },
   exportProduct: async (id: string): Promise<object> => {
-    const res = await fetch(`/api/export/product/${id}`);
+    const res = await fetch(`/api/export/product/${id}/json`);
     if (!res.ok) throw new Error('Failed to export product');
     return res.json();
   },
   getCatalogSummary: async (): Promise<object> => {
-    const res = await fetch(`/api/export/summary`);
+    const res = await fetch(`/api/export/catalog-summary`);
     if (!res.ok) throw new Error('Failed to fetch catalog summary');
     return res.json();
   },

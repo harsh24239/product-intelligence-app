@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronRight, Info, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 import { Product } from '../types/product';
+import { api } from '../services/api';
 
 interface AnomalyFlagsPanelProps {
   products: Product[];
@@ -25,6 +26,7 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ products, onSelec
     (p.anomalies || []).map((a, idx) => ({
       id: `${p.id}-anomaly-${idx}`,
       productId: p.id,
+      anomalyIndex: idx,
       name: p.name,
       sku: p.sku,
       field: a.field,
@@ -33,14 +35,16 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ products, onSelec
       issue: a.issue,
       severity: a.severity,
       confidence: 0,
+      resolved: a.resolved,
     }))
-  ).slice(0, 10); // Limit to top 10 for dashboard performance
+  ).filter(a => !a.resolved).slice(0, 10); // Limit to top 10 for dashboard performance
 
   // If no anomalies in real data, fallback to some illustrative examples mapped to actual products so clicking works
   const displayAnomalies = realAnomalies.length > 0 ? realAnomalies : (products.length > 0 ? [
     {
       id: 'mock-1',
       productId: products[0]?.id,
+      anomalyIndex: 0,
       name: products[0]?.name || 'Unknown Product',
       sku: products[0]?.sku || 'SKU-?',
       field: 'Attribute Extraction',
@@ -55,9 +59,16 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ products, onSelec
   const filtered = (filter === 'all' ? displayAnomalies : displayAnomalies.filter((a) => a.severity === filter))
     .filter(a => !resolvedIds.includes(a.id));
 
-  const handleResolve = (e: React.MouseEvent, id: string) => {
+  const handleResolve = async (e: React.MouseEvent, anomaly: any) => {
     e.stopPropagation();
-    setResolvedIds([...resolvedIds, id]);
+    try {
+      if (!anomaly.id.startsWith('mock')) {
+        await api.resolveAnomaly(anomaly.productId, anomaly.anomalyIndex);
+      }
+      setResolvedIds([...resolvedIds, anomaly.id]);
+    } catch (err) {
+      console.error('Failed to resolve anomaly via API', err);
+    }
   };
 
   return (
@@ -179,7 +190,7 @@ const AnomalyFlagsPanel: React.FC<AnomalyFlagsPanelProps> = ({ products, onSelec
 
                 <button
                   className="btn btn-accent"
-                  onClick={(e) => handleResolve(e, anomaly.id)}
+                  onClick={(e) => handleResolve(e, anomaly)}
                   style={{ fontSize: 12, padding: '7px 14px', fontWeight: 800 }}
                 >
                   <CheckCircle2 size={14} /> Approve Correction
