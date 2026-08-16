@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Product } from '../types/product';
 import {
   ArrowLeft,
@@ -7,15 +7,11 @@ import {
   Clock,
   ShieldAlert,
   Check,
-  ShoppingBag,
   FileText,
-  RefreshCw,
   Info,
   ChevronDown,
 } from 'lucide-react';
 import HITLValidationModal from './HITLValidationModal';
-import CADPreview3D from './CADPreview3D';
-import PIMConnectorsModal from './PIMConnectorsModal';
 import { generateProductDatasheet } from '../services/pdfGenerator';
 import { api } from '../services/api';
 
@@ -36,42 +32,9 @@ const statusConfig: Record<string, { label: string; color: string; bg: string; b
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }) => {
   const [activeTab, setActiveTab] = useState<'specs' | 'attributes' | 'anomalies' | 'audit'>('specs');
   const [showValidation, setShowValidation] = useState(false);
-  const [showPIMModal, setShowPIMModal] = useState(false);
   const [downloadingPDF, setDownloadingPDF] = useState(false);
-  const [substitutes, setSubstitutes] = useState<any[]>([]);
-  const [loadingSubstitutes, setLoadingSubstitutes] = useState(false);
-  const [showCAD, setShowCAD] = useState(false);
 
-  useEffect(() => {
-    const fetchSubstitutes = async () => {
-      setLoadingSubstitutes(true);
-      try {
-        const res = await api.getSubstitutes(product.id);
-        setSubstitutes(res.substitutes || []);
-      } catch {
-        setSubstitutes([
-          {
-            id: 'sub-1',
-            name: 'Bosch Rexroth Servo Motor MS2N05',
-            sku: 'MS2N05-D01',
-            manufacturer: 'Bosch Rexroth',
-            matchPercentage: '98.4%',
-            recommendation: '100% Drop-in — identical mounting & voltage rating',
-          },
-          {
-            id: 'sub-2',
-            name: 'Siemens 1FK7 Synchronous Servo',
-            sku: '1FK7060-2AC71',
-            manufacturer: 'Siemens AG',
-            matchPercentage: '95.1%',
-            recommendation: 'Compatible — verify terminal box orientation',
-          },
-        ]);
-      }
-      setLoadingSubstitutes(false);
-    };
-    fetchSubstitutes();
-  }, [product.id]);
+
 
   const handleDownloadDatasheet = async () => {
     setDownloadingPDF(true);
@@ -226,14 +189,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
               >
                 <Sparkles size={16} /> Validate with AI
               </button>
-              <button
-                id="btn-push-pim"
-                className="btn btn-accent"
-                onClick={() => setShowPIMModal(true)}
-                style={{ fontSize: 14, padding: '10px 20px', fontWeight: 800 }}
-              >
-                <ShoppingBag size={16} /> Export Structured Data
-              </button>
+
               <button
                 id="btn-pdf"
                 className="btn btn-secondary"
@@ -318,7 +274,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 320px',
+          gridTemplateColumns: '1fr',
           gap: 20,
           alignItems: 'start',
         }}
@@ -676,147 +632,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
           )}
         </div>
 
-        {/* Right sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-          {/* 3D CAD Preview collapsible */}
-          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-            <button
-              onClick={() => setShowCAD(!showCAD)}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                width: '100%', padding: '14px 16px',
-                cursor: 'pointer',
-                borderBottom: showCAD ? '1px solid var(--border)' : 'none',
-              }}
-            >
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>
-                  3D CAD Preview
-                </div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                  Interactive WebGL model from extracted specs
-                </div>
-              </div>
-              <ChevronDown
-                size={16}
-                color="var(--text-muted)"
-                style={{ transform: showCAD ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
-              />
-            </button>
-            {showCAD && (
-              <div style={{ padding: 12 }}>
-                <CADPreview3D product={product} isDark={true} />
-              </div>
-            )}
-          </div>
-
-          {/* Vector Substitute Finder */}
-          <div className="card">
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <RefreshCw size={14} color="var(--text-muted)" />
-                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
-                  Drop-in Substitutes
-                </span>
-                <span
-                  style={{
-                    fontSize: 9, fontWeight: 700,
-                    background: 'var(--blue-dim)',
-                    color: 'var(--blue)',
-                    border: '1px solid var(--blue-border)',
-                    padding: '1px 5px', borderRadius: 4,
-                  }}
-                >
-                  AI
-                </span>
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                Interchangeable parts found using vector cosine similarity across the catalog
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {loadingSubstitutes ? (
-                <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>
-                  Computing attribute embeddings…
-                </div>
-              ) : (
-                substitutes.map((sub, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      padding: '12px 14px',
-                      background: 'var(--bg)',
-                      border: '1px solid var(--border)',
-                      borderRadius: 8,
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>
-                        {sub.name}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: 11, fontWeight: 700,
-                          color: 'var(--green)',
-                          background: 'var(--green-dim)',
-                          border: '1px solid var(--green-border)',
-                          padding: '2px 6px', borderRadius: 4,
-                          flexShrink: 0,
-                        }}
-                      >
-                        {sub.matchPercentage}
-                      </span>
-                    </div>
-                    <p
-                      style={{
-                        fontSize: 10,
-                        color: 'var(--blue)',
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
-                        marginBottom: 4,
-                      }}
-                    >
-                      {sub.sku} · {sub.manufacturer}
-                    </p>
-                    <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                      {sub.recommendation}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Quick export panel */}
-          <div className="card">
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
-              Export & Integrate
-            </div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 14 }}>
-              Push this product to external commerce & ERP systems
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <button
-                className="btn btn-accent"
-                onClick={() => setShowPIMModal(true)}
-                style={{ fontSize: 12, width: '100%', justifyContent: 'flex-start' }}
-              >
-                <ShoppingBag size={13} />
-                Push to Shopify / SAP IDoc / Akeneo
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={handleDownloadDatasheet}
-                disabled={downloadingPDF}
-                style={{ fontSize: 12, width: '100%', justifyContent: 'flex-start' }}
-              >
-                <FileText size={13} />
-                {downloadingPDF ? 'Generating PDF…' : 'Download PDF Datasheet + QR Code'}
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Modals */}
@@ -831,9 +647,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product, onBack }
           }}
         />
       )}
-      {showPIMModal && (
-        <PIMConnectorsModal product={product} onClose={() => setShowPIMModal(false)} isDark={true} />
-      )}
+
     </div>
   );
 };
