@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { generateProductDatasheet } from '../services/pdfGenerator';
 
 import { Product } from '../types/product';
+import { API_BASE } from '../services/api';
 
 interface DataExportStudioProps {
   products?: Product[];
@@ -59,7 +60,7 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
 
     if (id === 'csv') {
       try {
-        const response = await fetch('/api/hackathon/export');
+        const response = await fetch(`${API_BASE}/api/hackathon/export`);
         if (!response.ok) throw new Error('Export failed');
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);

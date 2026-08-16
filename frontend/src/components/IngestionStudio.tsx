@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { FileText, Upload, Sparkles, FileCheck, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { api } from '../services/api';
+import { api, API_BASE } from '../services/api';
 import { Product } from '../types/product';
 
 interface IngestionStudioProps {
@@ -145,7 +145,7 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
             onClick={async () => {
               setMode('processing');
               try {
-                const res = await fetch('/api/hackathon/seed', { method: 'POST' });
+                const res = await fetch(`${API_BASE}/api/hackathon/seed`, { method: 'POST' });
                 await res.json();
                 simulateProgress(() => {
                   onExtractSuccess();

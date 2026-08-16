@@ -1,11 +1,13 @@
 import { Product, ProductStatus, CatalogMetrics, ExtractionResult } from '../types/product';
 
+export const API_BASE = ((import.meta as any).env?.VITE_API_URL || '').replace(/\/$/, '');
+
 export const api = {
   // Catalog
   getCatalog: async (filters?: { status?: string; category?: string; q?: string }): Promise<Product[]> => {
     try {
       const params = new URLSearchParams(filters as Record<string, string>).toString();
-      const res = await fetch(`/api/catalog?${params}`);
+      const res = await fetch(`${API_BASE}/api/catalog?${params}`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) return data;
@@ -15,7 +17,7 @@ export const api = {
   },
   getMetrics: async (): Promise<CatalogMetrics> => {
     try {
-      const res = await fetch(`/api/catalog/metrics`);
+      const res = await fetch(`${API_BASE}/api/catalog/metrics`);
       if (res.ok) {
         const raw = await res.json();
         return {
@@ -43,17 +45,17 @@ export const api = {
     };
   },
   getProduct: async (id: string): Promise<Product> => {
-    const res = await fetch(`/api/catalog/${id}`);
+    const res = await fetch(`${API_BASE}/api/catalog/${id}`);
     if (!res.ok) throw new Error('Failed to fetch product');
     return res.json();
   },
   getSubstitutes: async (id: string): Promise<{ productId: string; sku: string; substitutes: any[] }> => {
-    const res = await fetch(`/api/catalog/${id}/substitutes`);
+    const res = await fetch(`${API_BASE}/api/catalog/${id}/substitutes`);
     if (!res.ok) throw new Error('Failed to fetch vector substitutes');
     return res.json();
   },
   updateProduct: async (id: string, updates: Partial<Product>): Promise<Product> => {
-    const res = await fetch(`/api/catalog/${id}`, {
+    const res = await fetch(`${API_BASE}/api/catalog/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates),
@@ -65,11 +67,11 @@ export const api = {
     return api.updateProduct(id, { status });
   },
   deleteProduct: async (id: string): Promise<void> => {
-    const res = await fetch(`/api/catalog/${id}`, { method: 'DELETE' });
+    const res = await fetch(`${API_BASE}/api/catalog/${id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error('Failed to delete product');
   },
   resolveAnomaly: async (id: string, index: number): Promise<Product> => {
-    const res = await fetch(`/api/catalog/${id}/resolve-anomaly`, { 
+    const res = await fetch(`${API_BASE}/api/catalog/${id}/resolve-anomaly`, { 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ anomalyIndex: index })
@@ -80,7 +82,7 @@ export const api = {
   
   // Extraction
   extractFromText: async (rawText: string, productName?: string): Promise<Product> => {
-    const res = await fetch(`/api/extract/text`, {
+    const res = await fetch(`${API_BASE}/api/extract/text`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ rawText, productName }),
@@ -91,7 +93,7 @@ export const api = {
   extractFromFile: async (file: File): Promise<Product> => {
     const formData = new FormData();
     formData.append('file', file);
-    const res = await fetch(`/api/extract/file`, {
+    const res = await fetch(`${API_BASE}/api/extract/file`, {
       method: 'POST',
       body: formData,
     });
@@ -99,17 +101,17 @@ export const api = {
     return res.json();
   },
   enrichProduct: async (id: string): Promise<Product> => {
-    const res = await fetch(`/api/extract/enrich/${id}`, { method: 'POST' });
+    const res = await fetch(`${API_BASE}/api/extract/enrich/${id}`, { method: 'POST' });
     if (!res.ok) throw new Error('Failed to enrich product');
     return res.json();
   },
   validateProduct: async (id: string): Promise<Product> => {
-    const res = await fetch(`/api/extract/validate/${id}`, { method: 'POST' });
+    const res = await fetch(`${API_BASE}/api/extract/validate/${id}`, { method: 'POST' });
     if (!res.ok) throw new Error('Failed to validate product');
     return res.json();
   },
   batchExtract: async (items: { rawText: string }[]): Promise<ExtractionResult> => {
-    const res = await fetch(`/api/extract/batch`, {
+    const res = await fetch(`${API_BASE}/api/extract/batch`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items }),
@@ -120,18 +122,18 @@ export const api = {
   
   // Export
   exportJSON: async (): Promise<void> => {
-    window.open('/api/export/json', '_blank');
+    window.open(`${API_BASE}/api/export/json`, '_blank');
   },
   exportCSV: async (): Promise<void> => {
-    window.open('/api/export/csv', '_blank');
+    window.open(`${API_BASE}/api/export/csv`, '_blank');
   },
   exportProduct: async (id: string): Promise<object> => {
-    const res = await fetch(`/api/export/product/${id}/json`);
+    const res = await fetch(`${API_BASE}/api/export/product/${id}/json`);
     if (!res.ok) throw new Error('Failed to export product');
     return res.json();
   },
   getCatalogSummary: async (): Promise<object> => {
-    const res = await fetch(`/api/export/catalog-summary`);
+    const res = await fetch(`${API_BASE}/api/export/catalog-summary`);
     if (!res.ok) throw new Error('Failed to fetch catalog summary');
     return res.json();
   },
