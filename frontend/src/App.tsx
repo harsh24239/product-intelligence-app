@@ -179,59 +179,34 @@ function App() {
     switch (currentView) {
       case 'dashboard':
         return (
-          <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
-            {/* Pipeline Hero — the "what is this?" section */}
+            {/* Pipeline Hero */}
             <PipelineHero onStartDemo={() => navigateTo('ingest')} />
 
-            {/* KPI Metrics */}
-            <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    color: '#FFFFFF',
-                  }}
-                >
+            {/* KPI Metrics Section */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#38BDF8' }}>
                   Live Catalog Metrics
-                </span>
-                <div
-                  style={{
-                    width: 6, height: 6,
-                    borderRadius: '50%',
-                    background: 'var(--green)',
-                    animation: 'pulse 2s ease-in-out infinite',
-                  }}
-                />
-                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Live</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '2px 8px', background: 'rgba(52, 211, 153, 0.1)', border: '1px solid rgba(52, 211, 153, 0.3)', borderRadius: 5 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#34D399', animation: 'pulse 2s ease-in-out infinite' }} />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: '#34D399' }}>Live</span>
+                </div>
               </div>
               <MetricsOverview metrics={metrics} loading={loading} />
             </div>
 
-            {/* Dashboard panels */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {/* Anomaly panel */}
-              <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    color: '#FFFFFF',
-                  }}
-                >
-                  Active Anomalies — Items Needing Human Review
+            {/* Anomaly Queue */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#FBBF24' }}>
+                  Active Anomaly Queue
                 </div>
+                <span style={{ fontSize: 11, color: '#475569' }}>Requires human validation before publishing</span>
+              </div>
+              <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
                 <AnomalyFlagsPanel
                   products={products}
                   onSelectProduct={(id) => {
@@ -273,7 +248,17 @@ function App() {
         );
 
       case 'ingest':
-        return <IngestionStudio onExtractSuccess={() => navigateTo('catalog')} />;
+        return <IngestionStudio onExtractSuccess={async () => {
+          // Re-fetch catalog after pipeline runs so dashboard shows real data
+          try {
+            const [fp, fm] = await Promise.all([api.getCatalog(), api.getMetrics()]);
+            if (Array.isArray(fp) && fp.length > 0) {
+              setProducts(fp);
+              if (fm) setMetrics(fm);
+            }
+          } catch {}
+          navigateTo('catalog');
+        }} />;
 
       case 'export':
         return <DataExportStudio products={products} />;
