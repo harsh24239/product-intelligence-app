@@ -174,7 +174,7 @@ const IngestionStudio: React.FC<IngestionStudioProps> = ({ onExtractSuccess }) =
                   <span style={{ fontSize: 11, fontWeight: 800, background: 'rgba(16, 185, 129, 0.15)', color: '#34D399', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '3px 10px', borderRadius: 6, textTransform: 'uppercase' }}>Recommended</span>
                 </div>
                 <p style={{ fontSize: 14, color: '#CBD5E1', lineHeight: 1.7, marginBottom: 16 }}>
-                  Ingests all <strong style={{ color: '#FFFFFF' }}>1,000 products</strong> from the Unilog sample dataset and runs the full 5-stage enrichment pipeline: Placeholder Cleansing → Unit Normalization → Attribute Extraction → Description Generation → Delivery Format Preparation.
+                  Ingests all <strong style={{ color: '#FFFFFF' }}>1,000 products</strong> from the sample dataset and runs the full 5-stage enrichment pipeline: Placeholder Cleansing → Unit Normalization → Attribute Extraction → Description Generation → Delivery Format Preparation.
                 </p>
                 <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                   {[

@@ -67,7 +67,7 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Unihack_Expected_Output.csv`;
+        a.download = `Expected_Output.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -174,10 +174,10 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
         <Info size={20} color="#60A5FA" style={{ flexShrink: 0, marginTop: 2 }} />
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
-            Unilog Delivery Format Export
+            Standard Delivery Format Export
           </div>
           <p style={{ fontSize: 15, color: '#FFFFFF', lineHeight: 1.6 }}>
-            The enrichment pipeline transforms raw 6-column input rows into fully populated 252-column delivery records. Use the <strong>CSV Export</strong> to download the submission-ready output matching the exact Unilog expected output schema — no headers modified.
+            The enrichment pipeline transforms raw 6-column input rows into fully populated 252-column delivery records. Use the <strong>CSV Export</strong> to download the submission-ready output matching the exact expected output schema — no headers modified.
           </p>
         </div>
       </div>

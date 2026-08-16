@@ -57,7 +57,7 @@ const PipelineHero: React.FC<PipelineHeroProps> = ({ onStartDemo }) => {
           }}>
             <Cpu size={12} color="#38BDF8" />
             <span style={{ fontSize: 11, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Unilog Product Data Enrichment Pipeline
+              AI Product Data Enrichment Pipeline
             </span>
           </div>
 

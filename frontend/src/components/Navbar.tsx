@@ -228,7 +228,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <div style={{ padding: '16px', borderTop: '1px solid rgba(56, 189, 248, 0.35)' }}>
           <div style={{ padding: '12px 14px', background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 10 }}>
             <div style={{ fontSize: 11, fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Powered by AI</div>
-            <div style={{ fontSize: 14, color: '#FFFFFF', marginTop: 3, fontWeight: 700 }}>Unilog Product Intelligence</div>
+            <div style={{ fontSize: 14, color: '#FFFFFF', marginTop: 3, fontWeight: 700 }}>AI Product Intelligence</div>
             <div style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>Data Enrichment Engine v2.0</div>
           </div>
         </div>
