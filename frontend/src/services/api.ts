@@ -6,8 +6,12 @@ export const api = {
   // Catalog
   getCatalog: async (filters?: { status?: string; category?: string; q?: string }): Promise<Product[]> => {
     try {
-      const params = new URLSearchParams(filters as Record<string, string>).toString();
-      const res = await fetch(`${API_BASE}/api/catalog?${params}`);
+      const cleanFilters = Object.fromEntries(
+        Object.entries(filters || {}).filter(([_, v]) => v !== undefined && v !== '')
+      );
+      const params = new URLSearchParams(cleanFilters as Record<string, string>).toString();
+      const queryStr = params ? `?${params}` : '';
+      const res = await fetch(`${API_BASE}/api/catalog${queryStr}`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) return data;
