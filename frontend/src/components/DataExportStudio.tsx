@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, FileSpreadsheet, FileText, BarChart3, Check, Info, Copy, Sparkles, ShieldCheck } from 'lucide-react';
+import { Download, FileSpreadsheet, FileText, BarChart3, Check, Info, Sparkles, ShieldCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { generateProductDatasheet } from '../services/pdfGenerator';
 
@@ -12,10 +12,8 @@ interface DataExportStudioProps {
 const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) => {
   const [downloading, setDownloading] = useState<string | null>(null);
   const [downloaded, setDownloaded] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const [exportStep, setExportStep] = useState<string | null>(null);
 
-  // Strict Hackathon CSV delivery requires no payload customization
 
   const handleExport = async (id: string) => {
     setDownloading(id);
@@ -95,11 +93,6 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
     }, 1200);
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText('https://api.intelliproduct.ai/v1/catalog/export?format=json');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   const exportOptions = [
     {
@@ -145,7 +138,7 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
                 Export & Data Handoff Studio
               </h1>
               <div style={{ fontSize: 15, color: '#F1F5F9' }}>
-                Multi-format publishing pipeline, REST API distribution, and customizable ISO payload builder
+                Download enriched product records in multiple formats — CSV for ERP delivery and PDF datasheets for documentation.
               </div>
             </div>
           </div>
@@ -189,7 +182,6 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
           const Icon = opt.icon;
           const isDownloading = downloading === opt.id;
           const isDownloaded = downloaded === opt.id;
-          const isAPI = opt.id === 'api';
 
           return (
             <div
@@ -231,15 +223,6 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid rgba(56, 189, 248, 0.25)' }}>
                 <span style={{ fontSize: 13, color: '#94A3B8', fontWeight: 600 }}>{opt.size}</span>
-                {isAPI ? (
-                  <button
-                    className="btn btn-secondary"
-                    onClick={handleCopy}
-                    style={{ fontSize: 14, padding: '8px 18px', fontWeight: 800 }}
-                  >
-                    {copied ? <><Check size={16} color="#34D399" /> Copied Endpoint</> : <><Copy size={16} color="#60A5FA" /> Copy API Endpoint</>}
-                  </button>
-                ) : (
                   <button
                     className={`btn ${isDownloaded ? 'btn-accent' : 'btn-primary'}`}
                     onClick={() => handleExport(opt.id)}
@@ -254,7 +237,6 @@ const DataExportStudio: React.FC<DataExportStudioProps> = ({ products = [] }) =>
                       <><Download size={16} /> Export {opt.format}</>
                     )}
                   </button>
-                )}
               </div>
             </div>
           );
