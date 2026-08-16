@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Network, Database, Sparkles, Filter, Zap, ShieldCheck, Cpu, Search, Activity, CheckCircle2, Play } from 'lucide-react';
+import { Network, Filter, ShieldCheck, Cpu, Search, Activity } from 'lucide-react';
 
 interface NodeDetail {
   id: string;
@@ -125,13 +125,9 @@ const nodesList: NodeDetail[] = [
 ];
 
 const KnowledgeGraphViewer: React.FC = () => {
-  const [expandedBase, setExpandedBase] = useState(true);
   const [activeFilter, setActiveFilter] = useState<'all' | 'atex' | 'motors' | 'certs' | 'electrical'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedNode, setSelectedNode] = useState<NodeDetail | null>(nodesList[0]);
-  const [ragQuery, setRagQuery] = useState('Infer missing IP rating for motor SAB-992');
-  const [ragRunning, setRagRunning] = useState(false);
-  const [ragResult, setRagResult] = useState<string | null>(null);
 
   const filteredNodes = nodesList.filter(node => {
     const matchCluster = activeFilter === 'all' || node.cluster === activeFilter;
@@ -139,16 +135,6 @@ const KnowledgeGraphViewer: React.FC = () => {
                         node.category.toLowerCase().includes(searchTerm.toLowerCase());
     return matchCluster && matchSearch;
   });
-
-  const runSimulatedRag = (queryText: string) => {
-    setRagQuery(queryText);
-    setRagRunning(true);
-    setRagResult(null);
-    setTimeout(() => {
-      setRagRunning(false);
-      setRagResult('Traversal Path: Industrial Motors → Ingress Protection (IP65) → IEC 60529. Inferred value: "IP65" (98.6% Cosine Similarity)');
-    }, 700);
-  };
 
   return (
     <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -190,29 +176,6 @@ const KnowledgeGraphViewer: React.FC = () => {
         </div>
       </div>
 
-      {/* RAG Banner */}
-      <div style={{
-        background: '#1B2433',
-        border: '1px solid rgba(56, 189, 248, 0.35)',
-        borderRadius: 14,
-        padding: '18px 22px',
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: 14,
-      }}>
-        <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Sparkles size={20} color="#60A5FA" />
-        </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
-            How RAG Enrichment Works in the AI Pipeline
-          </div>
-          <p style={{ fontSize: 14, color: '#FFFFFF', lineHeight: 1.6 }}>
-            When supplier PDFs contain missing or abbreviated technical specs (e.g. <code style={{ color: '#38BDF8', fontWeight: 700 }}>"65"</code> instead of <code style={{ color: '#38BDF8', fontWeight: 700 }}>"IP65"</code>), 
-            the AI Agent executes vector similarity search against this Knowledge Graph. By traversing relationships between <strong style={{ color: '#60A5FA' }}>Product Domains → Operating Voltages → IEC Safety Standards</strong>, the pipeline automatically imputes missing specifications with 94%+ verified accuracy.
-          </p>
-        </div>
-      </div>
 
       {/* Filter and Search Bar */}
       <div className="card" style={{ padding: '14px 20px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 14, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 14 }}>
@@ -378,59 +341,6 @@ const KnowledgeGraphViewer: React.FC = () => {
                 </div>
               </div>
 
-              {/* Interactive RAG Vector Simulation Box */}
-              <div style={{ marginTop: 10, padding: 18, background: '#0B0F17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 800, color: '#FBBF24', textTransform: 'uppercase' }}>
-                  <Zap size={16} color="#FBBF24" />
-                  RAG Vector Search Simulator
-                </div>
-
-                {/* Preset Query Chips */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                  {[
-                    'Infer SAB-992 IP Rating',
-                    'Check IE3 Efficiency',
-                    'ATEX Zone 1 Audit'
-                  ].map((q, i) => (
-                    <button
-                      key={i}
-                      onClick={() => runSimulatedRag(q)}
-                      style={{ fontSize: 13, fontWeight: 700, padding: '6px 12px', borderRadius: 8, background: '#1B2433', color: '#60A5FA', border: '1px solid rgba(56, 189, 248, 0.35)', cursor: 'pointer' }}
-                    >
-                      ⚡ {q}
-                    </button>
-                  ))}
-                </div>
-
-                <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-                  <input
-                    type="text"
-                    value={ragQuery}
-                    onChange={(e) => setRagQuery(e.target.value)}
-                    style={{ height: 40, fontSize: 14, padding: '0 12px' }}
-                  />
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => runSimulatedRag(ragQuery)}
-                    style={{ fontSize: 14, padding: '0 18px', height: 40, fontWeight: 800 }}
-                    disabled={ragRunning}
-                  >
-                    <Play size={15} /> Run
-                  </button>
-                </div>
-
-                {ragRunning && (
-                  <div style={{ fontSize: 13, color: '#60A5FA', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Activity size={16} className="animate-spin" /> Executing Vector Similarity Search...
-                  </div>
-                )}
-
-                {ragResult && (
-                  <div style={{ padding: 12, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: 8, fontSize: 12, color: '#34D399', lineHeight: 1.5, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                    <CheckCircle2 size={14} color="#34D399" style={{ marginBottom: 2 }} /> {ragResult}
-                  </div>
-                )}
-              </div>
 
             </div>
           ) : (
@@ -441,64 +351,7 @@ const KnowledgeGraphViewer: React.FC = () => {
         </div>
       </div>
 
-      {/* ISO / IEC Standards Matrix Table */}
-      <div className="card" style={{ padding: 24, background: '#1B2433', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16 }}>
-        <div 
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
-          onClick={() => setExpandedBase(!expandedBase)}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Database size={22} color="#38BDF8" />
-            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>
-              ISO / IEC Industrial Standards Rule Matrix
-            </h3>
-          </div>
-          <span style={{ fontSize: 13, fontWeight: 800, color: '#60A5FA' }}>
-            {expandedBase ? 'Collapse Matrix ▲' : 'Expand Matrix ▼'}
-          </span>
-        </div>
 
-        {expandedBase && (
-          <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid rgba(56, 189, 248, 0.25)' }}>
-            <table>
-              <thead>
-                <tr>
-                  <th>Standard Code</th>
-                  <th>Category</th>
-                  <th>Description & Technical Mandate</th>
-                  <th>AI Validation Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>IEC 60529</td>
-                  <td style={{ color: '#FFFFFF' }}>Enclosure Protection</td>
-                  <td style={{ color: '#F1F5F9' }}>Defines Ingress Protection (IP) ratings for dust tightness and water jet resistance.</td>
-                  <td><span className="badge badge-validated">Auto-Verified</span></td>
-                </tr>
-                <tr>
-                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>IEC 60034-30-1</td>
-                  <td style={{ color: '#FFFFFF' }}>Energy Efficiency</td>
-                  <td style={{ color: '#F1F5F9' }}>Standardizes IE1, IE2, IE3, IE4 efficiency classes for industrial motors.</td>
-                  <td><span className="badge badge-commerce_ready">Compliance Pass</span></td>
-                </tr>
-                <tr>
-                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>Directive 2014/34/EU</td>
-                  <td style={{ color: '#FFFFFF' }}>ATEX Hazardous</td>
-                  <td style={{ color: '#F1F5F9' }}>Mandatory safety directive for equipment operating in explosive atmosphere zones.</td>
-                  <td><span className="badge badge-flagged">Flagged for Review</span></td>
-                </tr>
-                <tr>
-                  <td style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, color: '#38BDF8', fontSize: 14 }}>ISO 13849-1</td>
-                  <td style={{ color: '#FFFFFF' }}>Safety Systems</td>
-                  <td style={{ color: '#F1F5F9' }}>Safety-related parts of control systems (Performance Level PL a-e).</td>
-                  <td><span className="badge badge-validated">Auto-Verified</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
     </div>
   );
 };
